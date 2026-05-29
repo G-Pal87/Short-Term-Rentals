@@ -227,27 +227,6 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               </div>
             </div>
 
-            {/* Discount info */}
-            <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5">
-              <h3 className="font-semibold text-gray-900 mb-2">
-                🎉 Long Stay Discounts
-              </h3>
-              <ul className="space-y-1 text-sm text-gray-700">
-                <li className="flex items-center gap-2">
-                  <span className="text-green-600 font-bold">10% off</span>
-                  <span>for stays of 7 nights or more</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-green-600 font-bold">20% off</span>
-                  <span>for stays of 28 nights or more</span>
-                </li>
-              </ul>
-              <p className="text-xs text-gray-500 mt-2">
-                Discounts are applied automatically when you select dates in the
-                booking panel.
-              </p>
-            </div>
-
             {/* Map */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">

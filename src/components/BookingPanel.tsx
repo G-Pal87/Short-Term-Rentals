@@ -59,18 +59,8 @@ export default function BookingPanel({
       ? nightlySubtotal(range.from, range.to, ratesByDate, pricePerNight)
       : 0;
 
-  function getDiscount(): number {
-    if (nights >= 28) return 0.2;
-    if (nights >= 7) return 0.1;
-    return 0;
-  }
-
-  const discount = getDiscount();
-  const discountAmount = nightlyTotal * discount;
-  const discountedNightly = nightlyTotal - discountAmount;
   const cleaning = cleaningFee ?? 0;
-  const estimatedTotal = discountedNightly + cleaning;
-  const avgPerNight = nights > 0 ? discountedNightly / nights : 0;
+  const estimatedTotal = nightlyTotal + cleaning;
 
   function buildWhatsAppUrl(): string {
     if (!range?.from || !range?.to) {
@@ -137,18 +127,6 @@ export default function BookingPanel({
               <span>€{nightlyTotal.toFixed(2)}</span>
             </div>
 
-            {/* Long-stay discount */}
-            {discount > 0 && (
-              <div className="flex justify-between text-green-600 font-medium">
-                <span>
-                  {discount === 0.2
-                    ? "28+ nights discount (20%)"
-                    : "7+ nights discount (10%)"}
-                </span>
-                <span>−€{discountAmount.toFixed(2)}</span>
-              </div>
-            )}
-
             {/* Cleaning fee */}
             {cleaning > 0 && (
               <div className="flex justify-between text-gray-600">
@@ -158,14 +136,6 @@ export default function BookingPanel({
             )}
 
             <div className="border-t border-cream-dark my-2" />
-
-            {/* Avg per night (informational) */}
-            {discount > 0 && (
-              <div className="flex justify-between text-gray-500 text-xs">
-                <span>Avg per night after discount</span>
-                <span>€{avgPerNight.toFixed(2)}</span>
-              </div>
-            )}
 
             <div className="flex justify-between font-bold text-gray-900 text-base">
               <span>Estimated Total</span>

@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #e8845a;
+  --color-primary-dark: #d06e45;
+  --color-secondary: #2c5f5a;
+  --color-secondary-dark: #1e4540;
+  --color-cream: #fdf8f3;
+  --color-cream-dark: #f5ede0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: #1a1a1a;
+}
+
+/* react-day-picker overrides */
+.rdp {
+  --rdp-cell-size: 42px;
+  --rdp-accent-color: #e8845a;
+  --rdp-background-color: rgba(232, 132, 90, 0.1);
+  --rdp-accent-color-dark: #d06e45;
+  --rdp-background-color-dark: rgba(232, 132, 90, 0.2);
+  --rdp-outline: 2px solid var(--rdp-accent-color);
+  --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0.75);
+  margin: 0;
+}
+
+.rdp-day_selected,
+.rdp-day_selected:hover {
+  background-color: #e8845a !important;
+  color: white !important;
+}
+
+.rdp-day_range_middle {
+  background-color: rgba(232, 132, 90, 0.15) !important;
+  color: #1a1a1a !important;
+  border-radius: 0 !important;
+}
+
+.rdp-day_range_start,
+.rdp-day_range_end {
+  background-color: #e8845a !important;
+  color: white !important;
+}
+
+.rdp-day_disabled {
+  color: #ccc !important;
+  text-decoration: line-through;
+  background-color: #f5f5f5 !important;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: rgba(232, 132, 90, 0.1) !important;
+}
+
+.rdp-nav_button {
+  color: #2c5f5a;
+}
+
+.rdp-caption_label {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5ede0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e8845a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d06e45;
+}

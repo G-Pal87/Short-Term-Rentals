@@ -1,0 +1,176 @@
+export type Region = "paphos" | "tenerife";
+
+export interface Property {
+  id: string;
+  name: string;
+  subtitle: string;
+  region: Region;
+  icalUrl: string;
+  bedrooms: number;
+  bathrooms: number;
+  maxGuests: number;
+  pricePerNight: number;
+  lat: number;
+  lng: number;
+  amenities: string[];
+  description: string;
+  gradients: string[];
+}
+
+export const properties: Property[] = [
+  {
+    id: "venus-beach-retreat",
+    name: "Colourful Venus Beach Retreat",
+    subtitle: "Pool & 2 Terraces",
+    region: "paphos",
+    icalUrl:
+      "https://www.airbnb.gr/calendar/ical/1341854905555812998.ics?t=1e2c75c8b84645a4ac88669d8ec7bdda",
+    bedrooms: 2,
+    bathrooms: 1,
+    maxGuests: 4,
+    pricePerNight: 120,
+    lat: 34.7717,
+    lng: 32.4241,
+    amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen", "Beach Nearby"],
+    description:
+      "Welcome to the Colourful Venus Beach Retreat, a vibrant and beautifully designed two-bedroom apartment nestled in the heart of Paphos, Cyprus. This stunning retreat boasts a sparkling private pool and two spacious terraces where you can soak up the Mediterranean sunshine and enjoy breathtaking views. The interior is decorated with a palette of warm, cheerful colours that create an inviting and relaxing atmosphere. Fully equipped with modern amenities including a fully-fitted kitchen, air conditioning throughout, and high-speed WiFi, this property offers everything you need for an unforgettable holiday. The beach is just a short stroll away, making it the perfect base for exploring the beautiful coastline and the rich history of Paphos.",
+    gradients: [
+      "linear-gradient(135deg, #E8845A 0%, #c4623e 100%)",
+      "linear-gradient(135deg, #2C5F5A 0%, #1e4540 100%)",
+      "linear-gradient(135deg, #2C7BA3 0%, #1a5a7a 100%)",
+      "linear-gradient(135deg, #f0a070 0%, #E8845A 100%)",
+    ],
+  },
+  {
+    id: "luxe-poolside-escape",
+    name: "Luxe Poolside Escape",
+    subtitle: "Beach walk & 2 Terraces",
+    region: "paphos",
+    icalUrl:
+      "https://www.airbnb.gr/calendar/ical/1389855941514317769.ics?t=a2520714c5a34b1daa3b808b6c1bfd0e",
+    bedrooms: 2,
+    bathrooms: 1,
+    maxGuests: 4,
+    pricePerNight: 140,
+    lat: 34.77,
+    lng: 32.426,
+    amenities: [
+      "Pool",
+      "2 Terraces",
+      "Beach Walk",
+      "WiFi",
+      "AC",
+      "Kitchen",
+      "Parking",
+    ],
+    description:
+      "Experience luxury living at the Luxe Poolside Escape, an exquisite two-bedroom apartment offering the perfect blend of comfort and style in Paphos. Steps from the shimmering Mediterranean Sea, this property features a stunning pool and two elegant terraces perfect for al fresco dining and sunset cocktails. The interior has been thoughtfully designed with high-end furnishings and a sophisticated colour palette. A short beach walk leads you to the golden sands and crystal-clear waters of Paphos. Whether you're looking for a romantic getaway or a family holiday, this luxurious retreat promises memories that will last a lifetime. On-site parking and all modern conveniences are included.",
+    gradients: [
+      "linear-gradient(135deg, #1e4540 0%, #2C5F5A 100%)",
+      "linear-gradient(135deg, #E8845A 0%, #f0a070 100%)",
+      "linear-gradient(135deg, #4a90a4 0%, #2C7BA3 100%)",
+      "linear-gradient(135deg, #c4623e 0%, #a04830 100%)",
+    ],
+  },
+  {
+    id: "poolside-central-studio",
+    name: "Poolside Central Studio",
+    subtitle: "Balcony & Beach Walk",
+    region: "paphos",
+    icalUrl:
+      "https://www.airbnb.gr/calendar/ical/1417130109923067210.ics?t=e8ec8f5e94b845b6817598eeaa30df0e",
+    bedrooms: 0,
+    bathrooms: 1,
+    maxGuests: 2,
+    pricePerNight: 80,
+    lat: 34.773,
+    lng: 32.422,
+    amenities: ["Pool", "Balcony", "Beach Walk", "WiFi", "AC", "Kitchenette"],
+    description:
+      "The Poolside Central Studio is a charming and cosy studio apartment perfectly situated in the centre of Paphos, just a short walk from the beach. Ideal for couples or solo travellers, this bright and airy studio features a beautiful private balcony overlooking the pool, where you can enjoy your morning coffee with a refreshing view. The studio is cleverly designed to maximise space and comfort, with a well-equipped kitchenette, air conditioning, and fast WiFi. Its central location means you're never far from Paphos's best restaurants, shops, and attractions. The pool is shared with a small number of guests, ensuring a peaceful and relaxing atmosphere throughout your stay.",
+    gradients: [
+      "linear-gradient(135deg, #2C7BA3 0%, #4a90a4 100%)",
+      "linear-gradient(135deg, #E8845A 0%, #c4623e 100%)",
+      "linear-gradient(135deg, #2C5F5A 0%, #3a7a74 100%)",
+    ],
+  },
+  {
+    id: "colorful-2bedroom-house",
+    name: "Colorful 2-Bedroom House",
+    subtitle: "Walk to Beach & View Terrace",
+    region: "tenerife",
+    icalUrl:
+      "https://www.airbnb.com/calendar/ical/720194839435246794.ics?t=3da4aac00c9d4eb6bbe7f3496aa22ee8",
+    bedrooms: 2,
+    bathrooms: 1,
+    maxGuests: 5,
+    pricePerNight: 110,
+    lat: 28.4636,
+    lng: -16.2518,
+    amenities: [
+      "View Terrace",
+      "Beach Walk",
+      "WiFi",
+      "AC",
+      "Full Kitchen",
+      "Garden",
+    ],
+    description:
+      "Discover the magic of Tenerife from this stunning Colorful 2-Bedroom House, a vibrant and welcoming home with spectacular ocean and mountain views. Located within walking distance of a beautiful beach, this charming house accommodates up to five guests in style and comfort. The highlight of the property is its breathtaking view terrace — the perfect spot to watch the sunrise over the Atlantic Ocean with your morning coffee. Inside, the house is filled with colour and character, featuring a fully equipped kitchen, comfortable living spaces, and two well-appointed bedrooms. Tenerife's legendary sunshine, diverse landscapes, and rich culture are right on your doorstep, making this the ideal base for exploring this remarkable island.",
+    gradients: [
+      "linear-gradient(135deg, #E8845A 0%, #e8a87c 100%)",
+      "linear-gradient(135deg, #2C5F5A 0%, #2C7BA3 100%)",
+      "linear-gradient(135deg, #c4623e 0%, #E8845A 100%)",
+      "linear-gradient(135deg, #1e4540 0%, #2C5F5A 100%)",
+    ],
+  },
+  {
+    id: "beach-house-studio",
+    name: "Beach House Style Studio",
+    subtitle: "Quiet Nature & Near Beach",
+    region: "tenerife",
+    icalUrl:
+      "https://www.airbnb.com/calendar/ical/888793861213418554.ics?t=130346559a814283901a9b2280797a38",
+    bedrooms: 0,
+    bathrooms: 1,
+    maxGuests: 2,
+    pricePerNight: 75,
+    lat: 28.46,
+    lng: -16.26,
+    amenities: [
+      "Terrace",
+      "Near Beach",
+      "WiFi",
+      "AC",
+      "Kitchenette",
+      "Nature Views",
+    ],
+    description:
+      "Escape to the serene Beach House Style Studio, a peaceful and beautifully designed retreat nestled in the natural beauty of Tenerife. This intimate studio for two is the perfect sanctuary for those seeking tranquillity away from the crowds, while still being just minutes from a gorgeous beach. Surrounded by lush natural landscapes and the soothing sounds of nature, the studio features a charming terrace where you can unwind and take in the spectacular scenery. The interior is inspired by coastal living, with natural materials and a calming colour palette creating a sense of absolute relaxation. All essential amenities are provided, including air conditioning, WiFi, and a well-equipped kitchenette. Your own slice of paradise awaits.",
+    gradients: [
+      "linear-gradient(135deg, #4a90a4 0%, #2C7BA3 100%)",
+      "linear-gradient(135deg, #E8845A 0%, #f0a070 100%)",
+      "linear-gradient(135deg, #3a7a74 0%, #2C5F5A 100%)",
+    ],
+  },
+];
+
+export const regionDisplayNames: Record<Region, string> = {
+  paphos: "Cyprus — Paphos",
+  tenerife: "Spain — Tenerife",
+};
+
+export function getPropertiesByRegion(region: Region): Property[] {
+  return properties.filter((p) => p.region === region);
+}
+
+export function getPropertyById(id: string): Property | undefined {
+  return properties.find((p) => p.id === id);
+}
+
+export function getPropertyByRegionAndId(
+  region: string,
+  id: string
+): Property | undefined {
+  return properties.find((p) => p.region === region && p.id === id);
+}

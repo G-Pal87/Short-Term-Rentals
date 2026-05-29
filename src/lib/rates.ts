@@ -14,8 +14,7 @@ export async function fetchPropertyRates(
 
   try {
     const res = await fetch(
-      `${RAW_BASE}/${btPropertyId}.json?t=${Date.now()}`,
-      { cache: "no-store" }
+      `${RAW_BASE}/${btPropertyId}.json?t=${Date.now()}`
     );
     if (!res.ok) return null;
 

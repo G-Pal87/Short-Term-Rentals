@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
-import { isWithinInterval, parseISO, isBefore, startOfToday } from "date-fns";
+import { parseISO, isBefore, startOfToday } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { fetchIcalClient } from "@/lib/ical-client";
 import type { BlockedDateRange } from "@/lib/ical-client";
@@ -50,13 +50,11 @@ export default function AvailabilityCalendar({
 
   function isDateBlocked(date: Date): boolean {
     if (isBefore(date, today)) return true;
-    return disabledIntervals.some((interval) => {
-      try {
-        return isWithinInterval(date, { start: interval.from, end: interval.to });
-      } catch {
-        return false;
-      }
-    });
+    // iCal DTEND is exclusive (checkout day = available for next check-in),
+    // so we use date >= start && date < end instead of isWithinInterval (inclusive).
+    return disabledIntervals.some(
+      (interval) => !isBefore(date, interval.from) && isBefore(date, interval.to)
+    );
   }
 
   return (

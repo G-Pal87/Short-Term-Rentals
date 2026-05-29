@@ -8,6 +8,7 @@ import {
   type Region,
 } from "@/data/properties";
 import { fetchBlockedDates } from "@/lib/ical";
+import { fetchPropertyRates } from "@/lib/rates";
 
 interface PropertyPageProps {
   params: { region: string; propertyId: string };
@@ -58,8 +59,11 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     notFound();
   }
 
-  // Fetch blocked dates server-side directly via the iCal library
-  const blockedRanges = await fetchBlockedDates(property.icalUrl);
+  // Both fetches run in parallel at build time
+  const [blockedRanges, propertyRates] = await Promise.all([
+    fetchBlockedDates(property.icalUrl),
+    fetchPropertyRates(property.icalUrl, property.btPropertyId),
+  ]);
 
   const displayRegion = regionDisplayNames[property.region as Region];
 
@@ -267,6 +271,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 propertyName={property.name}
                 pricePerNight={property.pricePerNight}
                 blockedRanges={blockedRanges}
+                ratesByDate={propertyRates?.ratesByDate}
+                cleaningFee={propertyRates?.cleaningFee}
               />
             </div>
           </div>

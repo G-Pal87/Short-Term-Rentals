@@ -6,6 +6,7 @@ export interface Property {
   subtitle: string;
   region: Region;
   icalUrl: string;
+  btPropertyId?: string; // override for Business-Tracking feed matching
   bedrooms: number;
   bathrooms: number;
   maxGuests: number;

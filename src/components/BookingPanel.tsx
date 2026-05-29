@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
-import { differenceInCalendarDays, format } from "date-fns";
+import { differenceInCalendarDays, format, addDays } from "date-fns";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import type { BlockedDateRange } from "@/lib/ical";
 
@@ -10,26 +10,51 @@ interface BookingPanelProps {
   propertyName: string;
   pricePerNight: number;
   blockedRanges: BlockedDateRange[];
+  ratesByDate?: Record<string, number>;
+  cleaningFee?: number;
+}
+
+function toDateKey(d: Date): string {
+  return format(d, "yyyy-MM-dd");
 }
 
 function formatDateDisplay(date: Date): string {
   return format(date, "MMM d, yyyy");
 }
 
-function formatDateShort(date: Date): string {
-  return format(date, "yyyy-MM-dd");
+function nightlySubtotal(
+  from: Date,
+  to: Date,
+  ratesByDate: Record<string, number> | undefined,
+  fallback: number
+): number {
+  const nights = differenceInCalendarDays(to, from);
+  let total = 0;
+  for (let i = 0; i < nights; i++) {
+    const d = addDays(from, i);
+    const key = toDateKey(d);
+    total += ratesByDate?.[key] ?? fallback;
+  }
+  return total;
 }
 
 export default function BookingPanel({
   propertyName,
   pricePerNight,
   blockedRanges,
+  ratesByDate,
+  cleaningFee,
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
 
   const nights =
     range?.from && range?.to
       ? differenceInCalendarDays(range.to, range.from)
+      : 0;
+
+  const nightlyTotal =
+    range?.from && range?.to
+      ? nightlySubtotal(range.from, range.to, ratesByDate, pricePerNight)
       : 0;
 
   function getDiscount(): number {
@@ -39,9 +64,11 @@ export default function BookingPanel({
   }
 
   const discount = getDiscount();
-  const baseTotal = nights * pricePerNight;
-  const discountAmount = baseTotal * discount;
-  const finalTotal = baseTotal - discountAmount;
+  const discountAmount = nightlyTotal * discount;
+  const discountedNightly = nightlyTotal - discountAmount;
+  const cleaning = cleaningFee ?? 0;
+  const estimatedTotal = discountedNightly + cleaning;
+  const avgPerNight = nights > 0 ? discountedNightly / nights : 0;
 
   function buildWhatsAppUrl(): string {
     if (!range?.from || !range?.to) {
@@ -93,25 +120,53 @@ export default function BookingPanel({
                 {formatDateDisplay(range.to)}
               </span>
             </div>
+
             <div className="border-t border-cream-dark my-2" />
+
+            {/* Nightly subtotal */}
             <div className="flex justify-between text-gray-600">
               <span>
-                €{pricePerNight} × {nights} nights
+                {nights} nights
+                {ratesByDate
+                  ? " (dynamic rates)"
+                  : ` × €${pricePerNight}`}
               </span>
-              <span>€{baseTotal.toFixed(2)}</span>
+              <span>€{nightlyTotal.toFixed(2)}</span>
             </div>
+
+            {/* Long-stay discount */}
             {discount > 0 && (
               <div className="flex justify-between text-green-600 font-medium">
                 <span>
-                  {discount === 0.2 ? "28+ nights discount (20%)" : "7+ nights discount (10%)"}
+                  {discount === 0.2
+                    ? "28+ nights discount (20%)"
+                    : "7+ nights discount (10%)"}
                 </span>
                 <span>−€{discountAmount.toFixed(2)}</span>
               </div>
             )}
+
+            {/* Cleaning fee */}
+            {cleaning > 0 && (
+              <div className="flex justify-between text-gray-600">
+                <span>Cleaning fee</span>
+                <span>€{cleaning.toFixed(2)}</span>
+              </div>
+            )}
+
             <div className="border-t border-cream-dark my-2" />
+
+            {/* Avg per night (informational) */}
+            {discount > 0 && (
+              <div className="flex justify-between text-gray-500 text-xs">
+                <span>Avg per night after discount</span>
+                <span>€{avgPerNight.toFixed(2)}</span>
+              </div>
+            )}
+
             <div className="flex justify-between font-bold text-gray-900 text-base">
               <span>Estimated Total</span>
-              <span className="text-primary">€{finalTotal.toFixed(2)}</span>
+              <span className="text-primary">€{estimatedTotal.toFixed(2)}</span>
             </div>
             <p className="text-xs text-gray-400 mt-1">
               * Final price subject to confirmation by host

@@ -34,3 +34,6 @@ next-env.d.ts
 
 # package lock (optional - include if you want reproducible builds)
 package-lock.json
+
+# Claude Code internal
+.claude/

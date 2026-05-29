@@ -10,7 +10,7 @@ interface BookingPanelProps {
   propertyName: string;
   pricePerNight: number;
   blockedRanges: BlockedDateRange[];
-  icalUrl: string;
+  propertyId: string;
   ratesByDate?: Record<string, number>;
   cleaningFee?: number;
 }
@@ -43,7 +43,7 @@ export default function BookingPanel({
   propertyName,
   pricePerNight,
   blockedRanges,
-  icalUrl,
+  propertyId,
   ratesByDate,
   cleaningFee,
 }: BookingPanelProps) {
@@ -101,7 +101,7 @@ export default function BookingPanel({
       {/* Calendar */}
       <AvailabilityCalendar
         initialBlockedRanges={blockedRanges}
-        icalUrl={icalUrl}
+        propertyId={propertyId}
         selectedRange={range}
         onRangeSelect={setRange}
       />

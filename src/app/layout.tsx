@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import Header from "@/components/Header";
 
@@ -42,20 +43,20 @@ export default function RootLayout({
                 </h3>
                 <ul className="space-y-2 text-sm text-gray-300">
                   <li>
-                    <a
+                    <Link
                       href="/paphos"
                       className="hover:text-primary transition-colors"
                     >
                       Cyprus — Paphos
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="/tenerife"
                       className="hover:text-primary transition-colors"
                     >
                       Spain — Tenerife
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

@@ -62,7 +62,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   // Both fetches run in parallel at build time
   const [blockedRanges, propertyRates] = await Promise.all([
     fetchBlockedDates(property.icalUrl),
-    fetchPropertyRates(property.icalUrl, property.btPropertyId),
+    fetchPropertyRates(property.btPropertyId),
   ]);
 
   const displayRegion = regionDisplayNames[property.region as Region];

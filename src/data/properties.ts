@@ -24,6 +24,7 @@ export const properties: Property[] = [
     name: "Colourful Venus Beach Retreat",
     subtitle: "Pool & 2 Terraces",
     region: "paphos",
+    btPropertyId: "prop_mox7p43s8o",
     icalUrl:
       "https://www.airbnb.gr/calendar/ical/1341854905555812998.ics?t=1e2c75c8b84645a4ac88669d8ec7bdda",
     bedrooms: 2,
@@ -47,6 +48,7 @@ export const properties: Property[] = [
     name: "Luxe Poolside Escape",
     subtitle: "Beach walk & 2 Terraces",
     region: "paphos",
+    btPropertyId: "prop_mox7mr8day",
     icalUrl:
       "https://www.airbnb.gr/calendar/ical/1389855941514317769.ics?t=a2520714c5a34b1daa3b808b6c1bfd0e",
     bedrooms: 2,
@@ -78,6 +80,7 @@ export const properties: Property[] = [
     name: "Poolside Central Studio",
     subtitle: "Balcony & Beach Walk",
     region: "paphos",
+    btPropertyId: "prop_mox7ipfiam",
     icalUrl:
       "https://www.airbnb.gr/calendar/ical/1417130109923067210.ics?t=e8ec8f5e94b845b6817598eeaa30df0e",
     bedrooms: 0,
@@ -100,6 +103,7 @@ export const properties: Property[] = [
     name: "Colorful 2-Bedroom House",
     subtitle: "Walk to Beach & View Terrace",
     region: "tenerife",
+    btPropertyId: "prop_mohfv8np89",
     icalUrl:
       "https://www.airbnb.com/calendar/ical/720194839435246794.ics?t=3da4aac00c9d4eb6bbe7f3496aa22ee8",
     bedrooms: 2,
@@ -130,6 +134,7 @@ export const properties: Property[] = [
     name: "Beach House Style Studio",
     subtitle: "Quiet Nature & Near Beach",
     region: "tenerife",
+    btPropertyId: "prop_mohfwhqrgj",
     icalUrl:
       "https://www.airbnb.com/calendar/ical/888793861213418554.ics?t=130346559a814283901a9b2280797a38",
     bedrooms: 0,

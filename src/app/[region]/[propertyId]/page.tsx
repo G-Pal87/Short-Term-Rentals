@@ -271,6 +271,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 propertyName={property.name}
                 pricePerNight={property.pricePerNight}
                 blockedRanges={blockedRanges}
+                icalUrl={property.icalUrl}
                 ratesByDate={propertyRates?.ratesByDate}
                 cleaningFee={propertyRates?.cleaningFee}
               />

@@ -1,10 +1,7 @@
 import ical from "node-ical";
 import { format, parseISO, isValid } from "date-fns";
-
-export interface BlockedDateRange {
-  start: string;
-  end: string;
-}
+import type { BlockedDateRange } from "@/lib/ical-client";
+export type { BlockedDateRange } from "@/lib/ical-client";
 
 function formatDate(date: Date | string): string {
   if (typeof date === "string") {

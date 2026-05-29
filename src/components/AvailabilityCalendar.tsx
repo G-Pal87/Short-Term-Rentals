@@ -1,30 +1,44 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
 import { isWithinInterval, parseISO, isBefore, startOfToday } from "date-fns";
 import "react-day-picker/dist/style.css";
-import type { BlockedDateRange } from "@/lib/ical";
+import { fetchIcalClient } from "@/lib/ical-client";
+import type { BlockedDateRange } from "@/lib/ical-client";
 
 interface AvailabilityCalendarProps {
-  blockedRanges: BlockedDateRange[];
+  initialBlockedRanges: BlockedDateRange[];
+  icalUrl: string;
   onRangeSelect: (range: DateRange | undefined) => void;
   selectedRange: DateRange | undefined;
 }
 
 export default function AvailabilityCalendar({
-  blockedRanges,
+  initialBlockedRanges,
+  icalUrl,
   onRangeSelect,
   selectedRange,
 }: AvailabilityCalendarProps) {
   const today = startOfToday();
+  const [blockedRanges, setBlockedRanges] =
+    useState<BlockedDateRange[]>(initialBlockedRanges);
+  const [syncing, setSyncing] = useState(true);
 
-  // Convert blocked ranges to Date intervals
-  const disabledDays = blockedRanges
+  // Fetch fresh iCal data from Airbnb on every page open
+  useEffect(() => {
+    setSyncing(true);
+    fetchIcalClient(icalUrl)
+      .then((fresh) => {
+        if (fresh.length > 0) setBlockedRanges(fresh);
+      })
+      .finally(() => setSyncing(false));
+  }, [icalUrl]);
+
+  const disabledIntervals = blockedRanges
     .map((r) => {
       try {
-        const from = parseISO(r.start);
-        const to = parseISO(r.end);
-        return { from, to };
+        return { from: parseISO(r.start), to: parseISO(r.end) };
       } catch {
         return null;
       }
@@ -36,12 +50,9 @@ export default function AvailabilityCalendar({
 
   function isDateBlocked(date: Date): boolean {
     if (isBefore(date, today)) return true;
-    return disabledDays.some((interval) => {
+    return disabledIntervals.some((interval) => {
       try {
-        return isWithinInterval(date, {
-          start: interval.from,
-          end: interval.to,
-        });
+        return isWithinInterval(date, { start: interval.from, end: interval.to });
       } catch {
         return false;
       }
@@ -50,7 +61,25 @@ export default function AvailabilityCalendar({
 
   return (
     <div className="rounded-2xl border border-cream-dark bg-white p-4 shadow-sm">
-      <h3 className="font-semibold text-gray-900 mb-1">Availability</h3>
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="font-semibold text-gray-900">Availability</h3>
+        {syncing ? (
+          <span className="flex items-center gap-1.5 text-xs text-gray-400">
+            <svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+            </svg>
+            Syncing with Airbnb…
+          </span>
+        ) : (
+          <span className="text-xs text-green-600 flex items-center gap-1">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.172l7.879-7.879a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            Live availability
+          </span>
+        )}
+      </div>
       <p className="text-xs text-gray-500 mb-4">
         Select your check-in and check-out dates. Greyed out dates are
         unavailable.

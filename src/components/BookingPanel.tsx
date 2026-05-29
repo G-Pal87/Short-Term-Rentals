@@ -4,12 +4,13 @@ import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { differenceInCalendarDays, format, addDays } from "date-fns";
 import AvailabilityCalendar from "./AvailabilityCalendar";
-import type { BlockedDateRange } from "@/lib/ical";
+import type { BlockedDateRange } from "@/lib/ical-client";
 
 interface BookingPanelProps {
   propertyName: string;
   pricePerNight: number;
   blockedRanges: BlockedDateRange[];
+  icalUrl: string;
   ratesByDate?: Record<string, number>;
   cleaningFee?: number;
 }
@@ -42,6 +43,7 @@ export default function BookingPanel({
   propertyName,
   pricePerNight,
   blockedRanges,
+  icalUrl,
   ratesByDate,
   cleaningFee,
 }: BookingPanelProps) {
@@ -98,7 +100,8 @@ export default function BookingPanel({
     <div className="space-y-6">
       {/* Calendar */}
       <AvailabilityCalendar
-        blockedRanges={blockedRanges}
+        initialBlockedRanges={blockedRanges}
+        icalUrl={icalUrl}
         selectedRange={range}
         onRangeSelect={setRange}
       />

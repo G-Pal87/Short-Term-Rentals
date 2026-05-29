@@ -2,7 +2,6 @@ name: Sync Airbnb Calendars
 
 on:
   schedule:
-    # Run every hour to keep blocked dates fresh
     - cron: "0 * * * *"
   workflow_dispatch:
 
@@ -17,6 +16,10 @@ jobs:
         with:
           ref: gh-pages
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get parse script from main
+        run: git show origin/main:scripts/parse-ical.py > /tmp/parse-ical.py
 
       - name: Fetch and parse iCal feeds
         run: |
@@ -31,50 +34,20 @@ jobs:
             if curl -sf --max-time 20 \
               -A "Mozilla/5.0 (compatible; calendar-sync/1.0)" \
               "$url" -o "$tmpfile"; then
-              python3 - "$id" "$tmpfile" <<'PYEOF'
-import sys, re, json
-from datetime import datetime, timezone
-
-prop_id = sys.argv[1]
-tmpfile = sys.argv[2]
-
-with open(tmpfile, encoding="utf-8", errors="replace") as f:
-    text = f.read()
-
-def to_date(raw):
-    raw = re.sub(r'^[^:]*:', '', raw).strip()
-    m = re.match(r'^(\d{4})(\d{2})(\d{2})', raw)
-    return f"{m.group(1)}-{m.group(2)}-{m.group(3)}" if m else None
-
-blocked = []
-for ev in text.split('BEGIN:VEVENT')[1:]:
-    sm = re.search(r'DTSTART[;:][^\r\n]+', ev)
-    em = re.search(r'DTEND[;:][^\r\n]+', ev)
-    if not sm:
-        continue
-    start = to_date(sm.group(0))
-    end = to_date(em.group(0)) if em else start
-    if start and end:
-        blocked.append({'start': start, 'end': end})
-
-out = {'updatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), 'blocked': blocked}
-with open(f'calendars/{prop_id}.json', 'w') as f:
-    json.dump(out, f)
-print(f"  {prop_id}: {len(blocked)} blocked ranges")
-PYEOF
+              python3 /tmp/parse-ical.py "$id" "$tmpfile"
             else
-              echo "WARN: failed to fetch $id (HTTP error or timeout)"
-              echo "{\"updatedAt\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"blocked\":[]}" \
-                > "calendars/${id}.json"
+              echo "WARN: failed to fetch $id"
+              printf '{"updatedAt":"%s","blocked":[]}' \
+                "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "calendars/${id}.json"
             fi
             rm -f "$tmpfile"
           }
 
-          fetch_ical "venus-beach-retreat"      "https://www.airbnb.gr/calendar/ical/1341854905555812998.ics?t=1e2c75c8b84645a4ac88669d8ec7bdda"
-          fetch_ical "luxe-poolside-escape"     "https://www.airbnb.gr/calendar/ical/1389855941514317769.ics?t=a2520714c5a34b1daa3b808b6c1bfd0e"
-          fetch_ical "poolside-central-studio"  "https://www.airbnb.gr/calendar/ical/1417130109923067210.ics?t=e8ec8f5e94b845b6817598eeaa30df0e"
-          fetch_ical "colorful-2bedroom-house"  "https://www.airbnb.com/calendar/ical/720194839435246794.ics?t=3da4aac00c9d4eb6bbe7f3496aa22ee8"
-          fetch_ical "beach-house-studio"       "https://www.airbnb.com/calendar/ical/888793861213418554.ics?t=130346559a814283901a9b2280797a38"
+          fetch_ical "venus-beach-retreat"     "https://www.airbnb.gr/calendar/ical/1341854905555812998.ics?t=1e2c75c8b84645a4ac88669d8ec7bdda"
+          fetch_ical "luxe-poolside-escape"    "https://www.airbnb.gr/calendar/ical/1389855941514317769.ics?t=a2520714c5a34b1daa3b808b6c1bfd0e"
+          fetch_ical "poolside-central-studio" "https://www.airbnb.gr/calendar/ical/1417130109923067210.ics?t=e8ec8f5e94b845b6817598eeaa30df0e"
+          fetch_ical "colorful-2bedroom-house" "https://www.airbnb.com/calendar/ical/720194839435246794.ics?t=3da4aac00c9d4eb6bbe7f3496aa22ee8"
+          fetch_ical "beach-house-studio"      "https://www.airbnb.com/calendar/ical/888793861213418554.ics?t=130346559a814283901a9b2280797a38"
 
       - name: Commit calendar JSON to gh-pages
         run: |

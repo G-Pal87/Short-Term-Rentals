@@ -9,14 +9,14 @@ import type { BlockedDateRange } from "@/lib/ical-client";
 
 interface AvailabilityCalendarProps {
   initialBlockedRanges: BlockedDateRange[];
-  icalUrl: string;
+  propertyId: string;
   onRangeSelect: (range: DateRange | undefined) => void;
   selectedRange: DateRange | undefined;
 }
 
 export default function AvailabilityCalendar({
   initialBlockedRanges,
-  icalUrl,
+  propertyId,
   onRangeSelect,
   selectedRange,
 }: AvailabilityCalendarProps) {
@@ -28,12 +28,12 @@ export default function AvailabilityCalendar({
   // Fetch fresh iCal data from Airbnb on every page open
   useEffect(() => {
     setSyncing(true);
-    fetchIcalClient(icalUrl)
+    fetchIcalClient(propertyId)
       .then((fresh) => {
         if (fresh.length > 0) setBlockedRanges(fresh);
       })
       .finally(() => setSyncing(false));
-  }, [icalUrl]);
+  }, [propertyId]);
 
   const disabledIntervals = blockedRanges
     .map((r) => {

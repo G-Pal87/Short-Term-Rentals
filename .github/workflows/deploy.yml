@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    # Rebuild every 2 hours so Airbnb calendar availability stays fresh
-    - cron: "0 */2 * * *"
+    # Rebuild every 5 minutes so Airbnb calendar availability stays fresh
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:

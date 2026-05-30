@@ -94,6 +94,7 @@ export default function BookingPanel({
         propertyId={propertyId}
         selectedRange={range}
         onRangeSelect={setRange}
+        ratesByDate={ratesByDate}
       />
 
       {/* Price summary */}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
-import { parseISO, isBefore, startOfToday } from "date-fns";
+import { parseISO, isBefore, startOfToday, format } from "date-fns";
 import "react-day-picker/dist/style.css";
 import { fetchIcalClient } from "@/lib/ical-client";
 import type { BlockedDateRange } from "@/lib/ical-client";
@@ -12,6 +12,7 @@ interface AvailabilityCalendarProps {
   propertyId: string;
   onRangeSelect: (range: DateRange | undefined) => void;
   selectedRange: DateRange | undefined;
+  ratesByDate?: Record<string, number>;
 }
 
 export default function AvailabilityCalendar({
@@ -19,6 +20,7 @@ export default function AvailabilityCalendar({
   propertyId,
   onRangeSelect,
   selectedRange,
+  ratesByDate,
 }: AvailabilityCalendarProps) {
   const today = startOfToday();
   const [blockedRanges, setBlockedRanges] =
@@ -99,6 +101,21 @@ export default function AvailabilityCalendar({
             range_end: "rdp-day_range_end",
             range_middle: "rdp-day_range_middle",
             disabled: "rdp-day_disabled",
+          }}
+          components={{
+            DayContent: ({ date }) => {
+              const key = format(date, "yyyy-MM-dd");
+              const rate = ratesByDate?.[key];
+              const blocked = isDateBlocked(date);
+              return (
+                <div className="flex flex-col items-center justify-center leading-none gap-0.5">
+                  <span>{date.getDate()}</span>
+                  {rate && !blocked && (
+                    <span className="text-[8px] font-medium opacity-70">€{rate}</span>
+                  )}
+                </div>
+              );
+            },
           }}
         />
       </div>

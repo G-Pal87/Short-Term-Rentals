@@ -27,7 +27,7 @@ body {
 /* react-day-picker overrides — Tailwind preflight resets buttons so we
    must explicitly restore all day-cell styles */
 .rdp {
-  --rdp-cell-size: 40px;
+  --rdp-cell-size: 44px;
   --rdp-accent-color: #e8845a;
   --rdp-background-color: rgba(232, 132, 90, 0.1);
   --rdp-outline: 2px solid #e8845a;

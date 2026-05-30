@@ -21,7 +21,7 @@ export async function fetchPropertyRates(
     const feed = (await res.json()) as {
       property: { currency: string };
       cleaningGuestTotal: number;
-      rates: { date: string; guestAmount: number }[];
+      rates: { date: string; amount: number; guestAmount: number }[];
     };
 
     // Empty rates array means feed exists but has no pricing yet — fall back
@@ -29,7 +29,7 @@ export async function fetchPropertyRates(
 
     const ratesByDate: Record<string, number> = {};
     for (const r of feed.rates) {
-      ratesByDate[r.date] = r.guestAmount;
+      ratesByDate[r.date] = r.amount;
     }
 
     return {

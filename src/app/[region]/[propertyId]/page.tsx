@@ -65,6 +65,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     fetchPropertyRates(property.btPropertyId),
   ]);
 
+  const minPrice = propertyRates?.ratesByDate
+    ? Math.min(...Object.values(propertyRates.ratesByDate))
+    : property.pricePerNight;
+
   const displayRegion = regionDisplayNames[property.region as Region];
 
   return (
@@ -170,8 +174,9 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   <p className="text-sm text-gray-500 mt-1">{displayRegion}</p>
                 </div>
                 <div className="flex-shrink-0 text-right">
+                  <p className="text-xs text-gray-400 uppercase tracking-wide">From</p>
                   <p className="text-2xl font-bold text-primary">
-                    €{property.pricePerNight}
+                    €{minPrice}
                   </p>
                   <p className="text-sm text-gray-500">per night</p>
                 </div>

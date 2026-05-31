@@ -65,8 +65,9 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     fetchPropertyRates(property.btPropertyId),
   ]);
 
+  const today = new Date().toISOString().slice(0, 10);
   const minPrice = propertyRates?.ratesByDate
-    ? Math.min(...Object.values(propertyRates.ratesByDate))
+    ? Math.min(...Object.entries(propertyRates.ratesByDate).filter(([d]) => d >= today).map(([, v]) => v))
     : property.pricePerNight;
 
   const displayRegion = regionDisplayNames[property.region as Region];

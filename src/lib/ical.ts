@@ -1,5 +1,7 @@
 import ical from "node-ical";
 import { format, parseISO, isValid } from "date-fns";
+import fs from "fs";
+import path from "path";
 import type { BlockedDateRange } from "@/lib/ical-client";
 export type { BlockedDateRange } from "@/lib/ical-client";
 
@@ -17,8 +19,30 @@ function formatDate(date: Date | string): string {
   return "";
 }
 
+function readCache(propertyId: string): BlockedDateRange[] {
+  try {
+    const filePath = path.join(process.cwd(), "public", "calendars", `${propertyId}.json`);
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const data = JSON.parse(raw);
+    return Array.isArray(data.blocked) ? data.blocked : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeCache(propertyId: string, blocked: BlockedDateRange[]): void {
+  try {
+    const filePath = path.join(process.cwd(), "public", "calendars", `${propertyId}.json`);
+    const data = { updatedAt: new Date().toISOString(), blocked };
+    fs.writeFileSync(filePath, JSON.stringify(data));
+  } catch {
+    // non-fatal
+  }
+}
+
 export async function fetchBlockedDates(
-  icalUrl: string
+  icalUrl: string,
+  propertyId?: string
 ): Promise<BlockedDateRange[]> {
   try {
     const data = await ical.async.fromURL(icalUrl);
@@ -43,9 +67,25 @@ export async function fetchBlockedDates(
       }
     }
 
-    return blocked;
+    if (blocked.length > 0) {
+      // Fresh data — update the cache for next time
+      if (propertyId) writeCache(propertyId, blocked);
+      return blocked;
+    }
+
+    // iCal returned empty (likely 403) — use last known good cache
+    if (propertyId) {
+      const cached = readCache(propertyId);
+      if (cached.length > 0) return cached;
+    }
+
+    return [];
   } catch {
-    // Gracefully handle network errors, CORS issues, or parse failures
+    // On error, fall back to cache
+    if (propertyId) {
+      const cached = readCache(propertyId);
+      if (cached.length > 0) return cached;
+    }
     return [];
   }
 }

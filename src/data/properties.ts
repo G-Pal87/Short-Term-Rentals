@@ -87,8 +87,8 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 2,
     pricePerNight: 80,
-    lat: 34.773,
-    lng: 32.422,
+    lat: 34.765957426166075,
+    lng: 32.411798972819234,
     amenities: ["Pool", "Balcony", "Beach Walk", "WiFi", "AC", "Kitchenette"],
     description:
       "The Poolside Central Studio is a charming and cosy studio apartment perfectly situated in the centre of Paphos, just a short walk from the beach. Ideal for couples or solo travellers, this bright and airy studio features a beautiful private balcony overlooking the pool, where you can enjoy your morning coffee with a refreshing view. The studio is cleverly designed to maximise space and comfort, with a well-equipped kitchenette, air conditioning, and fast WiFi. Its central location means you're never far from Paphos's best restaurants, shops, and attractions. The pool is shared with a small number of guests, ensuring a peaceful and relaxing atmosphere throughout your stay.",

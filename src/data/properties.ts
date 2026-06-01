@@ -31,8 +31,8 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 4,
     pricePerNight: 120,
-    lat: 34.7717,
-    lng: 32.4241,
+    lat: 34.77792893594747,
+    lng: 32.408875392706626,
     amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen", "Beach Nearby"],
     description:
       "Welcome to the Colourful Venus Beach Retreat, a vibrant and beautifully designed two-bedroom apartment nestled in the heart of Paphos, Cyprus. This stunning retreat boasts a sparkling private pool and two spacious terraces where you can soak up the Mediterranean sunshine and enjoy breathtaking views. The interior is decorated with a palette of warm, cheerful colours that create an inviting and relaxing atmosphere. Fully equipped with modern amenities including a fully-fitted kitchen, air conditioning throughout, and high-speed WiFi, this property offers everything you need for an unforgettable holiday. The beach is just a short stroll away, making it the perfect base for exploring the beautiful coastline and the rich history of Paphos.",
@@ -55,8 +55,8 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 4,
     pricePerNight: 140,
-    lat: 34.77,
-    lng: 32.426,
+    lat: 34.77792893594747,
+    lng: 32.408875392706626,
     amenities: [
       "Pool",
       "2 Terraces",

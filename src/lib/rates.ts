@@ -23,7 +23,7 @@ export async function fetchPropertyRates(
     const feed = (await res.json()) as {
       property: { currency: string };
       cleaningGuestTotal: number;
-      rates: { date: string; amount: number; guestAmount: number; status: string }[];
+      rates: { date: string; amount: number; guestAmount?: number; airbnbCheckout?: number; status: string }[];
     };
 
     if (!Array.isArray(feed.rates) || feed.rates.length === 0) return null;
@@ -35,7 +35,8 @@ export async function fetchPropertyRates(
 
     for (const r of feed.rates) {
       ratesByDate[r.date] = r.amount;
-      airbnbRatesByDate[r.date] = r.guestAmount;
+      const airbnbPrice = r.airbnbCheckout ?? r.guestAmount;
+      if (airbnbPrice) airbnbRatesByDate[r.date] = airbnbPrice;
       if (r.status === "open" && r.date >= today) {
         openRatesByDate[r.date] = r.amount;
       }

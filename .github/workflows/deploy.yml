@@ -24,6 +24,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Restore calendar cache from gh-pages
+        run: |
+          git fetch origin gh-pages
+          mkdir -p public/calendars
+          for id in venus-beach-retreat luxe-poolside-escape poolside-central-studio colorful-2bedroom-house beach-house-studio; do
+            git show origin/gh-pages:calendars/${id}.json > public/calendars/${id}.json 2>/dev/null && \
+              echo "Restored $id" || echo "No cache for $id"
+          done
+
       - name: Build static site
         run: npm run build
 

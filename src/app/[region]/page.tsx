@@ -142,16 +142,13 @@ export default function RegionPage({ params }: RegionPageProps) {
           </>
         )}
 
-        {/* Discounts callout */}
+        {/* Direct booking callout */}
         <div className="mt-12 bg-primary/10 border border-primary/20 rounded-2xl p-6">
           <h3 className="font-semibold text-gray-900 mb-2 text-lg">
-            🎉 Direct Booking Discounts
+            💰 Why pay more?
           </h3>
           <p className="text-gray-600 text-sm">
-            Book directly with the host and enjoy exclusive discounts: save{" "}
-            <strong>10% on stays of 7+ nights</strong> and{" "}
-            <strong>20% on stays of 28+ nights</strong>. Select your dates on
-            any property page to see the discount applied automatically.
+            Booking direct means you deal with us personally — better prices, faster responses, no platform fees.
           </p>
         </div>
       </section>

@@ -158,7 +158,7 @@ export default function BookingPanel({
               <span className="text-primary">€{estimatedTotal.toFixed(2)}</span>
             </div>
             {saving > 0 && (
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-green-600 font-medium mt-1">
                 * Booking direct saves you €{saving.toFixed(0)} ({savingPct}%) vs Airbnb — no platform fees
               </p>
             )}

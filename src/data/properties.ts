@@ -11,6 +11,7 @@ export interface Property {
   bathrooms: number;
   maxGuests: number;
   pricePerNight: number;
+  cleaningFee: number;        // Cleaning fee (flat, per booking)
   lat: number;
   lng: number;
   amenities: string[];
@@ -31,6 +32,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 4,
     pricePerNight: 120,
+    cleaningFee: 60,
     lat: 34.77792893594747,
     lng: 32.408875392706626,
     amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen", "Beach Nearby"],
@@ -55,6 +57,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 4,
     pricePerNight: 140,
+    cleaningFee: 60,
     lat: 34.77792893594747,
     lng: 32.408875392706626,
     amenities: [
@@ -87,6 +90,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 2,
     pricePerNight: 80,
+    cleaningFee: 60,
     lat: 34.765957426166075,
     lng: 32.411798972819234,
     amenities: ["Pool", "Balcony", "Beach Walk", "WiFi", "AC", "Kitchenette"],
@@ -110,6 +114,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 5,
     pricePerNight: 110,
+    cleaningFee: 50,
     lat: 28.4636,
     lng: -16.2518,
     amenities: [
@@ -141,6 +146,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 2,
     pricePerNight: 75,
+    cleaningFee: 50,
     lat: 28.46,
     lng: -16.26,
     amenities: [

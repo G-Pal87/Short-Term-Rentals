@@ -262,7 +262,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 propertyId={property.id}
                 ratesByDate={propertyRates?.ratesByDate}
                 airbnbRatesByDate={propertyRates?.airbnbRatesByDate}
-                cleaningFee={property.cleaningFee}
+                cleaningFee={propertyRates?.cleaningFee ?? property.cleaningFee}
                 calendarSyncedAt={syncedAt}
                 calendarFromCache={fromCache}
               />

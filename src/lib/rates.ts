@@ -22,7 +22,7 @@ export async function fetchPropertyRates(
 
     const feed = (await res.json()) as {
       property: { currency: string };
-      cleaningGuestTotal: number;
+      cleaningFee: number;
       rates: { date: string; amount: number; guestAmount?: number; airbnbCheckout?: number; status: string }[];
     };
 
@@ -46,7 +46,7 @@ export async function fetchPropertyRates(
       ratesByDate,
       airbnbRatesByDate,
       openRatesByDate,
-      cleaningFee: feed.cleaningGuestTotal ?? 0,
+      cleaningFee: feed.cleaningFee ?? 0,
       currency: feed.property?.currency ?? "EUR",
     };
   } catch {

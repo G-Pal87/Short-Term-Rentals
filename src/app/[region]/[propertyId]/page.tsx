@@ -260,6 +260,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 blockedRanges={blockedRanges}
                 propertyId={property.id}
                 ratesByDate={propertyRates?.ratesByDate}
+                airbnbRatesByDate={propertyRates?.airbnbRatesByDate}
                 cleaningFee={propertyRates?.cleaningFee}
               />
             </div>

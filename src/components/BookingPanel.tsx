@@ -12,6 +12,7 @@ interface BookingPanelProps {
   blockedRanges: BlockedDateRange[];
   propertyId: string;
   ratesByDate?: Record<string, number>;
+  airbnbRatesByDate?: Record<string, number>;
   cleaningFee?: number;
 }
 
@@ -45,6 +46,7 @@ export default function BookingPanel({
   blockedRanges,
   propertyId,
   ratesByDate,
+  airbnbRatesByDate,
   cleaningFee,
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
@@ -61,6 +63,13 @@ export default function BookingPanel({
 
   const cleaning = cleaningFee ?? 0;
   const estimatedTotal = nightlyTotal + cleaning;
+
+  const airbnbTotal =
+    range?.from && range?.to
+      ? nightlySubtotal(range.from, range.to, airbnbRatesByDate, pricePerNight)
+      : 0;
+  const saving = airbnbTotal > 0 ? airbnbTotal - nightlyTotal : 0;
+  const savingPct = airbnbTotal > 0 ? Math.round((saving / airbnbTotal) * 100) : 0;
 
   function buildWhatsAppUrl(): string {
     if (!range?.from || !range?.to) {
@@ -142,9 +151,11 @@ export default function BookingPanel({
               <span>Estimated Total</span>
               <span className="text-primary">€{estimatedTotal.toFixed(2)}</span>
             </div>
-            <p className="text-xs text-green-600 font-medium mt-1">
-              * Booking direct saves you ~€{(nightlyTotal * 0.14).toFixed(0)} vs Airbnb — no platform fees
-            </p>
+            {saving > 0 && (
+              <p className="text-xs text-green-600 font-medium mt-1">
+                * Booking direct saves you €{saving.toFixed(0)} ({savingPct}%) vs Airbnb — no platform fees
+              </p>
+            )}
             <p className="text-xs text-gray-400 mt-0.5">
               * Final price subject to confirmation by host
             </p>

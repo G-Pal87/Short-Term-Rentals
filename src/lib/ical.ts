@@ -40,10 +40,28 @@ function writeCache(propertyId: string, blocked: BlockedDateRange[]): void {
   }
 }
 
+export interface CalendarData {
+  blocked: BlockedDateRange[];
+  syncedAt: string;   // ISO timestamp of when data was fetched
+  fromCache: boolean; // true if Airbnb was unreachable and cache was used
+}
+
+function readCacheRaw(propertyId: string): { blocked: BlockedDateRange[]; updatedAt?: string } | null {
+  try {
+    const filePath = path.join(process.cwd(), "public", "calendars", `${propertyId}.json`);
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const data = JSON.parse(raw);
+    return Array.isArray(data.blocked) ? data : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchBlockedDates(
   icalUrl: string,
   propertyId?: string
-): Promise<BlockedDateRange[]> {
+): Promise<CalendarData> {
+  const now = new Date().toISOString();
   try {
     const data = await ical.async.fromURL(icalUrl);
     const blocked: BlockedDateRange[] = [];
@@ -68,24 +86,26 @@ export async function fetchBlockedDates(
     }
 
     if (blocked.length > 0) {
-      // Fresh data — update the cache for next time
       if (propertyId) writeCache(propertyId, blocked);
-      return blocked;
+      return { blocked, syncedAt: now, fromCache: false };
     }
 
-    // iCal returned empty (likely 403) — use last known good cache
+    // iCal returned empty (likely 403) — fall back to cache
     if (propertyId) {
-      const cached = readCache(propertyId);
-      if (cached.length > 0) return cached;
+      const cache = readCacheRaw(propertyId);
+      if (cache && cache.blocked.length > 0) {
+        return { blocked: cache.blocked, syncedAt: cache.updatedAt ?? now, fromCache: true };
+      }
     }
 
-    return [];
+    return { blocked: [], syncedAt: now, fromCache: false };
   } catch {
-    // On error, fall back to cache
     if (propertyId) {
-      const cached = readCache(propertyId);
-      if (cached.length > 0) return cached;
+      const cache = readCacheRaw(propertyId);
+      if (cache && cache.blocked.length > 0) {
+        return { blocked: cache.blocked, syncedAt: cache.updatedAt ?? now, fromCache: true };
+      }
     }
-    return [];
+    return { blocked: [], syncedAt: now, fromCache: false };
   }
 }

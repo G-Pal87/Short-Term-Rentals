@@ -14,6 +14,8 @@ interface BookingPanelProps {
   ratesByDate?: Record<string, number>;
   airbnbRatesByDate?: Record<string, number>;
   cleaningFee?: number;
+  calendarSyncedAt?: string;
+  calendarFromCache?: boolean;
 }
 
 function toDateKey(d: Date): string {
@@ -48,6 +50,8 @@ export default function BookingPanel({
   ratesByDate,
   airbnbRatesByDate,
   cleaningFee,
+  calendarSyncedAt,
+  calendarFromCache,
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
 
@@ -104,6 +108,8 @@ export default function BookingPanel({
         selectedRange={range}
         onRangeSelect={setRange}
         ratesByDate={ratesByDate}
+        syncedAt={calendarSyncedAt}
+        fromCache={calendarFromCache}
       />
 
       {/* Price summary */}

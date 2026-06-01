@@ -13,6 +13,8 @@ interface AvailabilityCalendarProps {
   onRangeSelect: (range: DateRange | undefined) => void;
   selectedRange: DateRange | undefined;
   ratesByDate?: Record<string, number>;
+  syncedAt?: string;
+  fromCache?: boolean;
 }
 
 export default function AvailabilityCalendar({
@@ -21,6 +23,8 @@ export default function AvailabilityCalendar({
   onRangeSelect,
   selectedRange,
   ratesByDate,
+  syncedAt,
+  fromCache,
 }: AvailabilityCalendarProps) {
   const today = startOfToday();
   const [blockedRanges, setBlockedRanges] =
@@ -70,6 +74,13 @@ export default function AvailabilityCalendar({
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
             </svg>
             Syncing with Airbnb…
+          </span>
+        ) : fromCache ? (
+          <span className="text-xs text-amber-500 flex items-center gap-1" title={`Last successful sync: ${syncedAt}`}>
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            Sync issue — cached data
           </span>
         ) : (
           <span className="text-xs text-green-600 flex items-center gap-1">

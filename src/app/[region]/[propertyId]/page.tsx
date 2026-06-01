@@ -60,10 +60,11 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   }
 
   // Both fetches run in parallel at build time
-  const [blockedRanges, propertyRates] = await Promise.all([
+  const [calendarData, propertyRates] = await Promise.all([
     fetchBlockedDates(property.icalUrl, property.id),
     fetchPropertyRates(property.btPropertyId),
   ]);
+  const { blocked: blockedRanges, syncedAt, fromCache } = calendarData;
 
   const openRates = propertyRates?.openRatesByDate
     ? Object.values(propertyRates.openRatesByDate)
@@ -262,6 +263,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 ratesByDate={propertyRates?.ratesByDate}
                 airbnbRatesByDate={propertyRates?.airbnbRatesByDate}
                 cleaningFee={propertyRates?.cleaningFee}
+                calendarSyncedAt={syncedAt}
+                calendarFromCache={fromCache}
               />
             </div>
           </div>

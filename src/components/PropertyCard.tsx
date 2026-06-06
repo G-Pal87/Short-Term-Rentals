@@ -4,6 +4,7 @@ import { regionDisplayNames } from "@/data/properties";
 
 interface PropertyCardProps {
   property: Property;
+  minPrice?: number;
 }
 
 function BedIcon() {
@@ -30,8 +31,9 @@ function GuestsIcon() {
   );
 }
 
-export default function PropertyCard({ property }: PropertyCardProps) {
+export default function PropertyCard({ property, minPrice }: PropertyCardProps) {
   const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, pricePerNight, gradients } = property;
+  const displayPrice = minPrice ?? pricePerNight;
   const href = `/${region}/${id}`;
   const heroGradient = gradients[0];
 
@@ -68,7 +70,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         {/* Price badge */}
         <div className="absolute top-3 right-3 z-10">
           <span className="bg-primary text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-sm">
-            €{pricePerNight}
+            From €{displayPrice}
             <span className="text-xs font-normal opacity-90">/night</span>
           </span>
         </div>

@@ -7,6 +7,7 @@ import {
   regionDisplayNames,
   type Region,
 } from "@/data/properties";
+import { fetchPropertyRates } from "@/lib/rates";
 
 interface RegionPageProps {
   params: { region: string };
@@ -40,7 +41,7 @@ export function generateStaticParams() {
   return VALID_REGIONS.map((region) => ({ region }));
 }
 
-export default function RegionPage({ params }: RegionPageProps) {
+export default async function RegionPage({ params }: RegionPageProps) {
   const { region } = params;
 
   if (!VALID_REGIONS.includes(region as Region)) {
@@ -51,6 +52,18 @@ export default function RegionPage({ params }: RegionPageProps) {
   const properties = getPropertiesByRegion(typedRegion);
   const displayName = regionDisplayNames[typedRegion];
   const meta = regionMeta[typedRegion];
+
+  // Fetch live rates for all properties in parallel (same logic as detail page)
+  const allRates = await Promise.all(
+    properties.map((p) => fetchPropertyRates(p.btPropertyId))
+  );
+  const minPrices = properties.map((p, i) => {
+    const rates = allRates[i];
+    const openRates = rates?.openRatesByDate
+      ? Object.values(rates.openRatesByDate)
+      : [];
+    return openRates.length > 0 ? Math.min(...openRates) : p.pricePerNight;
+  });
 
   return (
     <div>
@@ -149,7 +162,7 @@ export default function RegionPage({ params }: RegionPageProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property, i) => (
                 <AnimateOnScroll key={property.id} delay={i * 80}>
-                  <PropertyCard property={property} />
+                  <PropertyCard property={property} minPrice={minPrices[i]} />
                 </AnimateOnScroll>
               ))}
             </div>

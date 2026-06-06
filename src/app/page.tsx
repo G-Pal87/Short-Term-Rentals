@@ -1,10 +1,28 @@
 import Link from "next/link";
-import { getPropertiesByRegion } from "@/data/properties";
+import { getPropertiesByRegion, properties } from "@/data/properties";
+import { fetchPropertyRates } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 
-export default function HomePage() {
+function regionMinPrice(rates: (Awaited<ReturnType<typeof fetchPropertyRates>> | null)[]): number | null {
+  const allOpen = rates.flatMap((r) =>
+    r?.openRatesByDate ? Object.values(r.openRatesByDate) : []
+  );
+  return allOpen.length > 0 ? Math.min(...allOpen) : null;
+}
+
+export default async function HomePage() {
   const paphosProps = getPropertiesByRegion("paphos");
   const tenerifeProps = getPropertiesByRegion("tenerife");
+
+  // Fetch all property rates in parallel, then compute per-region minimums
+  const allRates = await Promise.all(
+    properties.map((p) => fetchPropertyRates(p.btPropertyId))
+  );
+  const paphosRates = allRates.slice(0, paphosProps.length);
+  const tenerifeRates = allRates.slice(paphosProps.length);
+
+  const paphosMin = regionMinPrice(paphosRates) ?? Math.min(...paphosProps.map((p) => p.pricePerNight));
+  const tenerifeMin = regionMinPrice(tenerifeRates) ?? Math.min(...tenerifeProps.map((p) => p.pricePerNight));
 
   return (
     <div className="overflow-x-hidden">
@@ -144,7 +162,7 @@ export default function HomePage() {
                       {paphosProps.length} properties
                     </span>
                     <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                      From €80/night
+                      From €{paphosMin}/night
                     </span>
                   </div>
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold text-white mb-2">
@@ -188,7 +206,7 @@ export default function HomePage() {
                       {tenerifeProps.length} properties
                     </span>
                     <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                      From €75/night
+                      From €{tenerifeMin}/night
                     </span>
                   </div>
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold text-white mb-2">

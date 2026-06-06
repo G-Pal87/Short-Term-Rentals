@@ -138,12 +138,20 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   ]);
   const { blocked: blockedRanges, syncedAt, fromCache } = calendarData;
 
-  const openRates = propertyRates?.openRatesByDate
-    ? Object.values(propertyRates.openRatesByDate)
-    : [];
-  const minPrice = openRates.length > 0
-    ? Math.min(...openRates)
-    : property.pricePerNight;
+  let minPrice = property.pricePerNight;
+  let minPriceMonth: string | null = null;
+
+  if (propertyRates?.openRatesByDate) {
+    const entries = Object.entries(propertyRates.openRatesByDate);
+    if (entries.length > 0) {
+      const [minDate, minRate] = entries.reduce((best, cur) =>
+        cur[1] < best[1] ? cur : best
+      );
+      minPrice = minRate;
+      const [y, m] = minDate.split("-").map(Number);
+      minPriceMonth = new Date(y, m - 1, 1).toLocaleString("default", { month: "long" });
+    }
+  }
 
   const displayRegion = regionDisplayNames[property.region as Region];
 
@@ -234,7 +242,9 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 <div className="flex-shrink-0 text-right">
                   <p className="text-xs text-gray-400 uppercase tracking-widest">From</p>
                   <p className="font-serif text-3xl font-bold text-primary">€{minPrice}</p>
-                  <p className="text-xs text-gray-400">per night</p>
+                  <p className="text-xs text-gray-400">
+                    per night{minPriceMonth ? ` in ${minPriceMonth}` : ""}
+                  </p>
                 </div>
               </div>
 

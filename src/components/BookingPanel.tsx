@@ -82,7 +82,10 @@ export default function BookingPanel({
     }
     const checkIn = formatDateDisplay(range.from);
     const checkOut = formatDateDisplay(range.to);
-    const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights). Could you please confirm availability and pricing?`;
+    const totalLine = estimatedTotal > 0
+      ? ` The estimated total is *€${estimatedTotal.toFixed(0)}* (${nights} nights + cleaning fee).`
+      : "";
+    const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights).${totalLine} Could you please confirm availability and pricing?`;
     return `https://wa.me/420731139854?text=${encodeURIComponent(text)}`;
   }
 

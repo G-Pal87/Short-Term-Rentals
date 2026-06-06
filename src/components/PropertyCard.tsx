@@ -37,8 +37,9 @@ export default function PropertyCard({ property, minPrice }: PropertyCardProps) 
   const displayPrice = minPrice ?? pricePerNight;
   const href = `/${region}/${id}`;
   const heroGradient = gradients[0];
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const heroImage = images?.[0]
-    ? `/images/properties/${id}/${images[0]}`
+    ? `${basePath}/images/properties/${id}/${images[0]}`
     : null;
 
   return (

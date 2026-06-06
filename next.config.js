@@ -7,6 +7,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  env: {
+    NEXT_PUBLIC_BASE_PATH: "/Short-Term-Rentals",
+  },
 };
 
 module.exports = nextConfig;

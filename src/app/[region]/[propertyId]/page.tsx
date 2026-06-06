@@ -179,7 +179,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         {(() => {
           const imgs = property.images ?? [];
-          const imgPath = (f: string) => `/images/properties/${property.id}/${f}`;
+          const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+          const imgPath = (f: string) => `${basePath}/images/properties/${property.id}/${f}`;
           const hasPhotos = imgs.length > 0;
           return (
         <div className="grid grid-cols-4 gap-2.5 h-72 sm:h-[420px] rounded-2xl overflow-hidden">

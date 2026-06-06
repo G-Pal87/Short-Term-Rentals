@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import BookingPanel from "@/components/BookingPanel";
+import PhotoGallery from "@/components/PhotoGallery";
 import {
   properties,
   regionDisplayNames,
@@ -180,70 +180,13 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         {(() => {
           const imgs = property.images ?? [];
           const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-          const imgPath = (f: string) => `${basePath}/images/properties/${property.id}/${f}`;
-          const hasPhotos = imgs.length > 0;
+          const resolvedImages = imgs.map((f) => `${basePath}/images/properties/${property.id}/${f}`);
           return (
-        <div className="grid grid-cols-4 gap-2.5 h-72 sm:h-[420px] rounded-2xl overflow-hidden">
-          {/* Main large photo */}
-          <div
-            className="col-span-4 sm:col-span-2 relative overflow-hidden"
-            style={hasPhotos ? undefined : { background: property.gradients[0] }}
-          >
-            {hasPhotos ? (
-              <Image
-                src={imgPath(imgs[0])}
-                alt={property.name}
-                fill
-                priority
-                sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-cover"
-              />
-            ) : (
-              <div className="absolute inset-0 opacity-10">
-                <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 600 300" fill="none">
-                  <ellipse cx="300" cy="280" rx="350" ry="100" fill="rgba(255,255,255,0.2)" />
-                </svg>
-                <div className="absolute top-8 right-8 w-32 h-32 rounded-full border-2 border-white/50" />
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-4 text-white">
-              <span className="text-xs font-semibold bg-black/30 backdrop-blur-sm px-2 py-1 rounded-lg">Main view</span>
-            </div>
-          </div>
-
-          {/* Smaller thumbnails */}
-          <div className="hidden sm:grid sm:col-span-2 grid-cols-2 gap-2.5">
-            {(hasPhotos ? imgs.slice(1, 5) : property.gradients.slice(1, 5)).map((src, i) => (
-              <div
-                key={i}
-                className="relative overflow-hidden"
-                style={hasPhotos ? undefined : { background: src as string }}
-              >
-                {hasPhotos ? (
-                  <Image
-                    src={imgPath(src)}
-                    alt={`${property.name} photo ${i + 2}`}
-                    fill
-                    sizes="25vw"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="absolute inset-0 opacity-8">
-                    <div className="absolute bottom-0 right-0 w-16 h-16 rounded-full border border-white/30" />
-                  </div>
-                )}
-                {i === 2 && (hasPhotos ? imgs.length : property.gradients.length) > 5 && (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <span className="text-white text-sm font-semibold">
-                      +{(hasPhotos ? imgs.length : property.gradients.length) - 4} more
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+            <PhotoGallery
+              images={resolvedImages}
+              gradients={property.gradients}
+              propertyName={property.name}
+            />
           );
         })()}
       </section>

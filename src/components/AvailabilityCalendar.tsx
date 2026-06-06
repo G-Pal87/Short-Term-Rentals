@@ -122,7 +122,7 @@ export default function AvailabilityCalendar({
                 <div className="flex flex-col items-center justify-center leading-none gap-0.5">
                   <span>{date.getDate()}</span>
                   {rate && !blocked && (
-                    <span className="text-[8px] font-medium opacity-70">€{rate}</span>
+                    <span className="text-[10px] font-semibold opacity-80">€{rate}</span>
                   )}
                 </div>
               );

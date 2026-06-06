@@ -17,6 +17,12 @@ export interface Property {
   amenities: string[];
   description: string;
   gradients: string[];
+  /**
+   * Photo filenames inside public/images/properties/{id}/.
+   * e.g. ["01.jpg", "02.jpg", "03.jpg"]
+   * Omit (or leave empty) until photos are added — UI falls back to gradients.
+   */
+  images?: string[];
 }
 
 export const properties: Property[] = [

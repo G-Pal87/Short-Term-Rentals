@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Property } from "@/data/properties";
 import { regionDisplayNames } from "@/data/properties";
 
@@ -32,30 +33,44 @@ function GuestsIcon() {
 }
 
 export default function PropertyCard({ property, minPrice }: PropertyCardProps) {
-  const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, pricePerNight, gradients } = property;
+  const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, pricePerNight, gradients, images } = property;
   const displayPrice = minPrice ?? pricePerNight;
   const href = `/${region}/${id}`;
   const heroGradient = gradients[0];
+  const heroImage = images?.[0]
+    ? `/images/properties/${id}/${images[0]}`
+    : null;
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1.5 border border-cream-dark/60">
       {/* Image / gradient area */}
       <Link href={href} className="block relative h-60 overflow-hidden">
-        {/* Background gradient with zoom on hover */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.04]"
-          style={{ background: heroGradient }}
-        />
-
-        {/* Subtle wave pattern */}
-        <div className="absolute inset-0 opacity-15 pointer-events-none overflow-hidden">
-          <svg className="absolute -bottom-4 -left-4 w-48 h-48 text-white" fill="currentColor" viewBox="0 0 200 200">
-            <path d="M0 100 Q25 80 50 100 Q75 120 100 100 Q125 80 150 100 Q175 120 200 100 L200 200 L0 200 Z" opacity="0.3" />
-            <path d="M0 130 Q25 110 50 130 Q75 150 100 130 Q125 110 150 130 Q175 150 200 130 L200 200 L0 200 Z" opacity="0.2" />
-          </svg>
-          <div className="absolute top-6 right-6 w-20 h-20 rounded-full border-2 border-white/40" />
-          <div className="absolute top-10 right-10 w-12 h-12 rounded-full border border-white/30" />
-        </div>
+        {heroImage ? (
+          <Image
+            src={heroImage}
+            alt={name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          />
+        ) : (
+          <>
+            {/* Gradient placeholder with zoom on hover */}
+            <div
+              className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.04]"
+              style={{ background: heroGradient }}
+            />
+            {/* Subtle wave pattern */}
+            <div className="absolute inset-0 opacity-15 pointer-events-none overflow-hidden">
+              <svg className="absolute -bottom-4 -left-4 w-48 h-48 text-white" fill="currentColor" viewBox="0 0 200 200">
+                <path d="M0 100 Q25 80 50 100 Q75 120 100 100 Q125 80 150 100 Q175 120 200 100 L200 200 L0 200 Z" opacity="0.3" />
+                <path d="M0 130 Q25 110 50 130 Q75 150 100 130 Q125 110 150 130 Q175 150 200 130 L200 200 L0 200 Z" opacity="0.2" />
+              </svg>
+              <div className="absolute top-6 right-6 w-20 h-20 rounded-full border-2 border-white/40" />
+              <div className="absolute top-10 right-10 w-12 h-12 rounded-full border border-white/30" />
+            </div>
+          </>
+        )}
 
         {/* Text readability overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />

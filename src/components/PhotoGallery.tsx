@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 
 interface PhotoGalleryProps {
@@ -12,6 +12,7 @@ interface PhotoGalleryProps {
 export default function PhotoGallery({ images, gradients, propertyName }: PhotoGalleryProps) {
   const hasPhotos = images.length > 0;
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const totalCount = hasPhotos ? images.length : gradients.length;
 
@@ -19,12 +20,20 @@ export default function PhotoGallery({ images, gradients, propertyName }: PhotoG
   const closeLightbox = () => setLightboxIndex(null);
 
   const prev = useCallback(() => {
-    setLightboxIndex((i) => (i === null ? 0 : (i - 1 + totalCount) % totalCount));
-  }, [totalCount]);
+    if (lightboxIndex !== null) {
+      setLightboxIndex((i) => (i === null ? 0 : (i - 1 + totalCount) % totalCount));
+    } else {
+      setActiveIndex((i) => (i - 1 + totalCount) % totalCount);
+    }
+  }, [lightboxIndex, totalCount]);
 
   const next = useCallback(() => {
-    setLightboxIndex((i) => (i === null ? 0 : (i + 1) % totalCount));
-  }, [totalCount]);
+    if (lightboxIndex !== null) {
+      setLightboxIndex((i) => (i === null ? 0 : (i + 1) % totalCount));
+    } else {
+      setActiveIndex((i) => (i + 1) % totalCount);
+    }
+  }, [lightboxIndex, totalCount]);
 
   useEffect(() => {
     if (lightboxIndex === null) return;
@@ -41,19 +50,59 @@ export default function PhotoGallery({ images, gradients, propertyName }: PhotoG
     };
   }, [lightboxIndex, prev, next]);
 
+  // Touch swipe handlers (inline gallery)
+  const touchStartX = useRef<number | null>(null);
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) {
+      setActiveIndex((i) => (i + 1) % totalCount);
+    } else {
+      setActiveIndex((i) => (i - 1 + totalCount) % totalCount);
+    }
+  }
+
+  // Touch swipe handlers (lightbox)
+  const lbTouchStartX = useRef<number | null>(null);
+
+  function handleLbTouchStart(e: React.TouchEvent) {
+    lbTouchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleLbTouchEnd(e: React.TouchEvent) {
+    if (lbTouchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - lbTouchStartX.current;
+    lbTouchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) {
+      setLightboxIndex((i) => (i === null ? 0 : (i + 1) % totalCount));
+    } else {
+      setLightboxIndex((i) => (i === null ? 0 : (i - 1 + totalCount) % totalCount));
+    }
+  }
+
   return (
     <>
       {/* ── Grid ─────────────────────────────────────── */}
       <div className="grid grid-cols-4 gap-2.5 h-72 sm:h-[420px] rounded-2xl overflow-hidden">
-        {/* Main large photo */}
+        {/* Main large photo — swipeable on mobile */}
         <div
-          className="col-span-4 sm:col-span-2 relative overflow-hidden cursor-pointer"
-          style={hasPhotos ? undefined : { background: gradients[0] }}
-          onClick={() => openLightbox(0)}
+          className="col-span-4 sm:col-span-2 relative overflow-hidden cursor-pointer select-none"
+          style={hasPhotos ? undefined : { background: gradients[activeIndex] }}
+          onClick={() => openLightbox(activeIndex)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           {hasPhotos ? (
             <Image
-              src={images[0]}
+              src={images[activeIndex]}
               alt={propertyName}
               fill
               priority
@@ -66,7 +115,32 @@ export default function PhotoGallery({ images, gradients, propertyName }: PhotoG
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-          <div className="absolute bottom-4 left-4 text-white">
+          {/* Mobile: counter + arrows */}
+          <div className="sm:hidden absolute bottom-4 left-0 right-0 flex items-center justify-between px-3">
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveIndex((i) => (i - 1 + totalCount) % totalCount); }}
+              className="bg-black/30 hover:bg-black/50 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+              aria-label="Previous photo"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-white text-xs font-semibold bg-black/30 backdrop-blur-sm px-2 py-1 rounded-lg">
+              {activeIndex + 1} / {totalCount}
+            </span>
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveIndex((i) => (i + 1) % totalCount); }}
+              className="bg-black/30 hover:bg-black/50 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+              aria-label="Next photo"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          {/* Desktop label */}
+          <div className="hidden sm:block absolute bottom-4 left-4 text-white">
             <span className="text-xs font-semibold bg-black/30 backdrop-blur-sm px-2 py-1 rounded-lg">
               Main view
             </span>
@@ -121,6 +195,8 @@ export default function PhotoGallery({ images, gradients, propertyName }: PhotoG
         <div
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
           onClick={closeLightbox}
+          onTouchStart={handleLbTouchStart}
+          onTouchEnd={handleLbTouchEnd}
         >
           {/* Close */}
           <button

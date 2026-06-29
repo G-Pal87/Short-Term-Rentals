@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import BookingPanel from "@/components/BookingPanel";
+import PhotoGallery from "@/components/PhotoGallery";
 import {
   properties,
   regionDisplayNames,
@@ -115,41 +116,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
       {/* Photo Gallery */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 h-72 sm:h-96">
-          {/* Main large photo */}
-          <div
-            className="col-span-2 row-span-1 sm:col-span-2 sm:row-span-1 rounded-2xl overflow-hidden"
-            style={{ background: property.gradients[0] }}
-          >
-            <div className="w-full h-full flex items-center justify-center opacity-25">
-              <svg
-                className="w-20 h-20 text-white"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-              </svg>
-            </div>
-          </div>
-          {/* Smaller photos */}
-          {property.gradients.slice(1, 4).map((gradient, i) => (
-            <div
-              key={i}
-              className="rounded-2xl overflow-hidden"
-              style={{ background: gradient }}
-            >
-              <div className="w-full h-full flex items-center justify-center opacity-20">
-                <svg
-                  className="w-12 h-12 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-                </svg>
-              </div>
-            </div>
-          ))}
-        </div>
+        <PhotoGallery
+          gradients={property.gradients}
+          propertyName={property.name}
+        />
       </section>
 
       {/* Main content */}

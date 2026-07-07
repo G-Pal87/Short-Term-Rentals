@@ -20,8 +20,8 @@ export default function Header() {
   }, [pathname]);
 
   const navLinks = [
-    { href: "/paphos", label: "Cyprus — Paphos" },
-    { href: "/tenerife", label: "Spain — Tenerife" },
+    { href: "/paphos", label: "Cyprus - Paphos" },
+    { href: "/tenerife", label: "Spain - Tenerife" },
   ];
 
   return (

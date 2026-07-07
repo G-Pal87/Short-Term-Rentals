@@ -20,7 +20,7 @@ export interface Property {
   /**
    * Photo filenames inside public/images/properties/{id}/.
    * e.g. ["01.jpg", "02.jpg", "03.jpg"]
-   * Omit (or leave empty) until photos are added — UI falls back to gradients.
+   * Omit (or leave empty) until photos are added - UI falls back to gradients.
    */
   images?: string[];
 }
@@ -183,7 +183,7 @@ export const properties: Property[] = [
       "Garden",
     ],
     description:
-      "Discover the magic of Tenerife from this stunning Colorful 2-Bedroom House, a vibrant and welcoming home with spectacular ocean and mountain views. Located within walking distance of a beautiful beach, this charming house accommodates up to five guests in style and comfort. The highlight of the property is its breathtaking view terrace — the perfect spot to watch the sunrise over the Atlantic Ocean with your morning coffee. Inside, the house is filled with colour and character, featuring a fully equipped kitchen, comfortable living spaces, and two well-appointed bedrooms. Tenerife's legendary sunshine, diverse landscapes, and rich culture are right on your doorstep, making this the ideal base for exploring this remarkable island.",
+      "Discover the magic of Tenerife from this stunning Colorful 2-Bedroom House, a vibrant and welcoming home with spectacular ocean and mountain views. Located within walking distance of a beautiful beach, this charming house accommodates up to five guests in style and comfort. The highlight of the property is its breathtaking view terrace - the perfect spot to watch the sunrise over the Atlantic Ocean with your morning coffee. Inside, the house is filled with colour and character, featuring a fully equipped kitchen, comfortable living spaces, and two well-appointed bedrooms. Tenerife's legendary sunshine, diverse landscapes, and rich culture are right on your doorstep, making this the ideal base for exploring this remarkable island.",
     gradients: [
       "linear-gradient(135deg, #E8845A 0%, #e8a87c 100%)",
       "linear-gradient(135deg, #2C5F5A 0%, #2C7BA3 100%)",
@@ -225,8 +225,8 @@ export const properties: Property[] = [
 ];
 
 export const regionDisplayNames: Record<Region, string> = {
-  paphos: "Cyprus — Paphos",
-  tenerife: "Spain — Tenerife",
+  paphos: "Cyprus - Paphos",
+  tenerife: "Spain - Tenerife",
 };
 
 export function getPropertiesByRegion(region: Region): Property[] {

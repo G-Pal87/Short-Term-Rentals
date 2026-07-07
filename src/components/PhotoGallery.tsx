@@ -92,7 +92,7 @@ export default function PhotoGallery({ images, gradients, propertyName }: PhotoG
     <>
       {/* ── Grid ─────────────────────────────────────── */}
       <div className="grid grid-cols-4 gap-2.5 h-72 sm:h-[420px] rounded-2xl overflow-hidden">
-        {/* Main large photo — swipeable on mobile */}
+        {/* Main large photo - swipeable on mobile */}
         <div
           className="col-span-4 sm:col-span-2 relative overflow-hidden cursor-pointer select-none"
           style={hasPhotos ? undefined : { background: gradients[activeIndex] }}

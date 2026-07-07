@@ -22,14 +22,14 @@ const regionMeta: Record<
   { tagline: string; description: string; photo?: string; highlights: string[] }
 > = {
   paphos: {
-    tagline: "Cyprus — Paphos",
+    tagline: "Cyprus - Paphos",
     description:
       "Discover ancient ruins, turquoise bays, and warm Mediterranean charm in Paphos, Cyprus.",
     photo: `${basePath}/images/properties/poolside-central-studio/outside_02.jpg`,
     highlights: ["World Heritage site", "Year-round sunshine", "Crystal-clear beaches"],
   },
   tenerife: {
-    tagline: "Spain — Tenerife",
+    tagline: "Spain - Tenerife",
     description:
       "Experience the volcanic wonder, lush forests, and year-round sunshine of Tenerife, Spain.",
     highlights: ["Mount Teide volcano", "Eternal spring climate", "Atlantic coastline"],
@@ -185,7 +185,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
                   Save up to 20% vs Airbnb
                 </h3>
                 <p className="text-white/65 text-sm max-w-md leading-relaxed">
-                  No platform fees. Deal with us personally — better prices,
+                  No platform fees. Deal with us personally - better prices,
                   faster responses, and flexible booking terms.
                 </p>
               </div>

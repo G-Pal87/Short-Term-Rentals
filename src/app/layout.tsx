@@ -12,9 +12,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Mediterranean Rentals — Cyprus & Tenerife",
+  title: "Mediterranean Rentals - Cyprus & Tenerife",
   description:
-    "Beautiful holiday homes in Paphos, Cyprus and Tenerife, Spain. Book directly with the host for the best rates — no platform fees.",
+    "Beautiful holiday homes in Paphos, Cyprus and Tenerife, Spain. Book directly with the host for the best rates - no platform fees.",
   keywords:
     "vacation rental, Cyprus, Paphos, Tenerife, Spain, holiday apartment, pool, beach, direct booking",
 };
@@ -58,7 +58,7 @@ export default function RootLayout({
                 </Link>
                 <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
                   Handpicked holiday homes in Cyprus and Spain. Book directly
-                  with the host — better prices, personal service, no platform fees.
+                  with the host - better prices, personal service, no platform fees.
                 </p>
                 {/* WhatsApp CTA */}
                 <a
@@ -83,13 +83,13 @@ export default function RootLayout({
                   <li>
                     <Link href="/paphos" className="text-sm text-gray-300 hover:text-primary transition-colors flex items-center gap-2">
                       <span className="w-1 h-1 rounded-full bg-primary/60" />
-                      Cyprus — Paphos
+                      Cyprus - Paphos
                     </Link>
                   </li>
                   <li>
                     <Link href="/tenerife" className="text-sm text-gray-300 hover:text-primary transition-colors flex items-center gap-2">
                       <span className="w-1 h-1 rounded-full bg-primary/60" />
-                      Spain — Tenerife
+                      Spain - Tenerife
                     </Link>
                   </li>
                 </ul>

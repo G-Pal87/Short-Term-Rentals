@@ -90,7 +90,7 @@ export default function BookingPanel({
   }
 
   function buildEmailUrl(): string {
-    const subject = `Booking Request — ${propertyName}`;
+    const subject = `Booking Request - ${propertyName}`;
     let body: string;
     if (!range?.from || !range?.to) {
       body = `Hello!\n\nI'm interested in booking ${propertyName}. Could you please confirm availability and pricing?\n\nThank you.`;

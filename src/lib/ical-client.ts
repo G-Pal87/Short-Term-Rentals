@@ -1,4 +1,4 @@
-// Client-side calendar fetch — reads pre-parsed JSON from the same domain
+// Client-side calendar fetch - reads pre-parsed JSON from the same domain
 // (gh-pages/calendars/{id}.json, written hourly by the sync-calendars workflow).
 // No CORS issues, no third-party proxy dependency.
 

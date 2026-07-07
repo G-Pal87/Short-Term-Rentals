@@ -86,7 +86,7 @@ async function tryFetchIcal(icalUrl: string): Promise<BlockedDateRange[] | null>
     }
   }
 
-  // Empty result likely means a 403 — treat as failure so we can retry
+  // Empty result likely means a 403 - treat as failure so we can retry
   return blocked.length > 0 ? blocked : null;
 }
 
@@ -112,7 +112,7 @@ export async function fetchBlockedDates(
     }
   }
 
-  // All attempts exhausted — fall back to cache
+  // All attempts exhausted - fall back to cache
   void lastError;
   if (propertyId) {
     const cache = readCacheRaw(propertyId);

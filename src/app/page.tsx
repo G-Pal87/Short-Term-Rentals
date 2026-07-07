@@ -54,7 +54,7 @@ export default async function HomePage() {
           {/* Pill badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full mb-8 shadow-lg">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse-dot" />
-            <span className="font-medium tracking-wide">Direct booking — best rates guaranteed</span>
+            <span className="font-medium tracking-wide">Direct booking - best rates guaranteed</span>
           </div>
 
           {/* Main heading */}
@@ -68,7 +68,7 @@ export default async function HomePage() {
 
           <p className="text-lg sm:text-xl text-white/75 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
             Handpicked holiday homes on the sun-drenched shores of Cyprus and
-            the volcanic beauty of Tenerife. Skip the platform fees — book
+            the volcanic beauty of Tenerife. Skip the platform fees - book
             directly with your host.
           </p>
 
@@ -163,7 +163,7 @@ export default async function HomePage() {
                     </span>
                   </div>
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold text-white mb-2">
-                    Cyprus — Paphos
+                    Cyprus - Paphos
                   </h3>
                   <p className="text-white/80 text-base mb-5 leading-relaxed">
                     Ancient history, turquoise waters &amp; warm Mediterranean hospitality
@@ -200,7 +200,7 @@ export default async function HomePage() {
                     </span>
                   </div>
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold text-white mb-2">
-                    Spain — Tenerife
+                    Spain - Tenerife
                   </h3>
                   <p className="text-white/80 text-base mb-5 leading-relaxed">
                     Volcanic landscapes, eternal spring &amp; Atlantic coast living
@@ -297,7 +297,7 @@ export default async function HomePage() {
               Why Pay More When You Don&apos;t Have To?
             </h2>
             <p className="text-gray-500 text-lg leading-relaxed mb-8">
-              Platforms like Airbnb charge up to 20% in fees — fees you pay,
+              Platforms like Airbnb charge up to 20% in fees - fees you pay,
               fees the host pays. Booking directly cuts them all out. Better
               prices, better service, better experience.
             </p>
@@ -319,7 +319,7 @@ export default async function HomePage() {
             {[
               {
                 title: "Best Rates",
-                desc: "No platform fees means lower prices — guaranteed.",
+                desc: "No platform fees means lower prices - guaranteed.",
               },
               {
                 title: "Personal Service",
@@ -381,7 +381,7 @@ export default async function HomePage() {
                 name: "Elena V.",
                 location: "Netherlands",
                 property: "Poolside Central Studio, Cyprus",
-                text: "Perfect studio for a couple getaway. The pool area is gorgeous and the location is unbeatable. The host arranged early check-in for us — you can't get that on Airbnb!",
+                text: "Perfect studio for a couple getaway. The pool area is gorgeous and the location is unbeatable. The host arranged early check-in for us - you can't get that on Airbnb!",
                 rating: 5,
                 initials: "EV",
               },

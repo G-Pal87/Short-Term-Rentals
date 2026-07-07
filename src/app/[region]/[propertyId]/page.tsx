@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PropertyPageProps) {
   );
   if (!property) return {};
   return {
-    title: `${property.name} — ${regionDisplayNames[property.region as Region]}`,
+    title: `${property.name} - ${regionDisplayNames[property.region as Region]}`,
     description: property.description.slice(0, 160),
   };
 }

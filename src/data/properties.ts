@@ -221,6 +221,20 @@ export const properties: Property[] = [
       "linear-gradient(135deg, #E8845A 0%, #f0a070 100%)",
       "linear-gradient(135deg, #3a7a74 0%, #2C5F5A 100%)",
     ],
+    images: [
+      "hero.jpg",
+      "DSC04565.jpg",
+      "DSC04585.jpg",
+      "DSC04601.jpg",
+      "DSC04608.jpg",
+      "DSC04613.jpg",
+      "DSC04632.jpg",
+      "DSC04642.jpg",
+      "DSC04650.jpg",
+      "DSC04669.jpg",
+      "DSC04675.jpg",
+      "DSC04680.jpg",
+    ],
   },
 ];
 

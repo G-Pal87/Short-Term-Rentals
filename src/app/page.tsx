@@ -32,10 +32,10 @@ export default async function HomePage() {
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-        {/* Real property photo */}
+        {/* Landing hero photo */}
         <Image
-          src={`${basePath}/images/properties/luxe-poolside-escape/balcony_01.jpg`}
-          alt="Mediterranean terrace overlooking the coast"
+          src={`${basePath}/images/landing-hero.jpg`}
+          alt="Friends enjoying a Mediterranean beach"
           fill
           priority
           sizes="100vw"

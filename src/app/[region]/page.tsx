@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import PropertyCard from "@/components/PropertyCard";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import {
@@ -14,25 +15,23 @@ interface RegionPageProps {
 }
 
 const VALID_REGIONS: Region[] = ["paphos", "tenerife"];
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const regionMeta: Record<
   Region,
-  { tagline: string; description: string; gradient: string; highlights: string[] }
+  { tagline: string; description: string; photo?: string; highlights: string[] }
 > = {
   paphos: {
     tagline: "Cyprus — Paphos",
     description:
       "Discover ancient ruins, turquoise bays, and warm Mediterranean charm in Paphos, Cyprus.",
-    gradient:
-      "linear-gradient(145deg, #1a5a7a 0%, #2C7BA3 45%, #5a9dc0 70%, #E8845A 100%)",
+    photo: `${basePath}/images/properties/poolside-central-studio/outside_02.jpg`,
     highlights: ["World Heritage site", "Year-round sunshine", "Crystal-clear beaches"],
   },
   tenerife: {
     tagline: "Spain — Tenerife",
     description:
       "Experience the volcanic wonder, lush forests, and year-round sunshine of Tenerife, Spain.",
-    gradient:
-      "linear-gradient(145deg, #9e4a2a 0%, #c4623e 40%, #E8845A 70%, #2C5F5A 100%)",
     highlights: ["Mount Teide volcano", "Eternal spring climate", "Atlantic coastline"],
   },
 };
@@ -69,21 +68,27 @@ export default async function RegionPage({ params }: RegionPageProps) {
     <div>
       {/* ── Hero banner ──────────────────────────────────── */}
       <section
-        className="relative py-24 sm:py-32 overflow-hidden"
-        style={{ background: meta.gradient }}
+        className={`relative py-24 sm:py-32 overflow-hidden ${meta.photo ? "" : "bg-tenerife-gradient"}`}
       >
-        {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/3 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-black/10 translate-y-1/3 -translate-x-1/4 blur-3xl pointer-events-none" />
-
-        {/* Grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
+        {meta.photo && (
+          <>
+            <Image
+              src={meta.photo}
+              alt={displayName}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(160deg, rgba(28,55,53,0.9) 0%, rgba(28,55,53,0.72) 50%, rgba(176,96,63,0.5) 100%)",
+              }}
+            />
+          </>
+        )}
 
         {/* Wave bottom */}
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
@@ -107,7 +112,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
 
           <div className="max-w-2xl">
             {/* Available badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-xs px-4 py-2 rounded-full mb-6">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-xs px-4 py-2 rounded-full mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse-dot" />
               <span className="font-medium">{properties.length} {properties.length === 1 ? "property" : "properties"} available</span>
             </div>
@@ -120,7 +125,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
             {/* Highlights */}
             <div className="flex flex-wrap gap-2">
               {meta.highlights.map((h) => (
-                <span key={h} className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs px-3 py-1.5 rounded-full">
+                <span key={h} className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
                   <svg className="w-3 h-3 text-primary" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>

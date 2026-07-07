@@ -67,8 +67,6 @@ export default function PropertyCard({ property, minPrice }: PropertyCardProps) 
                 <path d="M0 100 Q25 80 50 100 Q75 120 100 100 Q125 80 150 100 Q175 120 200 100 L200 200 L0 200 Z" opacity="0.3" />
                 <path d="M0 130 Q25 110 50 130 Q75 150 100 130 Q125 110 150 130 Q175 150 200 130 L200 200 L0 200 Z" opacity="0.2" />
               </svg>
-              <div className="absolute top-6 right-6 w-20 h-20 rounded-full border-2 border-white/40" />
-              <div className="absolute top-10 right-10 w-12 h-12 rounded-full border border-white/30" />
             </div>
           </>
         )}

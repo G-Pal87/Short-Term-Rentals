@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: #e8845a;
-  --color-primary-dark: #d06e45;
-  --color-secondary: #2c5f5a;
-  --color-secondary-dark: #1e4540;
-  --color-cream: #fdf8f3;
-  --color-cream-dark: #f0e6d3;
-  --color-gold: #c9a84c;
+  --color-primary: #c97759;
+  --color-primary-dark: #b0603f;
+  --color-secondary: #2a4f4b;
+  --color-secondary-dark: #1c3735;
+  --color-cream: #faf6f0;
+  --color-cream-dark: #ede4d6;
+  --color-gold: #b99a5b;
 }
 
 * {
@@ -80,9 +80,9 @@ body {
 /* ── react-day-picker overrides ──────────────────────── */
 .rdp {
   --rdp-cell-size: 44px;
-  --rdp-accent-color: #e8845a;
-  --rdp-background-color: rgba(232, 132, 90, 0.1);
-  --rdp-outline: 2px solid #e8845a;
+  --rdp-accent-color: #c97759;
+  --rdp-background-color: rgba(201, 119, 89, 0.1);
+  --rdp-outline: 2px solid #c97759;
   --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0.75);
   margin: 0;
 }
@@ -175,7 +175,7 @@ body {
 }
 
 .rdp-day:hover:not(.rdp-day_disabled):not(.rdp-day_selected) {
-  background-color: rgba(232, 132, 90, 0.15);
+  background-color: rgba(201, 119, 89, 0.15);
 }
 
 .rdp-day_outside {
@@ -184,18 +184,18 @@ body {
 
 .rdp-day_selected,
 .rdp-day_selected:hover {
-  background-color: #e8845a !important;
+  background-color: #c97759 !important;
   color: white !important;
 }
 
 .rdp-day_range_start,
 .rdp-day_range_end {
-  background-color: #e8845a !important;
+  background-color: #c97759 !important;
   color: white !important;
 }
 
 .rdp-day_range_middle {
-  background-color: rgba(232, 132, 90, 0.15) !important;
+  background-color: rgba(201, 119, 89, 0.15) !important;
   color: #1a1a1a !important;
   border-radius: 0 !important;
 }

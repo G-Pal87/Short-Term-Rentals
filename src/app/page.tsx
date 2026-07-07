@@ -1,7 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getPropertiesByRegion, properties } from "@/data/properties";
 import { fetchPropertyRates } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 function regionMinPrice(rates: (Awaited<ReturnType<typeof fetchPropertyRates>> | null)[]): number | null {
   const allOpen = rates.flatMap((r) =>
@@ -28,29 +31,28 @@ export default async function HomePage() {
     <div className="overflow-x-hidden">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section
-        className="relative min-h-[92vh] flex items-center justify-center overflow-hidden"
-        style={{
-          background: "linear-gradient(145deg, #1a3d38 0%, #2C5F5A 40%, #4a8a84 70%, #E8845A 100%)",
-        }}
-      >
-        {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-primary/15 -translate-y-1/3 translate-x-1/3 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-secondary-light/20 translate-y-1/3 -translate-x-1/3 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-white/[0.03] blur-2xl pointer-events-none" />
-
-        {/* Subtle grid overlay */}
+      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+        {/* Real property photo */}
+        <Image
+          src={`${basePath}/images/properties/luxe-poolside-escape/balcony_01.jpg`}
+          alt="Mediterranean terrace overlooking the coast"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        {/* Duotone overlay for legibility, tinted with the brand palette */}
         <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          className="absolute inset-0"
           style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
+            background:
+              "linear-gradient(160deg, rgba(28,55,53,0.93) 0%, rgba(28,55,53,0.78) 45%, rgba(176,96,63,0.55) 100%)",
           }}
         />
 
         <div className="relative z-10 text-center px-5 sm:px-8 max-w-5xl mx-auto">
           {/* Pill badge */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-sm px-5 py-2 rounded-full mb-8 shadow-lg">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full mb-8 shadow-lg">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse-dot" />
             <span className="font-medium tracking-wide">Direct booking — best rates guaranteed</span>
           </div>
@@ -138,30 +140,25 @@ export default async function HomePage() {
               href="/paphos"
               className="group block rounded-3xl overflow-hidden shadow-lg hover:shadow-card-hover transition-all duration-500 hover:-translate-y-2"
             >
-              <div
-                className="relative h-96 sm:h-[480px] overflow-hidden"
-                style={{ background: "linear-gradient(145deg, #1a5a7a 0%, #2C7BA3 45%, #5a9dc0 70%, #E8845A 100%)" }}
-              >
-                {/* Pattern overlay */}
-                <div className="absolute inset-0 opacity-20 pointer-events-none">
-                  <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 400 200" fill="none">
-                    <ellipse cx="200" cy="200" rx="200" ry="80" fill="rgba(255,255,255,0.15)" />
-                    <ellipse cx="100" cy="180" rx="120" ry="60" fill="rgba(255,255,255,0.1)" />
-                  </svg>
-                  <div className="absolute top-8 right-8 w-40 h-40 rounded-full border-2 border-white/30 group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute top-16 right-16 w-24 h-24 rounded-full border-2 border-white/20 group-hover:scale-110 transition-transform duration-700 delay-75" />
-                </div>
+              <div className="relative h-96 sm:h-[480px] overflow-hidden">
+                <Image
+                  src={`${basePath}/images/properties/venus-beach-retreat/terrace_01.jpg`}
+                  alt="Terrace in Paphos, Cyprus"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
 
                 {/* Overlay for text */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent transition-opacity duration-500 group-hover:from-black/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent transition-opacity duration-500 group-hover:from-black/60" />
 
                 {/* Content */}
                 <div className="absolute inset-x-0 bottom-0 p-8">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       {paphosProps.length} properties
                     </span>
-                    <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       From €{paphosMin}/night
                     </span>
                   </div>
@@ -189,23 +186,16 @@ export default async function HomePage() {
               className="group block rounded-3xl overflow-hidden shadow-lg hover:shadow-card-hover transition-all duration-500 hover:-translate-y-2"
             >
               <div
-                className="relative h-96 sm:h-[480px] overflow-hidden"
-                style={{ background: "linear-gradient(145deg, #9e4a2a 0%, #c4623e 40%, #E8845A 70%, #2C5F5A 100%)" }}
+                className="relative h-96 sm:h-[480px] overflow-hidden bg-tenerife-gradient transition-transform duration-700 group-hover:scale-[1.03]"
               >
-                <div className="absolute inset-0 opacity-20 pointer-events-none">
-                  <div className="absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-black/20 to-transparent" />
-                  <div className="absolute top-8 right-8 w-40 h-40 rounded-full border-2 border-white/30 group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute top-16 right-16 w-24 h-24 rounded-full border-2 border-white/20 group-hover:scale-110 transition-transform duration-700 delay-75" />
-                </div>
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent transition-opacity duration-500 group-hover:from-black/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent transition-opacity duration-500 group-hover:from-black/45" />
 
                 <div className="absolute inset-x-0 bottom-0 p-8">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span className="bg-black/30 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       {tenerifeProps.length} properties
                     </span>
-                    <span className="bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span className="bg-black/30 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       From €{tenerifeMin}/night
                     </span>
                   </div>
@@ -324,53 +314,32 @@ export default async function HomePage() {
             </a>
           </AnimateOnScroll>
 
-          {/* Right: feature cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Right: feature list */}
+          <div className="space-y-7">
             {[
               {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                ),
                 title: "Best Rates",
                 desc: "No platform fees means lower prices — guaranteed.",
               },
               {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                ),
                 title: "Personal Service",
                 desc: "Direct contact with the host for any request, any time.",
               },
               {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
-                ),
                 title: "Handpicked Quality",
                 desc: "Every property personally verified by the host.",
               },
               {
-                icon: (
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                ),
                 title: "Flexible Terms",
                 desc: "Long-stay discounts and flexible check-in times.",
               },
             ].map((item, i) => (
               <AnimateOnScroll key={item.title} delay={i * 80}>
-                <div className="bg-white rounded-2xl p-5 border border-cream-dark shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
-                    {item.icon}
+                <div className="flex gap-5 pl-5 border-l-2 border-primary/25">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-1 text-sm">{item.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
                 </div>
               </AnimateOnScroll>
             ))}

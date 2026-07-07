@@ -32,6 +32,7 @@ const regionMeta: Record<
     tagline: "Spain - Tenerife",
     description:
       "Experience the volcanic wonder, lush forests, and year-round sunshine of Tenerife, Spain.",
+    photo: `${basePath}/images/properties/beach-house-studio/hero.jpg`,
     highlights: ["Mount Teide volcano", "Eternal spring climate", "Atlantic coastline"],
   },
 };

@@ -185,17 +185,23 @@ export default async function HomePage() {
               href="/tenerife"
               className="group block rounded-3xl overflow-hidden shadow-lg hover:shadow-card-hover transition-all duration-500 hover:-translate-y-2"
             >
-              <div
-                className="relative h-96 sm:h-[480px] overflow-hidden bg-tenerife-gradient transition-transform duration-700 group-hover:scale-[1.03]"
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent transition-opacity duration-500 group-hover:from-black/45" />
+              <div className="relative h-96 sm:h-[480px] overflow-hidden">
+                <Image
+                  src={`${basePath}/images/properties/colorful-2bedroom-house/hero.jpg`}
+                  alt="View terrace in Tenerife"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent transition-opacity duration-500 group-hover:from-black/60" />
 
                 <div className="absolute inset-x-0 bottom-0 p-8">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="bg-black/30 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       {tenerifeProps.length} properties
                     </span>
-                    <span className="bg-black/30 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       From €{tenerifeMin}/night
                     </span>
                   </div>

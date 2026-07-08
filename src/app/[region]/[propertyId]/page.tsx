@@ -6,6 +6,7 @@ import PhotoGallery from "@/components/PhotoGallery";
 import {
   properties,
   regionDisplayNames,
+  regionWhatsAppNumbers,
   type Region,
 } from "@/data/properties";
 import { fetchBlockedDates } from "@/lib/ical";
@@ -338,6 +339,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 pricePerNight={property.pricePerNight}
                 blockedRanges={blockedRanges}
                 propertyId={property.id}
+                whatsappNumber={regionWhatsAppNumbers[property.region as Region]}
                 ratesByDate={propertyRates?.ratesByDate}
                 airbnbRatesByDate={propertyRates?.airbnbRatesByDate}
                 cleaningFee={propertyRates?.cleaningFee ?? property.cleaningFee}

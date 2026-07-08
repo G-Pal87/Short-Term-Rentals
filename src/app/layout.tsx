@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import Header from "@/components/Header";
+import { defaultWhatsAppNumber } from "@/data/properties";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
@@ -62,7 +63,7 @@ export default function RootLayout({
                 </p>
                 {/* WhatsApp CTA */}
                 <a
-                  href="https://wa.me/420731139854"
+                  href={`https://wa.me/${defaultWhatsAppNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 mt-5 bg-green-600/20 hover:bg-green-600/30 border border-green-600/30 text-green-400 text-sm px-4 py-2 rounded-full transition-colors"
@@ -103,7 +104,7 @@ export default function RootLayout({
                 <ul className="space-y-3">
                   <li>
                     <a
-                      href="https://wa.me/420731139854"
+                      href={`https://wa.me/${defaultWhatsAppNumber}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-gray-300 hover:text-primary transition-colors flex items-center gap-2"

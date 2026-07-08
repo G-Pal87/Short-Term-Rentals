@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getPropertiesByRegion, properties } from "@/data/properties";
+import { getPropertiesByRegion, properties, defaultWhatsAppNumber } from "@/data/properties";
 import { fetchPropertyRates } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 
@@ -308,7 +308,7 @@ export default async function HomePage() {
               prices, better service, better experience.
             </p>
             <a
-              href="https://wa.me/420731139854"
+              href={`https://wa.me/${defaultWhatsAppNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
@@ -438,7 +438,7 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href="https://wa.me/420731139854"
+              href={`https://wa.me/${defaultWhatsAppNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2.5 bg-green-500 hover:bg-green-600 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"

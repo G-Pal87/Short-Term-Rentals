@@ -273,9 +273,9 @@ export default async function HomePage() {
               },
             ].map((step, i) => (
               <AnimateOnScroll key={step.num} delay={i * 100}>
-                <div className="flex flex-col items-center text-center group">
+                <div className="flex flex-col items-center text-center">
                   <div className="relative mb-6">
-                    <div className="w-20 h-20 rounded-2xl bg-white shadow-md border border-cream-dark flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white group-hover:shadow-card-hover transition-all duration-300">
+                    <div className="w-20 h-20 rounded-2xl bg-white shadow-md border border-cream-dark flex items-center justify-center text-secondary">
                       {step.icon}
                     </div>
                     <span className="absolute -top-2.5 -right-2.5 w-7 h-7 bg-primary text-white text-xs font-bold rounded-lg flex items-center justify-center shadow-sm">

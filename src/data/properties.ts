@@ -264,6 +264,15 @@ export const regionDisplayNames: Record<Region, string> = {
   tenerife: "Spain - Tenerife",
 };
 
+// WhatsApp numbers in wa.me format (country code + number, no "+" or spaces)
+export const regionWhatsAppNumbers: Record<Region, string> = {
+  paphos: "420731139854",
+  tenerife: "4915111470730",
+};
+
+// Used wherever a WhatsApp link isn't tied to one specific region (header, footer, homepage)
+export const defaultWhatsAppNumber = regionWhatsAppNumbers.paphos;
+
 export function getPropertiesByRegion(region: Region): Property[] {
   return properties.filter((p) => p.region === region);
 }

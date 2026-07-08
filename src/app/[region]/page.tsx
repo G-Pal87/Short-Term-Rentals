@@ -6,6 +6,7 @@ import AnimateOnScroll from "@/components/AnimateOnScroll";
 import {
   getPropertiesByRegion,
   regionDisplayNames,
+  regionWhatsAppNumbers,
   type Region,
 } from "@/data/properties";
 import { fetchPropertyRates } from "@/lib/rates";
@@ -52,6 +53,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
   const properties = getPropertiesByRegion(typedRegion);
   const displayName = regionDisplayNames[typedRegion];
   const meta = regionMeta[typedRegion];
+  const whatsappNumber = regionWhatsAppNumbers[typedRegion];
 
   // Fetch live rates for all properties in parallel (same logic as detail page)
   const allRates = await Promise.all(
@@ -191,7 +193,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
                 </p>
               </div>
               <a
-                href="https://wa.me/420731139854"
+                href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-shrink-0 flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap"

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { defaultWhatsAppNumber } from "@/data/properties";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -70,7 +71,7 @@ export default function Header() {
               </Link>
             ))}
             <a
-              href="https://wa.me/420731139854"
+              href={`https://wa.me/${defaultWhatsAppNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-2 flex items-center gap-2 bg-primary hover:bg-primary-dark text-white pl-3.5 pr-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 hover:shadow-lg shadow-primary/25"
@@ -130,7 +131,7 @@ export default function Header() {
             </Link>
           ))}
           <a
-            href="https://wa.me/420731139854"
+            href={`https://wa.me/${defaultWhatsAppNumber}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 mt-2 bg-primary text-white px-4 py-3 rounded-xl text-sm font-semibold hover:bg-primary-dark transition-colors"

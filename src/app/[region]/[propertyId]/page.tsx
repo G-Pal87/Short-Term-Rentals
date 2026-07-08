@@ -123,6 +123,13 @@ const defaultAmenityIcon = (
   </svg>
 );
 
+// Airbnb's calendar iCal URLs and listing pages share the same numeric ID
+// (".../calendar/ical/{id}.ics" <-> "airbnb.com/rooms/{id}")
+function getAirbnbListingUrl(icalUrl: string): string | null {
+  const match = icalUrl.match(/\/ical\/(\d+)\.ics/);
+  return match ? `https://www.airbnb.com/rooms/${match[1]}` : null;
+}
+
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { region, propertyId } = params;
 
@@ -309,6 +316,19 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                     Book directly with the host for the best rate. No platform fees, no middlemen.
                     Flexible check-in times available on request.
                   </p>
+                  {(() => {
+                    const airbnbUrl = getAirbnbListingUrl(property.icalUrl);
+                    return airbnbUrl ? (
+                      <a
+                        href={airbnbUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-xs text-gray-400 hover:text-primary underline underline-offset-2 mt-2 transition-colors"
+                      >
+                        See reviews on Airbnb
+                      </a>
+                    ) : null;
+                  })()}
                 </div>
               </div>
             </div>

@@ -208,7 +208,6 @@ export const properties: Property[] = [
       "DSC04720.jpg",
       "DSC04735.jpg",
       "DSC04747.jpg",
-      "DSC04762.jpg",
       "DSC04840.jpg",
     ],
   },

@@ -142,8 +142,8 @@ export default async function HomePage() {
             >
               <div className="relative h-96 sm:h-[480px] overflow-hidden">
                 <Image
-                  src={`${basePath}/images/properties/venus-beach-retreat/terrace_01.jpg`}
-                  alt="Terrace in Paphos, Cyprus"
+                  src={`${basePath}/images/cyprus-hero.jpg`}
+                  alt="Sea caves on the coast of Cyprus"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -187,8 +187,8 @@ export default async function HomePage() {
             >
               <div className="relative h-96 sm:h-[480px] overflow-hidden">
                 <Image
-                  src={`${basePath}/images/properties/colorful-2bedroom-house/hero.jpg`}
-                  alt="View terrace in Tenerife"
+                  src={`${basePath}/images/tenerife-hero.jpg`}
+                  alt="Coastal mountain village in Tenerife"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"

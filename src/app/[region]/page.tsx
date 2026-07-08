@@ -25,14 +25,14 @@ const regionMeta: Record<
     tagline: "Cyprus - Paphos",
     description:
       "Discover ancient ruins, turquoise bays, and warm Mediterranean charm in Paphos, Cyprus.",
-    photo: `${basePath}/images/properties/poolside-central-studio/outside_02.jpg`,
+    photo: `${basePath}/images/cyprus-hero.jpg`,
     highlights: ["World Heritage site", "Year-round sunshine", "Crystal-clear beaches"],
   },
   tenerife: {
     tagline: "Spain - Tenerife",
     description:
       "Experience the volcanic wonder, lush forests, and year-round sunshine of Tenerife, Spain.",
-    photo: `${basePath}/images/properties/beach-house-studio/hero.jpg`,
+    photo: `${basePath}/images/tenerife-hero.jpg`,
     highlights: ["Mount Teide volcano", "Eternal spring climate", "Atlantic coastline"],
   },
 };

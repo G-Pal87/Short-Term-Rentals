@@ -31,7 +31,7 @@ export default async function HomePage() {
     <div className="overflow-x-hidden">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-0 sm:min-h-[92vh] flex items-center justify-center overflow-hidden py-8 sm:py-0">
         {/* Landing hero photo */}
         <Image
           src={`${basePath}/images/landing-hero.jpg`}
@@ -52,13 +52,13 @@ export default async function HomePage() {
 
         <div className="relative z-10 w-full min-w-0 text-center px-5 sm:px-8 max-w-5xl mx-auto">
           {/* Pill badge */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full mb-8 shadow-lg">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full mb-5 sm:mb-8 shadow-lg">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse-dot" />
             <span className="font-medium tracking-wide">Direct booking - best rates guaranteed</span>
           </div>
 
           {/* Main heading */}
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.08] mb-8 text-balance break-words">
+          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.08] mb-5 sm:mb-8 text-balance break-words">
             Your Mediterranean
             <br />
             <em className="not-italic text-primary">Dream Holiday</em>
@@ -66,23 +66,23 @@ export default async function HomePage() {
             Awaits
           </h1>
 
-          <p className="text-lg sm:text-xl text-white/75 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+          <p className="text-base sm:text-xl text-white/75 max-w-2xl mx-auto mb-6 sm:mb-12 leading-relaxed font-light">
             Handpicked holiday homes on the sun-drenched shores of Cyprus and
             the volcanic beauty of Tenerife. Skip the platform fees - book
             directly with your host.
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap gap-4 justify-center mb-16">
+          <div className="flex flex-wrap gap-3 sm:gap-4 justify-center mb-8 sm:mb-16">
             <Link
               href="/paphos"
-              className="bg-primary hover:bg-primary-dark text-white px-9 py-4 rounded-full font-semibold text-base transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-glow"
+              className="bg-primary hover:bg-primary-dark text-white px-5 py-3.5 sm:px-9 sm:py-4 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-glow whitespace-nowrap"
             >
               Explore Cyprus
             </Link>
             <Link
               href="/tenerife"
-              className="bg-white/12 hover:bg-white/22 border border-white/30 backdrop-blur-sm text-white px-9 py-4 rounded-full font-semibold text-base transition-all duration-300 hover:scale-105"
+              className="bg-white/12 hover:bg-white/22 border border-white/30 backdrop-blur-sm text-white px-5 py-3.5 sm:px-9 sm:py-4 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-105 whitespace-nowrap"
             >
               Explore Tenerife
             </Link>

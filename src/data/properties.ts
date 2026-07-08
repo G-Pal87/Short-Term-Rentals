@@ -172,8 +172,8 @@ export const properties: Property[] = [
     maxGuests: 5,
     pricePerNight: 110,
     cleaningFee: 50,
-    lat: 28.4879968,
-    lng: -16.2389346,
+    lat: 28.488009964437737,
+    lng: -16.238934070321324,
     amenities: [
       "View Terrace",
       "Beach Walk",
@@ -224,8 +224,8 @@ export const properties: Property[] = [
     maxGuests: 2,
     pricePerNight: 75,
     cleaningFee: 50,
-    lat: 28.4879968,
-    lng: -16.2389346,
+    lat: 28.488009964437737,
+    lng: -16.238934070321324,
     amenities: [
       "Terrace",
       "Near Beach",

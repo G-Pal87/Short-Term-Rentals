@@ -50,7 +50,7 @@ export default async function HomePage() {
           }}
         />
 
-        <div className="relative z-10 text-center px-5 sm:px-8 max-w-5xl mx-auto">
+        <div className="relative z-10 w-full min-w-0 text-center px-5 sm:px-8 max-w-5xl mx-auto">
           {/* Pill badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full mb-8 shadow-lg">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse-dot" />
@@ -58,7 +58,7 @@ export default async function HomePage() {
           </div>
 
           {/* Main heading */}
-          <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.08] mb-8 text-balance">
+          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-[1.08] mb-8 text-balance break-words">
             Your Mediterranean
             <br />
             <em className="not-italic text-primary">Dream Holiday</em>
@@ -89,20 +89,20 @@ export default async function HomePage() {
           </div>
 
           {/* Inline stats */}
-          <div className="flex items-center justify-center gap-10 sm:gap-16">
-            <div className="text-center">
-              <p className="font-serif text-4xl sm:text-5xl font-bold text-white">5</p>
-              <p className="text-white/55 text-xs sm:text-sm tracking-widest uppercase mt-1">Properties</p>
+          <div className="flex items-center justify-center gap-4 sm:gap-10 lg:gap-16">
+            <div className="text-center min-w-0">
+              <p className="font-serif text-3xl sm:text-5xl font-bold text-white">5</p>
+              <p className="text-white/55 text-[10px] sm:text-sm tracking-wide sm:tracking-widest uppercase mt-1 whitespace-nowrap">Properties</p>
             </div>
-            <div className="w-px h-12 bg-white/15" />
-            <div className="text-center">
-              <p className="font-serif text-4xl sm:text-5xl font-bold text-white">2</p>
-              <p className="text-white/55 text-xs sm:text-sm tracking-widest uppercase mt-1">Destinations</p>
+            <div className="w-px h-12 bg-white/15 flex-shrink-0" />
+            <div className="text-center min-w-0">
+              <p className="font-serif text-3xl sm:text-5xl font-bold text-white">2</p>
+              <p className="text-white/55 text-[10px] sm:text-sm tracking-wide sm:tracking-widest uppercase mt-1 whitespace-nowrap">Destinations</p>
             </div>
-            <div className="w-px h-12 bg-white/15" />
-            <div className="text-center">
-              <p className="font-serif text-4xl sm:text-5xl font-bold text-primary">0%</p>
-              <p className="text-white/55 text-xs sm:text-sm tracking-widest uppercase mt-1">Platform fees</p>
+            <div className="w-px h-12 bg-white/15 flex-shrink-0" />
+            <div className="text-center min-w-0">
+              <p className="font-serif text-3xl sm:text-5xl font-bold text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.45)]">0%</p>
+              <p className="text-white/55 text-[10px] sm:text-sm tracking-wide sm:tracking-widest uppercase mt-1 whitespace-nowrap">Platform fees</p>
             </div>
           </div>
         </div>

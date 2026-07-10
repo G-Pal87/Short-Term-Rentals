@@ -15,9 +15,14 @@ interface BookingPanelProps {
   ratesByDate?: Record<string, number>;
   airbnbRatesByDate?: Record<string, number>;
   cleaningFee?: number;
+  maxGuests: number;
+  extraGuestFee?: number;
   calendarSyncedAt?: string;
   calendarFromCache?: boolean;
 }
+
+// Nightly rate already covers this many guests; each guest beyond it incurs extraGuestFee/night.
+const BASE_GUESTS = 2;
 
 function toDateKey(d: Date): string {
   return format(d, "yyyy-MM-dd");
@@ -52,10 +57,13 @@ export default function BookingPanel({
   ratesByDate,
   airbnbRatesByDate,
   cleaningFee,
+  maxGuests,
+  extraGuestFee = 0,
   calendarSyncedAt,
   calendarFromCache,
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
+  const [guests, setGuests] = useState(Math.min(BASE_GUESTS, maxGuests));
 
   const nights =
     range?.from && range?.to
@@ -67,19 +75,29 @@ export default function BookingPanel({
       ? nightlySubtotal(range.from, range.to, ratesByDate, pricePerNight)
       : 0;
 
-  const cleaning = cleaningFee ?? 0;
-  const estimatedTotal = nightlyTotal + cleaning;
-
   const airbnbTotal =
     range?.from && range?.to
       ? nightlySubtotal(range.from, range.to, airbnbRatesByDate, pricePerNight)
       : 0;
-  const saving = airbnbTotal > 0 ? airbnbTotal - nightlyTotal : 0;
-  const savingPct = airbnbTotal > 0 ? Math.round((saving / airbnbTotal) * 100) : 0;
+
+  // The extra-guest surcharge gets the same host discount as the nightly rate.
+  const discountRatio = airbnbTotal > 0 && nightlyTotal > 0 ? nightlyTotal / airbnbTotal : 1;
+  const extraGuests = Math.max(0, guests - BASE_GUESTS);
+  const rawExtraGuestTotal = extraGuests * extraGuestFee * nights;
+  const extraGuestTotal = Math.round(rawExtraGuestTotal * discountRatio);
+
+  const cleaning = cleaningFee ?? 0;
+  const estimatedTotal = nightlyTotal + extraGuestTotal + cleaning;
+
+  const airbnbComparableTotal = airbnbTotal > 0 ? airbnbTotal + rawExtraGuestTotal : 0;
+  const saving = airbnbComparableTotal > 0 ? airbnbComparableTotal - (nightlyTotal + extraGuestTotal) : 0;
+  const savingPct = airbnbComparableTotal > 0 ? Math.round((saving / airbnbComparableTotal) * 100) : 0;
+
+  const guestLabel = `${guests} guest${guests > 1 ? "s" : ""}`;
 
   function buildWhatsAppUrl(): string {
     if (!range?.from || !range?.to) {
-      const text = `Hello! I'm interested in booking *${propertyName}*. Could you please confirm availability and pricing?`;
+      const text = `Hello! I'm interested in booking *${propertyName}* for ${guestLabel}. Could you please confirm availability and pricing?`;
       return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
     }
     const checkIn = formatDateDisplay(range.from);
@@ -87,7 +105,7 @@ export default function BookingPanel({
     const totalLine = estimatedTotal > 0
       ? ` The estimated total is *€${estimatedTotal.toFixed(0)}* (${nights} nights + cleaning fee).`
       : "";
-    const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights).${totalLine} Could you please confirm availability and pricing?`;
+    const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights) for *${guestLabel}*.${totalLine} Could you please confirm availability and pricing?`;
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
   }
 
@@ -95,17 +113,56 @@ export default function BookingPanel({
     const subject = `Booking Request - ${propertyName}`;
     let body: string;
     if (!range?.from || !range?.to) {
-      body = `Hello!\n\nI'm interested in booking ${propertyName}. Could you please confirm availability and pricing?\n\nThank you.`;
+      body = `Hello!\n\nI'm interested in booking ${propertyName} for ${guestLabel}. Could you please confirm availability and pricing?\n\nThank you.`;
     } else {
       const checkIn = formatDateDisplay(range.from);
       const checkOut = formatDateDisplay(range.to);
-      body = `Hello!\n\nI'm interested in booking ${propertyName} from ${checkIn} to ${checkOut} (${nights} nights). Could you please confirm availability and pricing?\n\nThank you.`;
+      body = `Hello!\n\nI'm interested in booking ${propertyName} from ${checkIn} to ${checkOut} (${nights} nights) for ${guestLabel}. Could you please confirm availability and pricing?\n\nThank you.`;
     }
     return `mailto:giorgos.koutoulo@gmail.com?cc=katonarita90@gmail.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
   return (
     <div className="space-y-4">
+      {/* Guests */}
+      <div className="bg-white rounded-2xl border border-cream-dark p-5 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+              <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Guests
+            </h3>
+            <p className="text-xs text-gray-400 mt-1">
+              Up to {maxGuests} guest{maxGuests > 1 ? "s" : ""}
+              {extraGuestFee > 0 ? ` · +€${extraGuestFee}/night per guest after ${BASE_GUESTS}` : ""}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setGuests((g) => Math.max(1, g - 1))}
+              disabled={guests <= 1}
+              aria-label="Decrease guests"
+              className="w-8 h-8 rounded-full border border-cream-dark text-gray-600 flex items-center justify-center hover:bg-cream disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              −
+            </button>
+            <span className="w-5 text-center font-semibold text-gray-900">{guests}</span>
+            <button
+              type="button"
+              onClick={() => setGuests((g) => Math.min(maxGuests, g + 1))}
+              disabled={guests >= maxGuests}
+              aria-label="Increase guests"
+              className="w-8 h-8 rounded-full border border-cream-dark text-gray-600 flex items-center justify-center hover:bg-cream disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Calendar */}
       <AvailabilityCalendar
         initialBlockedRanges={blockedRanges}
@@ -147,6 +204,15 @@ export default function BookingPanel({
               </span>
               <span className="font-medium text-gray-900">€{nightlyTotal.toFixed(0)}</span>
             </div>
+
+            {extraGuestTotal > 0 && (
+              <div className="flex justify-between text-gray-600">
+                <span>
+                  Extra guests ({extraGuests} × {nights} night{nights > 1 ? "s" : ""})
+                </span>
+                <span className="font-medium text-gray-900">€{extraGuestTotal.toFixed(0)}</span>
+              </div>
+            )}
 
             {cleaning > 0 && (
               <div className="flex justify-between text-gray-600">

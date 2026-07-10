@@ -10,6 +10,11 @@ export interface Property {
   bedrooms: number;
   bathrooms: number;
   maxGuests: number;
+  /**
+   * Extra fee (EUR) charged per night for each guest beyond the first 2.
+   * 0 (or omitted) for properties whose maxGuests is 2 or fewer.
+   */
+  extraGuestFee?: number;
   pricePerNight: number;
   cleaningFee: number;        // Cleaning fee (flat, per booking)
   lat: number;
@@ -37,6 +42,7 @@ export const properties: Property[] = [
     bedrooms: 2,
     bathrooms: 1,
     maxGuests: 4,
+    extraGuestFee: 15,
     pricePerNight: 120,
     cleaningFee: 60,
     lat: 34.77792893594747,
@@ -80,6 +86,7 @@ export const properties: Property[] = [
     bedrooms: 2,
     bathrooms: 1,
     maxGuests: 4,
+    extraGuestFee: 15,
     pricePerNight: 140,
     cleaningFee: 60,
     lat: 34.77792893594747,
@@ -169,7 +176,8 @@ export const properties: Property[] = [
       "https://www.airbnb.com/calendar/ical/720194839435246794.ics?t=3da4aac00c9d4eb6bbe7f3496aa22ee8",
     bedrooms: 2,
     bathrooms: 1,
-    maxGuests: 5,
+    maxGuests: 6,
+    extraGuestFee: 10,
     pricePerNight: 110,
     cleaningFee: 50,
     lat: 28.488009964437737,
@@ -183,7 +191,7 @@ export const properties: Property[] = [
       "Garden",
     ],
     description:
-      "Discover the magic of Tenerife from this stunning Colorful 2-Bedroom House, a vibrant and welcoming home with spectacular ocean and mountain views. Located within walking distance of a beautiful beach, this charming house accommodates up to five guests in style and comfort. The highlight of the property is its breathtaking view terrace - the perfect spot to watch the sunrise over the Atlantic Ocean with your morning coffee. Inside, the house is filled with colour and character, featuring a fully equipped kitchen, comfortable living spaces, and two well-appointed bedrooms. Tenerife's legendary sunshine, diverse landscapes, and rich culture are right on your doorstep, making this the ideal base for exploring this remarkable island.",
+      "Discover the magic of Tenerife from this stunning Colorful 2-Bedroom House, a vibrant and welcoming home with spectacular ocean and mountain views. Located within walking distance of a beautiful beach, this charming house accommodates up to six guests in style and comfort. The highlight of the property is its breathtaking view terrace - the perfect spot to watch the sunrise over the Atlantic Ocean with your morning coffee. Inside, the house is filled with colour and character, featuring a fully equipped kitchen, comfortable living spaces, and two well-appointed bedrooms. Tenerife's legendary sunshine, diverse landscapes, and rich culture are right on your doorstep, making this the ideal base for exploring this remarkable island.",
     gradients: [
       "linear-gradient(135deg, #E8845A 0%, #e8a87c 100%)",
       "linear-gradient(135deg, #2C5F5A 0%, #2C7BA3 100%)",

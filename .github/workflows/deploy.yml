@@ -34,6 +34,12 @@ jobs:
           done
 
       - name: Build static site
+        env:
+          AIRBNB_ICAL_VENUS_BEACH_RETREAT: ${{ secrets.AIRBNB_ICAL_VENUS_BEACH_RETREAT }}
+          AIRBNB_ICAL_LUXE_POOLSIDE_ESCAPE: ${{ secrets.AIRBNB_ICAL_LUXE_POOLSIDE_ESCAPE }}
+          AIRBNB_ICAL_POOLSIDE_CENTRAL_STUDIO: ${{ secrets.AIRBNB_ICAL_POOLSIDE_CENTRAL_STUDIO }}
+          AIRBNB_ICAL_COLORFUL_2BEDROOM_HOUSE: ${{ secrets.AIRBNB_ICAL_COLORFUL_2BEDROOM_HOUSE }}
+          AIRBNB_ICAL_BEACH_HOUSE_STUDIO: ${{ secrets.AIRBNB_ICAL_BEACH_HOUSE_STUDIO }}
         run: npm run build
 
       - name: Deploy to GitHub Pages

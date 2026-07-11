@@ -9,7 +9,7 @@ export default function GoogleMapEmbed({
   lng,
   title,
 }: GoogleMapEmbedProps) {
-  const src = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+  const src = `https://maps.google.com/maps?q=${lat},${lng}&z=14&output=embed`;
 
   return (
     <div className="rounded-2xl overflow-hidden border border-cream-dark shadow-sm">

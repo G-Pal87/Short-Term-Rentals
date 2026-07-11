@@ -10,7 +10,11 @@ import {
   type Region,
 } from "@/data/properties";
 import { fetchBlockedDates } from "@/lib/ical";
-import { fetchPropertyRates } from "@/lib/rates";
+import { fetchPropertyRates, nearTermMinRate } from "@/lib/rates";
+import { getIcalUrl } from "@/lib/ical-secrets";
+import { approximateCoordinates } from "@/lib/geo";
+import { vacationRentalSchema, breadcrumbSchema } from "@/lib/schema";
+import { SITE_URL } from "@/lib/site";
 
 interface PropertyPageProps {
   params: { region: string; propertyId: string };
@@ -25,9 +29,32 @@ export async function generateMetadata({ params }: PropertyPageProps) {
     (p) => p.region === params.region && p.id === params.propertyId
   );
   if (!property) return {};
+
+  const displayRegion = regionDisplayNames[property.region as Region];
+  const title = `${property.name}: ${property.bedrooms === 0 ? "Studio" : `${property.bedrooms}-Bed`} in ${displayRegion}`;
+  const description = property.metaDescription;
+  const url = `${SITE_URL}/${params.region}/${params.propertyId}/`;
+  const heroImage = property.images?.[0]
+    ? `${SITE_URL}/images/properties/${property.id}/${property.images[0]}`
+    : undefined;
+
   return {
-    title: `${property.name} - ${regionDisplayNames[property.region as Region]}`,
-    description: property.description.slice(0, 160),
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      url,
+      images: heroImage ? [{ url: heroImage, width: 1200, height: 800, alt: property.name }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: heroImage ? [heroImage] : undefined,
+    },
   };
 }
 
@@ -123,13 +150,6 @@ const defaultAmenityIcon = (
   </svg>
 );
 
-// Airbnb's calendar iCal URLs and listing pages share the same numeric ID
-// (".../calendar/ical/{id}.ics" <-> "airbnb.com/rooms/{id}")
-function getAirbnbListingUrl(icalUrl: string): string | null {
-  const match = icalUrl.match(/\/ical\/(\d+)\.ics/);
-  return match ? `https://www.airbnb.com/rooms/${match[1]}` : null;
-}
-
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { region, propertyId } = params;
 
@@ -141,8 +161,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     notFound();
   }
 
+  const approxLocation = approximateCoordinates(property.lat, property.lng, property.id);
+
   const [calendarData, propertyRates] = await Promise.all([
-    fetchBlockedDates(property.icalUrl, property.id),
+    fetchBlockedDates(getIcalUrl(property.id), property.id),
     fetchPropertyRates(property.btPropertyId),
   ]);
   const { blocked: blockedRanges, syncedAt, fromCache } = calendarData;
@@ -150,22 +172,37 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   let minPrice = property.pricePerNight;
   let minPriceMonth: string | null = null;
 
-  if (propertyRates?.openRatesByDate) {
-    const entries = Object.entries(propertyRates.openRatesByDate);
-    if (entries.length > 0) {
-      const [minDate, minRate] = entries.reduce((best, cur) =>
-        cur[1] < best[1] ? cur : best
-      );
-      minPrice = minRate;
-      const [y, m] = minDate.split("-").map(Number);
-      minPriceMonth = new Date(y, m - 1, 1).toLocaleString("default", { month: "long" });
-    }
+  const nearTerm = nearTermMinRate(propertyRates?.openRatesByDate);
+  if (nearTerm) {
+    minPrice = nearTerm.price;
+    const [y, m] = nearTerm.date.split("-").map(Number);
+    minPriceMonth = new Date(y, m - 1, 1).toLocaleString("default", { month: "long" });
   }
 
   const displayRegion = regionDisplayNames[property.region as Region];
 
   return (
     <div className="bg-cream min-h-screen">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(vacationRentalSchema(property, approxLocation, minPrice)),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: "Home", url: `${SITE_URL}/` },
+              { name: displayRegion, url: `${SITE_URL}/${region}/` },
+              { name: property.name, url: `${SITE_URL}/${region}/${propertyId}/` },
+            ])
+          ),
+        }}
+      />
       {/* Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
         <nav className="flex items-center gap-2 text-sm text-gray-400">
@@ -316,19 +353,14 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                     Book directly with the host for the best rate. No platform fees, no middlemen.
                     Flexible check-in times available on request.
                   </p>
-                  {(() => {
-                    const airbnbUrl = getAirbnbListingUrl(property.icalUrl);
-                    return airbnbUrl ? (
-                      <a
-                        href={airbnbUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block text-xs text-gray-400 hover:text-primary underline underline-offset-2 mt-2 transition-colors"
-                      >
-                        See reviews on Airbnb
-                      </a>
-                    ) : null;
-                  })()}
+                  <a
+                    href={`https://www.airbnb.com/rooms/${property.airbnbListingId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block text-xs text-gray-400 hover:text-primary underline underline-offset-2 mt-2 transition-colors"
+                  >
+                    See reviews on Airbnb
+                  </a>
                 </div>
               </div>
             </div>
@@ -340,8 +372,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               </h2>
               <div className="rounded-2xl overflow-hidden shadow-sm border border-cream-dark">
                 <GoogleMapEmbed
-                  lat={property.lat}
-                  lng={property.lng}
+                  lat={approxLocation.lat}
+                  lng={approxLocation.lng}
                   title={property.name}
                 />
               </div>

@@ -53,3 +53,29 @@ export async function fetchPropertyRates(
     return null;
   }
 }
+
+/**
+ * Cheapest open rate within the next `days` days (default 90).
+ * Scoped to a near-term window so a single thin-data extrapolated rate far in
+ * the future (the feed's rates are model-extrapolated from limited history)
+ * can't drag down the advertised "from" price shown today.
+ */
+export function nearTermMinRate(
+  openRatesByDate: Record<string, number> | undefined,
+  days = 90
+): { price: number; date: string } | null {
+  if (!openRatesByDate) return null;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() + days);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+
+  const entries = Object.entries(openRatesByDate).filter(
+    ([date]) => date >= today && date <= cutoffStr
+  );
+  if (entries.length === 0) return null;
+
+  const [minDate, minPrice] = entries.reduce((best, cur) => (cur[1] < best[1] ? cur : best));
+  return { price: minPrice, date: minDate };
+}

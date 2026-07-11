@@ -4,6 +4,11 @@ import Link from "next/link";
 import "./globals.css";
 import Header from "@/components/Header";
 import { defaultWhatsAppNumber } from "@/data/properties";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { organizationSchema } from "@/lib/schema";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+
+const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({
@@ -12,12 +17,33 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+const DEFAULT_TITLE =
+  "Mediterranean Rentals - Book Direct Holiday Rentals in Paphos, Cyprus & Tenerife";
+const DEFAULT_DESCRIPTION =
+  "5 handpicked apartments and studios with pools in Paphos, Cyprus and Tenerife, Spain. Book directly with the host on WhatsApp, skip platform fees, and see live availability.";
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/landing-hero.jpg`;
+
 export const metadata: Metadata = {
-  title: "Mediterranean Rentals - Cyprus & Tenerife",
-  description:
-    "Beautiful holiday homes in Paphos, Cyprus and Tenerife, Spain. Book directly with the host for the best rates - no platform fees.",
-  keywords:
-    "vacation rental, Cyprus, Paphos, Tenerife, Spain, holiday apartment, pool, beach, direct booking",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: DEFAULT_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    url: SITE_URL,
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1920, height: 1208, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +54,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen bg-cream font-sans antialiased">
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema(defaultWhatsAppNumber)),
+          }}
+        />
         <Header />
         <main>{children}</main>
 
@@ -63,7 +96,7 @@ export default function RootLayout({
                 </p>
                 {/* WhatsApp CTA */}
                 <a
-                  href={`https://wa.me/${defaultWhatsAppNumber}`}
+                  href={buildWhatsAppUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 mt-5 bg-green-600/20 hover:bg-green-600/30 border border-green-600/30 text-green-400 text-sm px-4 py-2 rounded-full transition-colors"
@@ -104,7 +137,7 @@ export default function RootLayout({
                 <ul className="space-y-3">
                   <li>
                     <a
-                      href={`https://wa.me/${defaultWhatsAppNumber}`}
+                      href={buildWhatsAppUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-gray-300 hover:text-primary transition-colors flex items-center gap-2"

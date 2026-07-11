@@ -10,6 +10,9 @@ import {
   type Region,
 } from "@/data/properties";
 import { fetchPropertyRates } from "@/lib/rates";
+import { SITE_URL } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/schema";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 interface RegionPageProps {
   params: { region: string };
@@ -20,7 +23,15 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const regionMeta: Record<
   Region,
-  { tagline: string; description: string; photo?: string; highlights: string[] }
+  {
+    tagline: string;
+    description: string;
+    photo?: string;
+    highlights: string[];
+    pageTitle: string;
+    metaTitle: string;
+    metaDescription: string;
+  }
 > = {
   paphos: {
     tagline: "Cyprus - Paphos",
@@ -28,6 +39,10 @@ const regionMeta: Record<
       "Discover ancient ruins, turquoise bays, and warm Mediterranean charm in Paphos, Cyprus.",
     photo: `${basePath}/images/cyprus-hero.jpg`,
     highlights: ["World Heritage site", "Year-round sunshine", "Crystal-clear beaches"],
+    pageTitle: "Holiday Apartments in Paphos, Cyprus",
+    metaTitle: "Holiday Apartments in Paphos, Cyprus - Book Direct",
+    metaDescription:
+      "Handpicked apartments and studios with pools near Paphos, Cyprus. Book directly with the host on WhatsApp, skip platform fees, and see live availability and prices instantly.",
   },
   tenerife: {
     tagline: "Spain - Tenerife",
@@ -35,11 +50,41 @@ const regionMeta: Record<
       "Experience the volcanic wonder, lush forests, and year-round sunshine of Tenerife, Spain.",
     photo: `${basePath}/images/tenerife-hero.jpg`,
     highlights: ["Mount Teide volcano", "Eternal spring climate", "Atlantic coastline"],
+    pageTitle: "Holiday Rentals in Tenerife, Spain",
+    metaTitle: "Holiday Rentals in Tenerife, Spain - Book Direct with the Host",
+    metaDescription:
+      "Handpicked holiday homes near the beach in Tenerife, Spain. Book directly with the host on WhatsApp, skip platform fees, and see live availability and prices instantly.",
   },
 };
 
 export function generateStaticParams() {
   return VALID_REGIONS.map((region) => ({ region }));
+}
+
+export function generateMetadata({ params }: RegionPageProps) {
+  const { region } = params;
+  if (!VALID_REGIONS.includes(region as Region)) return {};
+  const meta = regionMeta[region as Region];
+  const url = `${SITE_URL}/${region}/`;
+  const image = meta.photo ? `${SITE_URL}${meta.photo.replace(basePath, "")}` : undefined;
+  return {
+    title: meta.metaTitle,
+    description: meta.metaDescription,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      title: meta.metaTitle,
+      description: meta.metaDescription,
+      url,
+      images: image ? [{ url: image, width: 1920, height: 1080, alt: meta.pageTitle }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.metaTitle,
+      description: meta.metaDescription,
+      images: image ? [image] : undefined,
+    },
+  };
 }
 
 export default async function RegionPage({ params }: RegionPageProps) {
@@ -69,6 +114,18 @@ export default async function RegionPage({ params }: RegionPageProps) {
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: "Home", url: `${SITE_URL}/` },
+              { name: displayName, url: `${SITE_URL}/${region}/` },
+            ])
+          ),
+        }}
+      />
       {/* ── Hero banner ──────────────────────────────────── */}
       <section
         className={`relative py-24 sm:py-32 overflow-hidden ${meta.photo ? "" : "bg-tenerife-gradient"}`}
@@ -121,7 +178,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
             </div>
 
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">
-              {displayName}
+              {meta.pageTitle}
             </h1>
             <p className="text-white/75 text-lg leading-relaxed mb-8">{meta.description}</p>
 
@@ -193,7 +250,10 @@ export default async function RegionPage({ params }: RegionPageProps) {
                 </p>
               </div>
               <a
-                href={`https://wa.me/${whatsappNumber}`}
+                href={buildWhatsAppUrl(
+                  whatsappNumber,
+                  `Hello! I'd like to know more about your properties in ${displayName}.`
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-shrink-0 flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap"

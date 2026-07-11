@@ -5,7 +5,12 @@ export interface Property {
   name: string;
   subtitle: string;
   region: Region;
-  icalUrl: string;
+  /**
+   * Numeric Airbnb listing ID (public - just used to build a "See reviews on
+   * Airbnb" link). The calendar-sync iCal URL itself carries a secret token
+   * and lives in the build environment instead (see src/lib/ical-secrets.ts).
+   */
+  airbnbListingId: string;
   btPropertyId?: string; // override for Business-Tracking feed matching
   bedrooms: number;
   bathrooms: number;
@@ -21,6 +26,8 @@ export interface Property {
   lng: number;
   amenities: string[];
   description: string;
+  /** Hand-written ~150-char summary for <meta name="description"> and social previews. */
+  metaDescription: string;
   gradients: string[];
   /**
    * Photo filenames inside public/images/properties/{id}/.
@@ -37,8 +44,7 @@ export const properties: Property[] = [
     subtitle: "Pool & 2 Terraces",
     region: "paphos",
     btPropertyId: "prop_mox7p43s8o",
-    icalUrl:
-      "https://www.airbnb.gr/calendar/ical/1341854905555812998.ics?t=1e2c75c8b84645a4ac88669d8ec7bdda",
+    airbnbListingId: "1341854905555812998",
     bedrooms: 2,
     bathrooms: 1,
     maxGuests: 4,
@@ -50,6 +56,8 @@ export const properties: Property[] = [
     amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen", "Beach Nearby"],
     description:
       "Welcome to the Colourful Venus Beach Retreat, a vibrant and beautifully designed two-bedroom apartment nestled in the heart of Paphos, Cyprus. This stunning retreat boasts a sparkling private pool and two spacious terraces where you can soak up the Mediterranean sunshine and enjoy breathtaking views. The interior is decorated with a palette of warm, cheerful colours that create an inviting and relaxing atmosphere. Fully equipped with modern amenities including a fully-fitted kitchen, air conditioning throughout, and high-speed WiFi, this property offers everything you need for an unforgettable holiday. The beach is just a short stroll away, making it the perfect base for exploring the beautiful coastline and the rich history of Paphos.",
+    metaDescription:
+      "2-bedroom apartment with a private pool and two terraces in Paphos, Cyprus. Sleeps 4, steps from the beach. Book direct with the host, no platform fees.",
     gradients: [
       "linear-gradient(135deg, #E8845A 0%, #c4623e 100%)",
       "linear-gradient(135deg, #2C5F5A 0%, #1e4540 100%)",
@@ -81,8 +89,7 @@ export const properties: Property[] = [
     subtitle: "Beach walk & 2 Terraces",
     region: "paphos",
     btPropertyId: "prop_mox7mr8day",
-    icalUrl:
-      "https://www.airbnb.gr/calendar/ical/1389855941514317769.ics?t=a2520714c5a34b1daa3b808b6c1bfd0e",
+    airbnbListingId: "1389855941514317769",
     bedrooms: 2,
     bathrooms: 1,
     maxGuests: 4,
@@ -102,6 +109,8 @@ export const properties: Property[] = [
     ],
     description:
       "Experience luxury living at the Luxe Poolside Escape, an exquisite two-bedroom apartment offering the perfect blend of comfort and style in Paphos. Steps from the shimmering Mediterranean Sea, this property features a stunning pool and two elegant terraces perfect for al fresco dining and sunset cocktails. The interior has been thoughtfully designed with high-end furnishings and a sophisticated colour palette. A short beach walk leads you to the golden sands and crystal-clear waters of Paphos. Whether you're looking for a romantic getaway or a family holiday, this luxurious retreat promises memories that will last a lifetime. On-site parking and all modern conveniences are included.",
+    metaDescription:
+      "2-bedroom apartment with a pool and two terraces in Paphos, Cyprus, a short walk from the beach. Sleeps 4, on-site parking. Book direct, no platform fees.",
     gradients: [
       "linear-gradient(135deg, #1e4540 0%, #2C5F5A 100%)",
       "linear-gradient(135deg, #E8845A 0%, #f0a070 100%)",
@@ -131,8 +140,7 @@ export const properties: Property[] = [
     subtitle: "Balcony & Beach Walk",
     region: "paphos",
     btPropertyId: "prop_mox7ipfiam",
-    icalUrl:
-      "https://www.airbnb.gr/calendar/ical/1417130109923067210.ics?t=e8ec8f5e94b845b6817598eeaa30df0e",
+    airbnbListingId: "1417130109923067210",
     bedrooms: 0,
     bathrooms: 1,
     maxGuests: 2,
@@ -143,6 +151,8 @@ export const properties: Property[] = [
     amenities: ["Pool", "Balcony", "Beach Walk", "WiFi", "AC", "Kitchenette"],
     description:
       "The Poolside Central Studio is a charming and cosy studio apartment perfectly situated in the centre of Paphos, just a short walk from the beach. Ideal for couples or solo travellers, this bright and airy studio features a beautiful private balcony overlooking the pool, where you can enjoy your morning coffee with a refreshing view. The studio is cleverly designed to maximise space and comfort, with a well-equipped kitchenette, air conditioning, and fast WiFi. Its central location means you're never far from Paphos's best restaurants, shops, and attractions. The pool is shared with a small number of guests, ensuring a peaceful and relaxing atmosphere throughout your stay.",
+    metaDescription:
+      "Central Paphos studio with a private balcony over the pool, a short walk to the beach. Sleeps 2. Book direct with the host, no platform fees.",
     gradients: [
       "linear-gradient(135deg, #2C7BA3 0%, #4a90a4 100%)",
       "linear-gradient(135deg, #E8845A 0%, #c4623e 100%)",
@@ -172,8 +182,7 @@ export const properties: Property[] = [
     subtitle: "Walk to Beach & View Terrace",
     region: "tenerife",
     btPropertyId: "prop_mohfv8np89",
-    icalUrl:
-      "https://www.airbnb.com/calendar/ical/720194839435246794.ics?t=3da4aac00c9d4eb6bbe7f3496aa22ee8",
+    airbnbListingId: "720194839435246794",
     bedrooms: 2,
     bathrooms: 1,
     maxGuests: 6,
@@ -192,6 +201,8 @@ export const properties: Property[] = [
     ],
     description:
       "Discover the magic of Tenerife from this stunning Colorful 2-Bedroom House, a vibrant and welcoming home with spectacular ocean and mountain views. Located within walking distance of a beautiful beach, this charming house accommodates up to six guests in style and comfort. The highlight of the property is its breathtaking view terrace - the perfect spot to watch the sunrise over the Atlantic Ocean with your morning coffee. Inside, the house is filled with colour and character, featuring a fully equipped kitchen, comfortable living spaces, and two well-appointed bedrooms. Tenerife's legendary sunshine, diverse landscapes, and rich culture are right on your doorstep, making this the ideal base for exploring this remarkable island.",
+    metaDescription:
+      "2-bedroom house with an ocean and mountain view terrace in Tenerife, Spain, walking distance to the beach. Sleeps 6. Book direct, no platform fees.",
     gradients: [
       "linear-gradient(135deg, #E8845A 0%, #e8a87c 100%)",
       "linear-gradient(135deg, #2C5F5A 0%, #2C7BA3 100%)",
@@ -225,8 +236,7 @@ export const properties: Property[] = [
     subtitle: "Quiet Nature & Near Beach",
     region: "tenerife",
     btPropertyId: "prop_mohfwhqrgj",
-    icalUrl:
-      "https://www.airbnb.com/calendar/ical/888793861213418554.ics?t=130346559a814283901a9b2280797a38",
+    airbnbListingId: "888793861213418554",
     bedrooms: 0,
     bathrooms: 1,
     maxGuests: 2,
@@ -244,6 +254,8 @@ export const properties: Property[] = [
     ],
     description:
       "Escape to the serene Beach House Style Studio, a peaceful and beautifully designed retreat nestled in the natural beauty of Tenerife. This intimate studio for two is the perfect sanctuary for those seeking tranquillity away from the crowds, while still being just minutes from a gorgeous beach. Surrounded by lush natural landscapes and the soothing sounds of nature, the studio features a charming terrace where you can unwind and take in the spectacular scenery. The interior is inspired by coastal living, with natural materials and a calming colour palette creating a sense of absolute relaxation. All essential amenities are provided, including air conditioning, WiFi, and a well-equipped kitchenette. Your own slice of paradise awaits.",
+    metaDescription:
+      "Peaceful studio with a terrace near the beach in Tenerife, Spain, surrounded by nature. Sleeps 2. Book direct with the host, no platform fees.",
     gradients: [
       "linear-gradient(135deg, #4a90a4 0%, #2C7BA3 100%)",
       "linear-gradient(135deg, #E8845A 0%, #f0a070 100%)",

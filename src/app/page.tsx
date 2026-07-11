@@ -1,16 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getPropertiesByRegion, properties, defaultWhatsAppNumber } from "@/data/properties";
-import { fetchPropertyRates } from "@/lib/rates";
+import { fetchPropertyRates, nearTermMinRate } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+
+const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 function regionMinPrice(rates: (Awaited<ReturnType<typeof fetchPropertyRates>> | null)[]): number | null {
-  const allOpen = rates.flatMap((r) =>
-    r?.openRatesByDate ? Object.values(r.openRatesByDate) : []
-  );
-  return allOpen.length > 0 ? Math.min(...allOpen) : null;
+  const prices = rates
+    .map((r) => nearTermMinRate(r?.openRatesByDate)?.price)
+    .filter((p): p is number => p !== undefined);
+  return prices.length > 0 ? Math.min(...prices) : null;
 }
 
 export default async function HomePage() {
@@ -308,7 +311,7 @@ export default async function HomePage() {
               prices, better service, better experience.
             </p>
             <a
-              href={`https://wa.me/${defaultWhatsAppNumber}`}
+              href={buildWhatsAppUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
@@ -438,7 +441,7 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href={`https://wa.me/${defaultWhatsAppNumber}`}
+              href={buildWhatsAppUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2.5 bg-green-500 hover:bg-green-600 text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"

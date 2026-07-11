@@ -5,6 +5,7 @@ import { DateRange } from "react-day-picker";
 import { differenceInCalendarDays, format, addDays } from "date-fns";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import type { BlockedDateRange } from "@/lib/ical-client";
+import { buildWhatsAppUrl as buildWhatsAppLink } from "@/lib/whatsapp";
 
 interface BookingPanelProps {
   propertyName: string;
@@ -98,7 +99,7 @@ export default function BookingPanel({
   function buildWhatsAppUrl(): string {
     if (!range?.from || !range?.to) {
       const text = `Hello! I'm interested in booking *${propertyName}* for ${guestLabel}. Could you please confirm availability and pricing?`;
-      return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+      return buildWhatsAppLink(whatsappNumber, text);
     }
     const checkIn = formatDateDisplay(range.from);
     const checkOut = formatDateDisplay(range.to);
@@ -106,7 +107,7 @@ export default function BookingPanel({
       ? ` The estimated total is *€${estimatedTotal.toFixed(0)}* (${nights} nights + cleaning fee).`
       : "";
     const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights) for *${guestLabel}*.${totalLine} Could you please confirm availability and pricing?`;
-    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    return buildWhatsAppLink(whatsappNumber, text);
   }
 
   function buildEmailUrl(): string {

@@ -91,10 +91,22 @@ async function tryFetchIcal(icalUrl: string): Promise<BlockedDateRange[] | null>
 }
 
 export async function fetchBlockedDates(
-  icalUrl: string,
+  icalUrl: string | undefined,
   propertyId?: string
 ): Promise<CalendarData> {
   const now = new Date().toISOString();
+
+  if (!icalUrl) {
+    // No calendar-sync secret configured for this build (e.g. local dev) -
+    // go straight to the last synced cache instead of a doomed retry loop.
+    if (propertyId) {
+      const cache = readCacheRaw(propertyId);
+      if (cache && cache.blocked.length > 0) {
+        return { blocked: cache.blocked, syncedAt: cache.updatedAt ?? now, fromCache: true };
+      }
+    }
+    return { blocked: [], syncedAt: now, fromCache: false };
+  }
 
   let lastError: unknown;
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {

@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://g-pal87.github.io/Short-Term-Rentals/sitemap.xml

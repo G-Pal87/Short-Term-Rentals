@@ -26,7 +26,7 @@ jobs:
           LATEST=$(curl -sf "$FEED_URL" | python3 -c "import json,sys; print(json.load(sys.stdin).get('generatedAt',''))" 2>/dev/null || echo "")
 
           if [ -z "$LATEST" ]; then
-            echo "Could not fetch feed — skipping"
+            echo "Could not fetch feed - skipping"
             echo "changed=false" >> $GITHUB_OUTPUT
             exit 0
           fi
@@ -34,7 +34,7 @@ jobs:
           STORED=$(cat "$STAMP_FILE" 2>/dev/null || echo "")
 
           if [ "$LATEST" = "$STORED" ]; then
-            echo "Rates unchanged ($LATEST) — no rebuild needed"
+            echo "Rates unchanged ($LATEST) - no rebuild needed"
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "Rates changed: $STORED → $LATEST"
@@ -48,6 +48,6 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .last-rates-update
-          git commit -m "chore: rates updated in Business-Tracking — rebuild site"
+          git commit -m "chore: rates updated in Business-Tracking - rebuild site"
           # force-with-lease: safe if another concurrent run already pushed the same stamp
-          git push --force-with-lease origin main || echo "Concurrent run already pushed — skipping"
+          git push --force-with-lease origin main || echo "Concurrent run already pushed - skipping"

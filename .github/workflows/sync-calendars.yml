@@ -38,7 +38,7 @@ jobs:
             local url="$2"
             local tmpfile delays=(0 5 15 30)
             if [ -z "$url" ]; then
-              echo "WARN: no secret set for $id — keeping existing cache"
+              echo "WARN: no secret set for $id - keeping existing cache"
               return
             fi
             tmpfile=$(mktemp /tmp/ical_XXXXXX.ics)
@@ -52,7 +52,7 @@ jobs:
               fi
             done
             if [ "$success" = false ]; then
-              echo "WARN: all attempts failed for $id — keeping existing cache"
+              echo "WARN: all attempts failed for $id - keeping existing cache"
               # Do NOT overwrite with empty data; leave existing calendars/${id}.json intact
             fi
             rm -f "$tmpfile"

@@ -198,31 +198,12 @@ export default function BookingPanel({
           </div>
 
           <div className="space-y-2.5 text-sm">
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between font-bold text-gray-900">
               <span>
-                {nights} nights
-                {ratesByDate ? " (dynamic rates)" : ` × €${pricePerNight}`}
+                Total for {nights} night{nights > 1 ? "s" : ""}
+                {extraGuestTotal > 0 ? `, ${extraGuests} extra guest${extraGuests > 1 ? "s" : ""}` : ""}
               </span>
-              <span className="font-medium text-gray-900">€{nightlyTotal.toFixed(0)}</span>
-            </div>
-
-            {extraGuestTotal > 0 && (
-              <div className="flex justify-between text-gray-600">
-                <span>
-                  Extra guests ({extraGuests} × {nights} night{nights > 1 ? "s" : ""})
-                </span>
-                <span className="font-medium text-gray-900">€{extraGuestTotal.toFixed(0)}</span>
-              </div>
-            )}
-
-            <div className="border-t border-cream-dark pt-2.5">
-              <div className="flex justify-between font-bold text-gray-900">
-                <span>Estimated Total</span>
-                <span className="text-primary text-lg">€{estimatedTotal.toFixed(0)}</span>
-              </div>
-              {cleaning > 0 && (
-                <p className="text-xs text-gray-400 mt-1">Cleaning included — no extra fees</p>
-              )}
+              <span className="text-primary text-lg">€{estimatedTotal.toFixed(0)}</span>
             </div>
 
             {saving > 0 && (

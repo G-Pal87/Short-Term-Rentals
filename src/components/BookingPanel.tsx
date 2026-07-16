@@ -215,18 +215,14 @@ export default function BookingPanel({
               </div>
             )}
 
-            {cleaning > 0 && (
-              <div className="flex justify-between text-gray-600">
-                <span>Cleaning fee</span>
-                <span className="font-medium text-gray-900">€{cleaning.toFixed(0)}</span>
-              </div>
-            )}
-
             <div className="border-t border-cream-dark pt-2.5">
               <div className="flex justify-between font-bold text-gray-900">
                 <span>Estimated Total</span>
                 <span className="text-primary text-lg">€{estimatedTotal.toFixed(0)}</span>
               </div>
+              {cleaning > 0 && (
+                <p className="text-xs text-gray-400 mt-1">Cleaning included — no extra fees</p>
+              )}
             </div>
 
             {saving > 0 && (

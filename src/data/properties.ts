@@ -45,7 +45,7 @@ export const properties: Property[] = [
     region: "paphos",
     btPropertyId: "prop_mox7p43s8o",
     airbnbListingId: "1341854905555812998",
-    bedrooms: 2,
+    bedrooms: 1,
     bathrooms: 1,
     maxGuests: 4,
     extraGuestFee: 15,
@@ -55,9 +55,9 @@ export const properties: Property[] = [
     lng: 32.408875392706626,
     amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen", "Beach Nearby"],
     description:
-      "Welcome to the Colourful Venus Beach Retreat, a vibrant and beautifully designed two-bedroom apartment nestled in the heart of Paphos, Cyprus. This stunning retreat boasts a sparkling private pool and two spacious terraces where you can soak up the Mediterranean sunshine and enjoy breathtaking views. The interior is decorated with a palette of warm, cheerful colours that create an inviting and relaxing atmosphere. Fully equipped with modern amenities including a fully-fitted kitchen, air conditioning throughout, and high-speed WiFi, this property offers everything you need for an unforgettable holiday. The beach is just a short stroll away, making it the perfect base for exploring the beautiful coastline and the rich history of Paphos.",
+      "Welcome to the Colourful Venus Beach Retreat, a vibrant and beautifully designed one-bedroom apartment nestled in the heart of Paphos, Cyprus. This stunning retreat boasts a sparkling private pool and two spacious terraces where you can soak up the Mediterranean sunshine and enjoy breathtaking views. The interior is decorated with a palette of warm, cheerful colours that create an inviting and relaxing atmosphere. A convertible double bed couch in the living room means the apartment comfortably accommodates up to 4 guests. Fully equipped with modern amenities including a fully-fitted kitchen, air conditioning throughout, and high-speed WiFi, this property offers everything you need for an unforgettable holiday. The beach is just a short stroll away, making it the perfect base for exploring the beautiful coastline and the rich history of Paphos.",
     metaDescription:
-      "2-bedroom apartment with a private pool and two terraces in Paphos, Cyprus. Sleeps 4, steps from the beach. Book direct with the host, no platform fees.",
+      "1-bedroom apartment with a private pool and two terraces in Paphos, Cyprus. Sleeps 4 with a sofa bed, steps from the beach. Book direct with the host, no platform fees.",
     gradients: [
       "linear-gradient(135deg, #E8845A 0%, #c4623e 100%)",
       "linear-gradient(135deg, #2C5F5A 0%, #1e4540 100%)",
@@ -90,7 +90,7 @@ export const properties: Property[] = [
     region: "paphos",
     btPropertyId: "prop_mox7mr8day",
     airbnbListingId: "1389855941514317769",
-    bedrooms: 2,
+    bedrooms: 1,
     bathrooms: 1,
     maxGuests: 4,
     extraGuestFee: 15,
@@ -108,9 +108,9 @@ export const properties: Property[] = [
       "Parking",
     ],
     description:
-      "Experience luxury living at the Luxe Poolside Escape, an exquisite two-bedroom apartment offering the perfect blend of comfort and style in Paphos. Steps from the shimmering Mediterranean Sea, this property features a stunning pool and two elegant terraces perfect for al fresco dining and sunset cocktails. The interior has been thoughtfully designed with high-end furnishings and a sophisticated colour palette. A short beach walk leads you to the golden sands and crystal-clear waters of Paphos. Whether you're looking for a romantic getaway or a family holiday, this luxurious retreat promises memories that will last a lifetime. On-site parking and all modern conveniences are included.",
+      "Experience luxury living at the Luxe Poolside Escape, an exquisite one-bedroom apartment offering the perfect blend of comfort and style in Paphos. Steps from the shimmering Mediterranean Sea, this property features a stunning pool and two elegant terraces perfect for al fresco dining and sunset cocktails. The interior has been thoughtfully designed with high-end furnishings and a sophisticated colour palette. A convertible double bed couch in the living room means the apartment comfortably accommodates up to 4 guests. A short beach walk leads you to the golden sands and crystal-clear waters of Paphos. Whether you're looking for a romantic getaway or a family holiday, this luxurious retreat promises memories that will last a lifetime. On-site parking and all modern conveniences are included.",
     metaDescription:
-      "2-bedroom apartment with a pool and two terraces in Paphos, Cyprus, a short walk from the beach. Sleeps 4, on-site parking. Book direct, no platform fees.",
+      "1-bedroom apartment with a pool and two terraces in Paphos, Cyprus, a short walk from the beach. Sleeps 4 with a sofa bed, on-site parking. Book direct, no platform fees.",
     gradients: [
       "linear-gradient(135deg, #1e4540 0%, #2C5F5A 100%)",
       "linear-gradient(135deg, #E8845A 0%, #f0a070 100%)",

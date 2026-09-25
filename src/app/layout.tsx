@@ -4,7 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import Header from "@/components/Header";
 import { defaultWhatsAppNumber } from "@/data/properties";
-import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { SITE_URL, SITE_NAME, CONTACT_EMAIL } from "@/lib/site";
 import { organizationSchema } from "@/lib/schema";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
@@ -150,13 +150,13 @@ export default function RootLayout({
                   </li>
                   <li>
                     <a
-                      href="mailto:giorgos.koutoulo@gmail.com"
+                      href={`mailto:${CONTACT_EMAIL}`}
                       className="text-sm text-gray-300 hover:text-primary transition-colors flex items-center gap-2"
                     >
                       <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
-                      giorgos.koutoulo@gmail.com
+                      {CONTACT_EMAIL}
                     </a>
                   </li>
                 </ul>

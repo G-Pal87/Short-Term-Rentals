@@ -5,9 +5,8 @@ import { regionDisplayNames } from "@/data/properties";
 
 interface PropertyCardProps {
   property: Property;
-  minPrice?: number;
-  /** false = prices hidden for this property (Business-Tracking switch). */
-  showPrice?: boolean;
+  /** Advertised "From" price; null = "Price on request" (hidden or nothing open). */
+  minPrice: number | null;
 }
 
 function BedIcon() {
@@ -34,9 +33,8 @@ function GuestsIcon() {
   );
 }
 
-export default function PropertyCard({ property, minPrice, showPrice = true }: PropertyCardProps) {
-  const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, pricePerNight, gradients, images } = property;
-  const displayPrice = minPrice ?? pricePerNight;
+export default function PropertyCard({ property, minPrice }: PropertyCardProps) {
+  const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, gradients, images } = property;
   const href = `/${region}/${id}`;
   const heroGradient = gradients[0];
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -86,9 +84,9 @@ export default function PropertyCard({ property, minPrice, showPrice = true }: P
         {/* Price badge */}
         <div className="absolute top-3 right-3 z-10">
           <span className="bg-primary text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-sm">
-            {showPrice ? (
+            {minPrice != null ? (
               <>
-                From €{displayPrice}
+                From €{minPrice}
                 <span className="text-xs font-normal opacity-90">/night</span>
               </>
             ) : (

@@ -18,7 +18,7 @@ jobs:
     steps:
       # Full history but no file contents up front (blob:none): only the files
       # the pushed commits touched are downloaded.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
           filter: blob:none
@@ -27,4 +27,14 @@ jobs:
         env:
           BEFORE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
           AFTER: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-        run: python3 .github/scripts/privacy-guard.py "$BEFORE" "$AFTER"
+          EVENT: ${{ github.event_name }}
+        # On a pull request, run the guard as it is on the base branch, so the
+        # pull request can't weaken the check that is judging it.
+        run: |
+          guard=.github/scripts/privacy-guard.py
+          if [ "$EVENT" = "pull_request" ] && git cat-file -e "$BEFORE:$guard" 2>/dev/null; then
+            git show "$BEFORE:$guard" > "$RUNNER_TEMP/privacy-guard.py"
+          else
+            cp "$guard" "$RUNNER_TEMP/privacy-guard.py"
+          fi
+          python3 "$RUNNER_TEMP/privacy-guard.py" "$BEFORE" "$AFTER"

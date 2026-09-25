@@ -8,7 +8,8 @@ commits and fails the run (which emails the pusher) when it finds:
 
   - calendar data, .ics files, rate feeds or the rates stamp committed;
   - Airbnb calendar links (their ?s= token grants calendar access), secrets,
-    password hashes or copies of rate feeds inside any file.
+    password hashes, copies of rate feeds, precise property coordinates or
+    hard-coded prices inside any file.
 
 It never prints file contents - only paths and reasons - because Actions logs
 of a public repository are public too.
@@ -37,6 +38,11 @@ SECRET_PATTERNS = {
     "a password hash": re.compile(rb"\"passwordHash\"\s*:\s*\"[0-9a-f]{32,}\""),
     "an Airbnb calendar link with its access token": re.compile(rb"airbnb\.[a-z.]+/calendar/ical/\d+\.ics\?[^\s\"']*\bs=[0-9a-f]{16,}"),
     "a copy of a daily-rate feed": re.compile(rb"\"schema\"\s*:\s*\"str-daily-rates"),
+    # Property positions are published ~200m off and rounded to 3 decimals;
+    # 4+ decimals (~10m) would point at the building.
+    "precise property coordinates": re.compile(rb"\b(?:lat|lng|latitude|longitude|mapLat|mapLng)\"?\s*[:=]\s*-?\d{1,3}\.\d{4,}"),
+    # Prices come from the rates feed at deploy time only.
+    "a hard-coded nightly price or cleaning fee": re.compile(rb"\b(?:pricePerNight|cleaningFee)\"?\s*:\s*[1-9]"),
 }
 ZERO_SHA = re.compile(r"^0+$")
 
@@ -72,14 +78,15 @@ def changed_files(commit):
 def commits_to_check(before, after):
     if before and not ZERO_SHA.match(before):
         try:
-            return git("rev-list", "--max-count=200", f"{before}..{after}").split()
+            return git("rev-list", f"{before}..{after}").split()
         except subprocess.CalledProcessError:
             pass  # before is unknown here (e.g. after a force-push): fall through
     # New branch or force-push: commits not reachable from any other branch.
     others = [r for r in git("for-each-ref", "--format=%(refname)", "refs/remotes/origin").split()
               if git("rev-parse", r).strip() != git("rev-parse", after).strip()]
-    return git("rev-list", "--max-count=200", after, "--not", *others).split() if others \
-        else git("rev-list", "--max-count=200", after).split()
+    # No commit cap: every pushed commit is checked, however many there are.
+    return git("rev-list", after, "--not", *others).split() if others \
+        else git("rev-list", after).split()
 
 
 def main():

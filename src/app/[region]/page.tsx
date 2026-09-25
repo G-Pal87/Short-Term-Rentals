@@ -7,9 +7,10 @@ import {
   getPropertiesByRegion,
   regionDisplayNames,
   regionWhatsAppNumbers,
+  regionTimeZones,
   type Region,
 } from "@/data/properties";
-import { fetchPropertyRates } from "@/lib/rates";
+import { fetchPropertyRates, advertisedMinRate } from "@/lib/rates";
 import { SITE_URL } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
@@ -100,19 +101,14 @@ export default async function RegionPage({ params }: RegionPageProps) {
   const meta = regionMeta[typedRegion];
   const whatsappNumber = regionWhatsAppNumbers[typedRegion];
 
-  // Fetch live rates for all properties in parallel (same logic as detail page)
-  const allRates = await Promise.all(
-    properties.map((p) => fetchPropertyRates(p.btPropertyId))
+  // Same "From" price as the home and property pages (near-term window).
+  // null = prices hidden in Business-Tracking or nothing open -> "Price on request".
+  const timeZone = regionTimeZones[typedRegion];
+  const minPrices = await Promise.all(
+    properties.map(async (p) =>
+      advertisedMinRate(await fetchPropertyRates(p.btPropertyId, timeZone), timeZone)?.price ?? null
+    )
   );
-  // Prices hidden in Business-Tracking for a property -> "Price on request".
-  const showPrices = allRates.map((r) => r?.showPrices !== false);
-  const minPrices = properties.map((p, i) => {
-    const rates = allRates[i];
-    const openRates = rates?.openRatesByDate
-      ? Object.values(rates.openRatesByDate)
-      : [];
-    return openRates.length > 0 ? Math.min(...openRates) : p.pricePerNight;
-  });
 
   return (
     <div>
@@ -229,7 +225,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property, i) => (
                 <AnimateOnScroll key={property.id} delay={i * 80}>
-                  <PropertyCard property={property} minPrice={minPrices[i]} showPrice={showPrices[i]} />
+                  <PropertyCard property={property} minPrice={minPrices[i]} />
                 </AnimateOnScroll>
               ))}
             </div>

@@ -8,7 +8,7 @@ export interface Property {
   /**
    * Numeric Airbnb listing ID (public - just used to build a "See reviews on
    * Airbnb" link). The calendar-sync iCal URL itself carries a secret token
-   * and lives in the build environment instead (see src/lib/ical-secrets.ts).
+   * and lives only in the repository's Actions secrets (see deploy.yml).
    */
   airbnbListingId: string;
   btPropertyId?: string; // override for Business-Tracking feed matching
@@ -20,10 +20,13 @@ export interface Property {
    * 0 (or omitted) for properties whose maxGuests is 2 or fewer.
    */
   extraGuestFee?: number;
-  pricePerNight: number;
-  cleaningFee: number;        // Cleaning fee (flat, per booking)
-  lat: number;
-  lng: number;
+  /**
+   * Deliberately approximate map position (~150-250m from the door, rounded
+   * to 3 decimals): the exact address is only given after booking, and this
+   * repository is public. Never put exact coordinates here.
+   */
+  mapLat: number;
+  mapLng: number;
   amenities: string[];
   description: string;
   /** Hand-written ~150-char summary for <meta name="description"> and social previews. */
@@ -49,10 +52,8 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 4,
     extraGuestFee: 15,
-    pricePerNight: 120,
-    cleaningFee: 60,
-    lat: 34.77792893594747,
-    lng: 32.408875392706626,
+    mapLat: 34.777,
+    mapLng: 32.406,
     amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen", "Beach Nearby"],
     description:
       "Welcome to the Colourful Venus Beach Retreat, a vibrant and beautifully designed one-bedroom apartment nestled in the heart of Paphos, Cyprus. This stunning retreat boasts a sparkling private pool and two spacious terraces where you can soak up the Mediterranean sunshine and enjoy breathtaking views. The interior is decorated with a palette of warm, cheerful colours that create an inviting and relaxing atmosphere. A convertible double bed couch in the living room means the apartment comfortably accommodates up to 4 guests. Fully equipped with modern amenities including a fully-fitted kitchen, air conditioning throughout, and high-speed WiFi, this property offers everything you need for an unforgettable holiday. The beach is just a short stroll away, making it the perfect base for exploring the beautiful coastline and the rich history of Paphos.",
@@ -94,10 +95,8 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 4,
     extraGuestFee: 15,
-    pricePerNight: 140,
-    cleaningFee: 60,
-    lat: 34.77792893594747,
-    lng: 32.408875392706626,
+    mapLat: 34.779,
+    mapLng: 32.411,
     amenities: [
       "Pool",
       "2 Terraces",
@@ -144,10 +143,8 @@ export const properties: Property[] = [
     bedrooms: 0,
     bathrooms: 1,
     maxGuests: 2,
-    pricePerNight: 80,
-    cleaningFee: 60,
-    lat: 34.765957426166075,
-    lng: 32.411798972819234,
+    mapLat: 34.764,
+    mapLng: 32.412,
     amenities: ["Pool", "Balcony", "Beach Walk", "WiFi", "AC", "Kitchenette"],
     description:
       "The Poolside Central Studio is a charming and cosy studio apartment perfectly situated in the centre of Paphos, just a short walk from the beach. Ideal for couples or solo travellers, this bright and airy studio features a beautiful private balcony overlooking the pool, where you can enjoy your morning coffee with a refreshing view. The studio is cleverly designed to maximise space and comfort, with a well-equipped kitchenette, air conditioning, and fast WiFi. Its central location means you're never far from Paphos's best restaurants, shops, and attractions. The pool is shared with a small number of guests, ensuring a peaceful and relaxing atmosphere throughout your stay.",
@@ -187,10 +184,8 @@ export const properties: Property[] = [
     bathrooms: 1,
     maxGuests: 6,
     extraGuestFee: 10,
-    pricePerNight: 110,
-    cleaningFee: 50,
-    lat: 28.488009964437737,
-    lng: -16.238934070321324,
+    mapLat: 28.488,
+    mapLng: -16.241,
     amenities: [
       "View Terrace",
       "Beach Walk",
@@ -240,10 +235,8 @@ export const properties: Property[] = [
     bedrooms: 0,
     bathrooms: 1,
     maxGuests: 2,
-    pricePerNight: 75,
-    cleaningFee: 50,
-    lat: 28.488009964437737,
-    lng: -16.238934070321324,
+    mapLat: 28.488,
+    mapLng: -16.237,
     amenities: [
       "Terrace",
       "Near Beach",
@@ -281,6 +274,12 @@ export const properties: Property[] = [
 export const regionDisplayNames: Record<Region, string> = {
   paphos: "Cyprus - Paphos",
   tenerife: "Spain - Tenerife",
+};
+
+// Local time zone per region: decides which day is "today" for rates.
+export const regionTimeZones: Record<Region, string> = {
+  paphos: "Asia/Nicosia",
+  tenerife: "Atlantic/Canary",
 };
 
 // WhatsApp numbers in wa.me format (country code + number, no "+" or spaces)

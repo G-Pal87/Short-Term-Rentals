@@ -7,12 +7,11 @@ import {
   properties,
   regionDisplayNames,
   regionWhatsAppNumbers,
+  regionTimeZones,
   type Region,
 } from "@/data/properties";
-import { fetchBlockedDates } from "@/lib/ical";
-import { fetchPropertyRates, nearTermMinRate } from "@/lib/rates";
-import { getIcalUrl } from "@/lib/ical-secrets";
-import { approximateCoordinates } from "@/lib/geo";
+import { readCalendar } from "@/lib/calendar";
+import { fetchPropertyRates, advertisedMinRate } from "@/lib/rates";
 import { vacationRentalSchema, breadcrumbSchema } from "@/lib/schema";
 import { SITE_URL } from "@/lib/site";
 
@@ -161,28 +160,25 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     notFound();
   }
 
-  const approxLocation = approximateCoordinates(property.lat, property.lng, property.id);
+  const approxLocation = { lat: property.mapLat, lng: property.mapLng };
+  const timeZone = regionTimeZones[property.region];
 
-  const [calendarData, propertyRates] = await Promise.all([
-    fetchBlockedDates(getIcalUrl(property.id), property.id),
-    fetchPropertyRates(property.btPropertyId),
-  ]);
-  const { blocked: blockedRanges, syncedAt, fromCache } = calendarData;
-
-  let minPrice = property.pricePerNight;
-  let minPriceMonth: string | null = null;
-
-  const nearTerm = nearTermMinRate(propertyRates?.openRatesByDate);
-  if (nearTerm) {
-    minPrice = nearTerm.price;
-    const [y, m] = nearTerm.date.split("-").map(Number);
-    minPriceMonth = new Date(y, m - 1, 1).toLocaleString("default", { month: "long" });
-  }
+  const calendar = readCalendar(property.id);
+  const propertyRates = await fetchPropertyRates(property.btPropertyId, timeZone);
 
   // Prices hidden for this property in Business-Tracking (per property or
-  // globally): no price anywhere on the page, including the static
-  // pricePerNight fallback and the search-engine price range.
-  const showPrices = propertyRates?.showPrices !== false;
+  // globally), or no feed: no price anywhere on the page, including the
+  // search-engine price range.
+  const showPrices = propertyRates?.showPrices === true;
+
+  // null (hidden, or nothing open in the next year) -> "Price on request".
+  const advertised = advertisedMinRate(propertyRates, timeZone);
+  const minPrice = advertised?.price ?? null;
+  let minPriceMonth: string | null = null;
+  if (advertised) {
+    const [y, m] = advertised.date.split("-").map(Number);
+    minPriceMonth = new Date(y, m - 1, 1).toLocaleString("en-GB", { month: "long" });
+  }
 
   const displayRegion = regionDisplayNames[property.region as Region];
 
@@ -192,7 +188,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(vacationRentalSchema(property, approxLocation, showPrices ? minPrice : null)),
+          __html: JSON.stringify(vacationRentalSchema(property, approxLocation, minPrice)),
         }}
       />
       <script
@@ -265,7 +261,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </div>
                 </div>
                 <div className="flex-shrink-0 text-right">
-                  {showPrices ? (
+                  {minPrice != null ? (
                     <>
                       <p className="text-xs text-gray-400 uppercase tracking-widest">From</p>
                       <p className="font-serif text-3xl font-bold text-primary">€{minPrice}</p>
@@ -403,18 +399,16 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             <div className="sticky top-20">
               <BookingPanel
                 propertyName={property.name}
-                pricePerNight={property.pricePerNight}
                 showPrices={showPrices}
-                blockedRanges={blockedRanges}
-                propertyId={property.id}
+                blockedRanges={calendar.blocked}
                 whatsappNumber={regionWhatsAppNumbers[property.region as Region]}
                 ratesByDate={propertyRates?.ratesByDate}
                 airbnbRatesByDate={propertyRates?.airbnbRatesByDate}
-                cleaningFee={propertyRates?.cleaningFee ?? property.cleaningFee}
+                cleaningFee={propertyRates?.cleaningFee ?? 0}
                 maxGuests={property.maxGuests}
                 extraGuestFee={property.extraGuestFee ?? 0}
-                calendarSyncedAt={syncedAt}
-                calendarFromCache={fromCache}
+                calendarSyncedAt={calendar.syncedAt}
+                calendarStatus={calendar.status}
               />
             </div>
           </div>

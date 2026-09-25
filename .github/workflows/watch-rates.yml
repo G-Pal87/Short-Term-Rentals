@@ -3,9 +3,11 @@ name: Watch for Rate Updates
 # Polls the Business-Tracking rate feed and redeploys the site when it has
 # changed since the live build. Compares with the rates-stamp.txt the live site
 # was built with (see deploy.yml), so nothing is committed to this repo.
+# Business-Tracking also sends a rates-updated repository_dispatch straight to
+# deploy.yml, so this hourly poll is only a backstop for a missed dispatch.
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:

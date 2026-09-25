@@ -41,3 +41,7 @@ next-env.d.ts
 /calendars/
 /public/calendars/
 /public/rates-stamp.txt
+
+# Resized image variants, generated before every dev/build run
+# (scripts/build-image-variants.js).
+/public/images/_opt/

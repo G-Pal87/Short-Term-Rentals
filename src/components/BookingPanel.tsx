@@ -4,12 +4,13 @@ import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { differenceInCalendarDays, format, addDays } from "date-fns";
 import AvailabilityCalendar from "./AvailabilityCalendar";
-import type { BlockedDateRange } from "@/lib/ical-client";
+import type { BlockedDateRange } from "@/lib/availability";
+import type { CalendarStatus } from "@/lib/calendar";
 import { buildWhatsAppUrl as buildWhatsAppLink } from "@/lib/whatsapp";
+import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
 
 interface BookingPanelProps {
   propertyName: string;
-  pricePerNight: number;
   /**
    * false = prices hidden for this property in Business-Tracking: no totals,
    * savings, per-guest fees or amounts in the WhatsApp/email message - the
@@ -17,15 +18,14 @@ interface BookingPanelProps {
    */
   showPrices?: boolean;
   blockedRanges: BlockedDateRange[];
-  propertyId: string;
   whatsappNumber: string;
   ratesByDate?: Record<string, number>;
   airbnbRatesByDate?: Record<string, number>;
   cleaningFee?: number;
   maxGuests: number;
   extraGuestFee?: number;
-  calendarSyncedAt?: string;
-  calendarFromCache?: boolean;
+  calendarSyncedAt?: string | null;
+  calendarStatus: CalendarStatus;
 }
 
 // Nightly rate already covers this many guests; each guest beyond it incurs extraGuestFee/night.
@@ -39,28 +39,26 @@ function formatDateDisplay(date: Date): string {
   return format(date, "MMM d, yyyy");
 }
 
+/** Sum of the nightly rates, or null if any night has no rate (no guessing). */
 function nightlySubtotal(
   from: Date,
   to: Date,
-  ratesByDate: Record<string, number> | undefined,
-  fallback: number
-): number {
+  ratesByDate: Record<string, number> | undefined
+): number | null {
   const nights = differenceInCalendarDays(to, from);
   let total = 0;
   for (let i = 0; i < nights; i++) {
-    const d = addDays(from, i);
-    const key = toDateKey(d);
-    total += ratesByDate?.[key] ?? fallback;
+    const rate = ratesByDate?.[toDateKey(addDays(from, i))];
+    if (rate == null) return null;
+    total += rate;
   }
   return total;
 }
 
 export default function BookingPanel({
   propertyName,
-  pricePerNight,
   showPrices = true,
   blockedRanges,
-  propertyId,
   whatsappNumber,
   ratesByDate,
   airbnbRatesByDate,
@@ -68,7 +66,7 @@ export default function BookingPanel({
   maxGuests,
   extraGuestFee = 0,
   calendarSyncedAt,
-  calendarFromCache,
+  calendarStatus,
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [guests, setGuests] = useState(Math.min(BASE_GUESTS, maxGuests));
@@ -78,27 +76,32 @@ export default function BookingPanel({
       ? differenceInCalendarDays(range.to, range.from)
       : 0;
 
+  // null = at least one night has no live rate: quote on request instead.
   const nightlyTotal =
-    range?.from && range?.to
-      ? nightlySubtotal(range.from, range.to, ratesByDate, pricePerNight)
-      : 0;
+    showPrices && range?.from && range?.to
+      ? nightlySubtotal(range.from, range.to, ratesByDate)
+      : null;
 
+  // Savings are only claimed when every night has an Airbnb price to compare.
   const airbnbTotal =
-    range?.from && range?.to
-      ? nightlySubtotal(range.from, range.to, airbnbRatesByDate, pricePerNight)
-      : 0;
+    nightlyTotal != null && range?.from && range?.to
+      ? nightlySubtotal(range.from, range.to, airbnbRatesByDate)
+      : null;
 
   // The extra-guest surcharge gets the same host discount as the nightly rate.
-  const discountRatio = airbnbTotal > 0 && nightlyTotal > 0 ? nightlyTotal / airbnbTotal : 1;
+  const discountRatio = airbnbTotal && nightlyTotal ? nightlyTotal / airbnbTotal : 1;
   const extraGuests = Math.max(0, guests - BASE_GUESTS);
   const rawExtraGuestTotal = extraGuests * extraGuestFee * nights;
   const extraGuestTotal = Math.round(rawExtraGuestTotal * discountRatio);
 
   const cleaning = cleaningFee ?? 0;
-  const estimatedTotal = nightlyTotal + extraGuestTotal + cleaning;
+  const estimatedTotal = nightlyTotal != null ? nightlyTotal + extraGuestTotal + cleaning : null;
 
-  const airbnbComparableTotal = airbnbTotal > 0 ? airbnbTotal + rawExtraGuestTotal : 0;
-  const saving = airbnbComparableTotal > 0 ? airbnbComparableTotal - (nightlyTotal + extraGuestTotal) : 0;
+  const airbnbComparableTotal = airbnbTotal ? airbnbTotal + rawExtraGuestTotal : 0;
+  const saving =
+    airbnbComparableTotal > 0 && nightlyTotal != null
+      ? airbnbComparableTotal - (nightlyTotal + extraGuestTotal)
+      : 0;
   const savingPct = airbnbComparableTotal > 0 ? Math.round((saving / airbnbComparableTotal) * 100) : 0;
 
   const guestLabel = `${guests} guest${guests > 1 ? "s" : ""}`;
@@ -115,7 +118,7 @@ export default function BookingPanel({
       const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights) for *${guestLabel}*. Could you please confirm availability and send me a quote?`;
       return buildWhatsAppLink(whatsappNumber, text);
     }
-    const totalLine = estimatedTotal > 0
+    const totalLine = estimatedTotal != null && estimatedTotal > 0
       ? ` The estimated total is *€${estimatedTotal.toFixed(0)}* (${nights} nights + cleaning fee).`
       : "";
     const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights) for *${guestLabel}*.${totalLine} Could you please confirm availability and pricing?`;
@@ -132,7 +135,7 @@ export default function BookingPanel({
       const checkOut = formatDateDisplay(range.to);
       body = `Hello!\n\nI'm interested in booking ${propertyName} from ${checkIn} to ${checkOut} (${nights} nights) for ${guestLabel}. Could you please confirm availability and ${showPrices ? "pricing" : "send me a quote"}?\n\nThank you.`;
     }
-    return `mailto:giorgos.koutoulo@gmail.com?cc=katonarita90@gmail.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return `mailto:${CONTACT_EMAIL}?cc=${CONTACT_EMAIL_CC}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
   return (
@@ -178,13 +181,12 @@ export default function BookingPanel({
 
       {/* Calendar */}
       <AvailabilityCalendar
-        initialBlockedRanges={blockedRanges}
-        propertyId={propertyId}
+        blockedRanges={blockedRanges}
         selectedRange={range}
         onRangeSelect={setRange}
-        ratesByDate={ratesByDate}
+        ratesByDate={showPrices ? ratesByDate : undefined}
         syncedAt={calendarSyncedAt}
-        fromCache={calendarFromCache}
+        status={calendarStatus}
       />
 
       {/* Price summary */}
@@ -194,7 +196,7 @@ export default function BookingPanel({
             <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            {showPrices ? "Price Summary" : "Your Stay"}
+            {estimatedTotal != null ? "Price Summary" : "Your Stay"}
           </h3>
 
           {/* Check-in/out dates */}
@@ -209,7 +211,7 @@ export default function BookingPanel({
             </div>
           </div>
 
-          {showPrices ? (
+          {estimatedTotal != null ? (
           <div className="space-y-2.5 text-sm">
             <div className="flex justify-between font-bold text-gray-900">
               <span>

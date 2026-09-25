@@ -1,43 +1,37 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getPropertiesByRegion, properties, defaultWhatsAppNumber } from "@/data/properties";
-import { fetchPropertyRates, nearTermMinRate } from "@/lib/rates";
+import { getPropertiesByRegion, defaultWhatsAppNumber, regionTimeZones, type Property } from "@/data/properties";
+import { fetchPropertyRates, advertisedMinRate } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
 
 const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-type Rates = Awaited<ReturnType<typeof fetchPropertyRates>>;
-
-// Cheapest near-term price across a region's properties whose prices are
-// shown. Properties with prices hidden in Business-Tracking are skipped; the
-// static pricePerNight fallback also only uses visible properties. null when
+// Cheapest advertised price across a region's properties. Properties with
+// prices hidden in Business-Tracking (or nothing open) are skipped. null when
 // no property in the region shows a price (the badge is then omitted).
-function regionMinPrice(props: { pricePerNight: number }[], rates: (Rates | null)[]): number | null {
-  const visible = props.map((p, i) => ({ p, r: rates[i] })).filter(({ r }) => r?.showPrices !== false);
-  if (visible.length === 0) return null;
-  const live = visible
-    .map(({ r }) => nearTermMinRate(r?.openRatesByDate)?.price)
-    .filter((p): p is number => p !== undefined);
-  if (live.length > 0) return Math.min(...live);
-  return Math.min(...visible.map(({ p }) => p.pricePerNight));
+async function regionMinPrice(props: Property[]): Promise<number | null> {
+  const prices = await Promise.all(
+    props.map(async (p) => {
+      const tz = regionTimeZones[p.region];
+      return advertisedMinRate(await fetchPropertyRates(p.btPropertyId, tz), tz)?.price;
+    })
+  );
+  const shown = prices.filter((p): p is number => p !== undefined);
+  return shown.length > 0 ? Math.min(...shown) : null;
 }
 
 export default async function HomePage() {
   const paphosProps = getPropertiesByRegion("paphos");
   const tenerifeProps = getPropertiesByRegion("tenerife");
 
-  // Fetch all property rates in parallel, then compute per-region minimums
-  const allRates = await Promise.all(
-    properties.map((p) => fetchPropertyRates(p.btPropertyId))
-  );
-  const paphosRates = allRates.slice(0, paphosProps.length);
-  const tenerifeRates = allRates.slice(paphosProps.length);
-
-  const paphosMin = regionMinPrice(paphosProps, paphosRates);
-  const tenerifeMin = regionMinPrice(tenerifeProps, tenerifeRates);
+  const [paphosMin, tenerifeMin] = await Promise.all([
+    regionMinPrice(paphosProps),
+    regionMinPrice(tenerifeProps),
+  ]);
 
   return (
     <div className="overflow-x-hidden">
@@ -465,7 +459,7 @@ export default async function HomePage() {
               WhatsApp Us
             </a>
             <a
-              href="mailto:giorgos.koutoulo@gmail.com?cc=katonarita90@gmail.com"
+              href={`mailto:${CONTACT_EMAIL}?cc=${CONTACT_EMAIL_CC}`}
               className="flex items-center gap-2.5 bg-secondary hover:bg-secondary-dark text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

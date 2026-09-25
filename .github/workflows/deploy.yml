@@ -1,17 +1,35 @@
 name: Deploy to GitHub Pages
 
+# Uses GitHub Pages' own Actions deployment (Settings → Pages → Source:
+# "GitHub Actions"). Nothing is committed anywhere: every run builds the site
+# with the current rates and Airbnb calendars and uploads it as a Pages
+# artifact. The old gh-pages branch kept every past build (prices, calendars)
+# in public git history.
 on:
   push:
     branches: [main]
   repository_dispatch:
     types: [rates-updated]
+  schedule:
+    # Refresh the Airbnb calendars 4x a day (replaces sync-calendars.yml).
+    - cron: "0 0,6,12,18 * * *"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://g-pal87.github.io/Short-Term-Rentals
+  RATES_INDEX_URL: https://raw.githubusercontent.com/G-Pal87/Business-Tracking/rates-feed/exports/daily-rates/index.json
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,14 +42,68 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Restore calendar cache from gh-pages
+      - name: Fetch and parse Airbnb calendars
+        env:
+          AIRBNB_ICAL_VENUS_BEACH_RETREAT: ${{ secrets.AIRBNB_ICAL_VENUS_BEACH_RETREAT }}
+          AIRBNB_ICAL_LUXE_POOLSIDE_ESCAPE: ${{ secrets.AIRBNB_ICAL_LUXE_POOLSIDE_ESCAPE }}
+          AIRBNB_ICAL_POOLSIDE_CENTRAL_STUDIO: ${{ secrets.AIRBNB_ICAL_POOLSIDE_CENTRAL_STUDIO }}
+          AIRBNB_ICAL_COLORFUL_2BEDROOM_HOUSE: ${{ secrets.AIRBNB_ICAL_COLORFUL_2BEDROOM_HOUSE }}
+          AIRBNB_ICAL_BEACH_HOUSE_STUDIO: ${{ secrets.AIRBNB_ICAL_BEACH_HOUSE_STUDIO }}
         run: |
-          git fetch origin gh-pages
+          mkdir -p calendars   # parse-ical.py writes calendars/<id>.json
+
+          # If Airbnb can't be reached, keep the calendar the live site already
+          # serves rather than publishing an empty one.
+          keep_live() {
+            curl -sf --max-time 30 "$SITE_URL/calendars/$1.json" -o "calendars/$1.json" \
+              && echo "  kept live calendar for $1" \
+              || { rm -f "calendars/$1.json"; echo "  WARN: no calendar available for $1"; }
+          }
+
+          fetch_ical() {
+            local id="$1"
+            local url="$2"
+            local tmpfile delays=(0 5 15 30)
+            if [ -z "$url" ]; then
+              echo "WARN: no secret set for $id"
+              keep_live "$id"
+              return
+            fi
+            tmpfile=$(mktemp /tmp/ical_XXXXXX.ics)
+            local success=false
+            for delay in "${delays[@]}"; do
+              [ "$delay" -gt 0 ] && echo "  retrying $id in ${delay}s..." && sleep "$delay"
+              if curl -sf --max-time 30 \
+                -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" \
+                "$url" -o "$tmpfile" && [ -s "$tmpfile" ]; then
+                python3 scripts/parse-ical.py "$id" "$tmpfile" && success=true && break
+              fi
+            done
+            if [ "$success" = false ]; then
+              echo "WARN: all attempts failed for $id"
+              keep_live "$id"
+            fi
+            rm -f "$tmpfile"
+          }
+
+          fetch_ical "venus-beach-retreat"     "$AIRBNB_ICAL_VENUS_BEACH_RETREAT"
+          fetch_ical "luxe-poolside-escape"    "$AIRBNB_ICAL_LUXE_POOLSIDE_ESCAPE"
+          fetch_ical "poolside-central-studio" "$AIRBNB_ICAL_POOLSIDE_CENTRAL_STUDIO"
+          fetch_ical "colorful-2bedroom-house" "$AIRBNB_ICAL_COLORFUL_2BEDROOM_HOUSE"
+          fetch_ical "beach-house-studio"      "$AIRBNB_ICAL_BEACH_HOUSE_STUDIO"
+
           mkdir -p public/calendars
-          for id in venus-beach-retreat luxe-poolside-escape poolside-central-studio colorful-2bedroom-house beach-house-studio; do
-            git show origin/gh-pages:calendars/${id}.json > public/calendars/${id}.json 2>/dev/null && \
-              echo "Restored $id" || echo "No cache for $id"
-          done
+          cp calendars/*.json public/calendars/ 2>/dev/null || true
+
+      # watch-rates.yml compares this stamp on the live site with the feed to
+      # decide whether a rebuild is needed. Read BEFORE the build, so the stamp
+      # is never newer than the rates the build actually used.
+      - name: Record rates feed version
+        run: |
+          curl -sf "$RATES_INDEX_URL?t=$(date +%s)" \
+            | python3 -c "import json,sys; print(json.load(sys.stdin).get('generatedAt',''))" \
+            > public/rates-stamp.txt || echo "" > public/rates-stamp.txt
+          echo "Rates feed generatedAt: $(cat public/rates-stamp.txt)"
 
       - name: Build static site
         env:
@@ -42,10 +114,16 @@ jobs:
           AIRBNB_ICAL_BEACH_HOUSE_STUDIO: ${{ secrets.AIRBNB_ICAL_BEACH_HOUSE_STUDIO }}
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
-          keep_files: true
-          cname: ""
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

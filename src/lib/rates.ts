@@ -1,7 +1,7 @@
 // RATES_FEED_BASE lets a local/test build point at another copy of the feeds.
 const RAW_BASE =
   process.env.RATES_FEED_BASE ||
-  "https://raw.githubusercontent.com/G-Pal87/Business-Tracking/main/exports/daily-rates";
+  "https://raw.githubusercontent.com/G-Pal87/Business-Tracking/rates-feed/exports/daily-rates";
 
 export interface PropertyRates {
   /**

@@ -179,6 +179,11 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     minPriceMonth = new Date(y, m - 1, 1).toLocaleString("default", { month: "long" });
   }
 
+  // Prices hidden for this property in Business-Tracking (per property or
+  // globally): no price anywhere on the page, including the static
+  // pricePerNight fallback and the search-engine price range.
+  const showPrices = propertyRates?.showPrices !== false;
+
   const displayRegion = regionDisplayNames[property.region as Region];
 
   return (
@@ -187,7 +192,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(vacationRentalSchema(property, approxLocation, minPrice)),
+          __html: JSON.stringify(vacationRentalSchema(property, approxLocation, showPrices ? minPrice : null)),
         }}
       />
       <script
@@ -260,11 +265,21 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </div>
                 </div>
                 <div className="flex-shrink-0 text-right">
-                  <p className="text-xs text-gray-400 uppercase tracking-widest">From</p>
-                  <p className="font-serif text-3xl font-bold text-primary">€{minPrice}</p>
-                  <p className="text-xs text-gray-400">
-                    per night{minPriceMonth ? ` in ${minPriceMonth}` : ""}
-                  </p>
+                  {showPrices ? (
+                    <>
+                      <p className="text-xs text-gray-400 uppercase tracking-widest">From</p>
+                      <p className="font-serif text-3xl font-bold text-primary">€{minPrice}</p>
+                      <p className="text-xs text-gray-400">
+                        per night{minPriceMonth ? ` in ${minPriceMonth}` : ""}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-xs text-gray-400 uppercase tracking-widest">Rates</p>
+                      <p className="font-serif text-2xl font-bold text-primary">Price on request</p>
+                      <p className="text-xs text-gray-400">Message the host for your best rate</p>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -389,6 +404,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <BookingPanel
                 propertyName={property.name}
                 pricePerNight={property.pricePerNight}
+                showPrices={showPrices}
                 blockedRanges={blockedRanges}
                 propertyId={property.id}
                 whatsappNumber={regionWhatsAppNumbers[property.region as Region]}

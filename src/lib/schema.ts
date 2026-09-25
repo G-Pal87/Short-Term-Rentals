@@ -21,7 +21,7 @@ const REGION_ADDRESS: Record<Region, { addressLocality: string; postalCode?: str
 export function vacationRentalSchema(
   property: Property,
   approxLocation: { lat: number; lng: number },
-  minPrice: number
+  minPrice: number | null
 ) {
   const url = `${SITE_URL}/${property.region}/${property.id}/`;
   const images = (property.images ?? []).map(
@@ -55,7 +55,9 @@ export function vacationRentalSchema(
       name: a,
       value: true,
     })),
-    priceRange: `From €${minPrice}/night`,
+    // Omitted when prices are hidden (minPrice null) so search engines don't
+    // show one either.
+    priceRange: minPrice != null ? `From €${minPrice}/night` : undefined,
   };
 }
 

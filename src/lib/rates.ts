@@ -1,7 +1,16 @@
+// RATES_FEED_BASE lets a local/test build point at another copy of the feeds.
 const RAW_BASE =
+  process.env.RATES_FEED_BASE ||
   "https://raw.githubusercontent.com/G-Pal87/Business-Tracking/main/exports/daily-rates";
 
 export interface PropertyRates {
+  /**
+   * false when prices are hidden for this property in Business-Tracking
+   * (per property, or all properties at once). The feed then carries no
+   * amounts at all, and every page must show "Price on request" instead of
+   * a price - including the static pricePerNight fallback.
+   */
+  showPrices: boolean;
   ratesByDate: Record<string, number>;      // "YYYY-MM-DD" -> host amount
   airbnbRatesByDate: Record<string, number>; // "YYYY-MM-DD" -> Airbnb checkout price
   openRatesByDate: Record<string, number>;   // "YYYY-MM-DD" -> host amount (open dates only)
@@ -22,9 +31,23 @@ export async function fetchPropertyRates(
 
     const feed = (await res.json()) as {
       property: { currency: string };
-      cleaningFee: number;
-      rates: { date: string; amount: number; guestAmount?: number; airbnbCheckout?: number; status: string }[];
+      showPrices?: boolean;
+      cleaningFee?: number;
+      rates: { date: string; amount?: number; guestAmount?: number; airbnbCheckout?: number; status: string }[];
     };
+
+    // Older feeds have no showPrices field: treat as shown.
+    const showPrices = feed.showPrices !== false;
+    if (!showPrices) {
+      return {
+        showPrices: false,
+        ratesByDate: {},
+        airbnbRatesByDate: {},
+        openRatesByDate: {},
+        cleaningFee: 0,
+        currency: feed.property?.currency ?? "EUR",
+      };
+    }
 
     if (!Array.isArray(feed.rates) || feed.rates.length === 0) return null;
 
@@ -34,6 +57,8 @@ export async function fetchPropertyRates(
     const openRatesByDate: Record<string, number> = {};
 
     for (const r of feed.rates) {
+      // Unavailable (booked/blocked) nights carry no amount.
+      if (typeof r.amount !== "number") continue;
       ratesByDate[r.date] = r.amount;
       const airbnbPrice = r.airbnbCheckout ?? r.guestAmount;
       if (airbnbPrice) airbnbRatesByDate[r.date] = airbnbPrice;
@@ -43,6 +68,7 @@ export async function fetchPropertyRates(
     }
 
     return {
+      showPrices: true,
       ratesByDate,
       airbnbRatesByDate,
       openRatesByDate,

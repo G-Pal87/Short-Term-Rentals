@@ -10,6 +10,12 @@ import { buildWhatsAppUrl as buildWhatsAppLink } from "@/lib/whatsapp";
 interface BookingPanelProps {
   propertyName: string;
   pricePerNight: number;
+  /**
+   * false = prices hidden for this property in Business-Tracking: no totals,
+   * savings, per-guest fees or amounts in the WhatsApp/email message - the
+   * guest asks for a quote instead.
+   */
+  showPrices?: boolean;
   blockedRanges: BlockedDateRange[];
   propertyId: string;
   whatsappNumber: string;
@@ -52,6 +58,7 @@ function nightlySubtotal(
 export default function BookingPanel({
   propertyName,
   pricePerNight,
+  showPrices = true,
   blockedRanges,
   propertyId,
   whatsappNumber,
@@ -103,6 +110,11 @@ export default function BookingPanel({
     }
     const checkIn = formatDateDisplay(range.from);
     const checkOut = formatDateDisplay(range.to);
+    if (!showPrices) {
+      // Prices hidden: never quote an amount - ask the host for one.
+      const text = `Hello! I'm interested in booking *${propertyName}* from ${checkIn} to ${checkOut} (${nights} nights) for *${guestLabel}*. Could you please confirm availability and send me a quote?`;
+      return buildWhatsAppLink(whatsappNumber, text);
+    }
     const totalLine = estimatedTotal > 0
       ? ` The estimated total is *€${estimatedTotal.toFixed(0)}* (${nights} nights + cleaning fee).`
       : "";
@@ -118,7 +130,7 @@ export default function BookingPanel({
     } else {
       const checkIn = formatDateDisplay(range.from);
       const checkOut = formatDateDisplay(range.to);
-      body = `Hello!\n\nI'm interested in booking ${propertyName} from ${checkIn} to ${checkOut} (${nights} nights) for ${guestLabel}. Could you please confirm availability and pricing?\n\nThank you.`;
+      body = `Hello!\n\nI'm interested in booking ${propertyName} from ${checkIn} to ${checkOut} (${nights} nights) for ${guestLabel}. Could you please confirm availability and ${showPrices ? "pricing" : "send me a quote"}?\n\nThank you.`;
     }
     return `mailto:giorgos.koutoulo@gmail.com?cc=katonarita90@gmail.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
@@ -137,7 +149,7 @@ export default function BookingPanel({
             </h3>
             <p className="text-xs text-gray-400 mt-1">
               Up to {maxGuests} guest{maxGuests > 1 ? "s" : ""}
-              {extraGuestFee > 0 ? ` · +€${extraGuestFee}/night per guest after ${BASE_GUESTS}` : ""}
+              {showPrices && extraGuestFee > 0 ? ` · +€${extraGuestFee}/night per guest after ${BASE_GUESTS}` : ""}
             </p>
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
@@ -182,7 +194,7 @@ export default function BookingPanel({
             <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            Price Summary
+            {showPrices ? "Price Summary" : "Your Stay"}
           </h3>
 
           {/* Check-in/out dates */}
@@ -197,6 +209,7 @@ export default function BookingPanel({
             </div>
           </div>
 
+          {showPrices ? (
           <div className="space-y-2.5 text-sm">
             <div className="flex justify-between font-bold text-gray-900">
               <span>
@@ -221,6 +234,17 @@ export default function BookingPanel({
               Final price subject to host confirmation
             </p>
           </div>
+          ) : (
+          <div className="space-y-2.5 text-sm">
+            <div className="flex justify-between font-bold text-gray-900">
+              <span>{nights} night{nights > 1 ? "s" : ""} · {guestLabel}</span>
+              <span className="text-primary">Price on request</span>
+            </div>
+            <p className="text-xs text-gray-500">
+              Send your dates via WhatsApp or email and the host will reply with your personal quote.
+            </p>
+          </div>
+          )}
         </div>
       )}
 

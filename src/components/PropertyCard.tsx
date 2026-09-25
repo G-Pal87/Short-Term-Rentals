@@ -6,6 +6,8 @@ import { regionDisplayNames } from "@/data/properties";
 interface PropertyCardProps {
   property: Property;
   minPrice?: number;
+  /** false = prices hidden for this property (Business-Tracking switch). */
+  showPrice?: boolean;
 }
 
 function BedIcon() {
@@ -32,7 +34,7 @@ function GuestsIcon() {
   );
 }
 
-export default function PropertyCard({ property, minPrice }: PropertyCardProps) {
+export default function PropertyCard({ property, minPrice, showPrice = true }: PropertyCardProps) {
   const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, pricePerNight, gradients, images } = property;
   const displayPrice = minPrice ?? pricePerNight;
   const href = `/${region}/${id}`;
@@ -84,8 +86,14 @@ export default function PropertyCard({ property, minPrice }: PropertyCardProps) 
         {/* Price badge */}
         <div className="absolute top-3 right-3 z-10">
           <span className="bg-primary text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-sm">
-            From €{displayPrice}
-            <span className="text-xs font-normal opacity-90">/night</span>
+            {showPrice ? (
+              <>
+                From €{displayPrice}
+                <span className="text-xs font-normal opacity-90">/night</span>
+              </>
+            ) : (
+              "Price on request"
+            )}
           </span>
         </div>
 

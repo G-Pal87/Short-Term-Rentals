@@ -9,11 +9,20 @@ const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your proper
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-function regionMinPrice(rates: (Awaited<ReturnType<typeof fetchPropertyRates>> | null)[]): number | null {
-  const prices = rates
-    .map((r) => nearTermMinRate(r?.openRatesByDate)?.price)
+type Rates = Awaited<ReturnType<typeof fetchPropertyRates>>;
+
+// Cheapest near-term price across a region's properties whose prices are
+// shown. Properties with prices hidden in Business-Tracking are skipped; the
+// static pricePerNight fallback also only uses visible properties. null when
+// no property in the region shows a price (the badge is then omitted).
+function regionMinPrice(props: { pricePerNight: number }[], rates: (Rates | null)[]): number | null {
+  const visible = props.map((p, i) => ({ p, r: rates[i] })).filter(({ r }) => r?.showPrices !== false);
+  if (visible.length === 0) return null;
+  const live = visible
+    .map(({ r }) => nearTermMinRate(r?.openRatesByDate)?.price)
     .filter((p): p is number => p !== undefined);
-  return prices.length > 0 ? Math.min(...prices) : null;
+  if (live.length > 0) return Math.min(...live);
+  return Math.min(...visible.map(({ p }) => p.pricePerNight));
 }
 
 export default async function HomePage() {
@@ -27,8 +36,8 @@ export default async function HomePage() {
   const paphosRates = allRates.slice(0, paphosProps.length);
   const tenerifeRates = allRates.slice(paphosProps.length);
 
-  const paphosMin = regionMinPrice(paphosRates) ?? Math.min(...paphosProps.map((p) => p.pricePerNight));
-  const tenerifeMin = regionMinPrice(tenerifeRates) ?? Math.min(...tenerifeProps.map((p) => p.pricePerNight));
+  const paphosMin = regionMinPrice(paphosProps, paphosRates);
+  const tenerifeMin = regionMinPrice(tenerifeProps, tenerifeRates);
 
   return (
     <div className="overflow-x-hidden">
@@ -161,9 +170,11 @@ export default async function HomePage() {
                     <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       {paphosProps.length} properties
                     </span>
-                    <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                      From €{paphosMin}/night
-                    </span>
+                    {paphosMin != null && (
+                      <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                        From €{paphosMin}/night
+                      </span>
+                    )}
                   </div>
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold text-white mb-2">
                     Cyprus - Paphos
@@ -204,9 +215,11 @@ export default async function HomePage() {
                     <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       {tenerifeProps.length} properties
                     </span>
-                    <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                      From €{tenerifeMin}/night
-                    </span>
+                    {tenerifeMin != null && (
+                      <span className="bg-black/35 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                        From €{tenerifeMin}/night
+                      </span>
+                    )}
                   </div>
                   <h3 className="font-serif text-3xl sm:text-4xl font-bold text-white mb-2">
                     Spain - Tenerife

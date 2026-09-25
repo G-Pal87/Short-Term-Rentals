@@ -104,6 +104,8 @@ export default async function RegionPage({ params }: RegionPageProps) {
   const allRates = await Promise.all(
     properties.map((p) => fetchPropertyRates(p.btPropertyId))
   );
+  // Prices hidden in Business-Tracking for a property -> "Price on request".
+  const showPrices = allRates.map((r) => r?.showPrices !== false);
   const minPrices = properties.map((p, i) => {
     const rates = allRates[i];
     const openRates = rates?.openRatesByDate
@@ -227,7 +229,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property, i) => (
                 <AnimateOnScroll key={property.id} delay={i * 80}>
-                  <PropertyCard property={property} minPrice={minPrices[i]} />
+                  <PropertyCard property={property} minPrice={minPrices[i]} showPrice={showPrices[i]} />
                 </AnimateOnScroll>
               ))}
             </div>

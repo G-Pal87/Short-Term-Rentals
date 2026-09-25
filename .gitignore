@@ -35,3 +35,9 @@ next-env.d.ts
 
 # Claude Code internal
 .claude/
+
+# Generated at deploy time (deploy.yml) and served only from the Pages
+# artifact, so they never enter the public git history.
+/calendars/
+/public/calendars/
+/public/rates-stamp.txt

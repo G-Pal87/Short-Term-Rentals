@@ -1,0 +1,30 @@
+name: Privacy guard
+
+# This repository is public and holds only the website's source. Fails (and
+# GitHub emails the pusher) if a push or pull request adds anything that must
+# not be public: Airbnb calendar data or links, rate feeds, or secrets.
+# Prints only paths and reasons, never contents. See
+# .github/scripts/privacy-guard.py.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      # Full history but no file contents up front (blob:none): only the files
+      # the pushed commits touched are downloaded.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Check pushed commits for data that must not be public
+        env:
+          BEFORE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          AFTER: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: python3 .github/scripts/privacy-guard.py "$BEFORE" "$AFTER"

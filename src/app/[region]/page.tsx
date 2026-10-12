@@ -32,6 +32,8 @@ const regionMeta: Record<
     pageTitle: string;
     metaTitle: string;
     metaDescription: string;
+    // Overrides displayName in the "All properties in …" heading.
+    listingsHeadingName?: string;
   }
 > = {
   paphos: {
@@ -47,6 +49,7 @@ const regionMeta: Record<
   },
   tenerife: {
     tagline: "Spain - Tenerife",
+    listingsHeadingName: "Tenerife - Santa Cruz",
     description:
       "Experience the volcanic wonder, lush forests, and year-round sunshine of Tenerife, Spain.",
     photo: `${basePath}/images/tenerife-hero.jpg`,
@@ -214,7 +217,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
             <div className="flex items-center justify-between mb-10">
               <div>
                 <h2 className="font-serif text-2xl font-bold text-gray-900">
-                  All properties in {displayName}
+                  All properties in {meta.listingsHeadingName ?? displayName}
                 </h2>
                 <p className="text-gray-500 text-sm mt-1">
                   {properties.length} listing{properties.length !== 1 ? "s" : ""} · Direct booking available

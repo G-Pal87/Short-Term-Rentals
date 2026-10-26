@@ -283,7 +283,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
                     href={instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 border border-white/40 hover:border-white hover:bg-white/10 text-white px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 whitespace-nowrap"
+                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#F58529] via-[#DD2A7B] to-[#8134AF] hover:brightness-110 text-white px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap"
                   >
                     <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <rect x="3" y="3" width="18" height="18" rx="5" />

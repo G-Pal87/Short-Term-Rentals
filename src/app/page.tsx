@@ -58,10 +58,16 @@ export default async function HomePage() {
         />
 
         <div className="relative z-10 w-full min-w-0 text-center px-5 sm:px-8 max-w-5xl mx-auto">
-          {/* Pill badge */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full mb-5 sm:mb-8 shadow-lg">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse-dot" />
-            <span className="font-medium tracking-wide">Direct booking - best rates guaranteed</span>
+          {/* Pill badges */}
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-5 sm:mb-8">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full shadow-lg">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse-dot" />
+              <span className="font-medium tracking-wide">Direct booking - best rates guaranteed</span>
+            </div>
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm px-5 py-2 rounded-full shadow-lg">
+              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+              <span className="font-medium tracking-wide">Verified rentals · Airbnb Superhost</span>
+            </div>
           </div>
 
           {/* Main heading */}
@@ -126,7 +132,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── DESTINATIONS ────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <section id="destinations" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <AnimateOnScroll className="text-center mb-14">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary mb-3">
             Where do you want to go?
@@ -318,26 +324,15 @@ export default async function HomePage() {
               fees the host pays. Booking directly cuts them all out. Better
               prices, better service, better experience.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={buildWhatsAppUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
-              >
-                WhatsApp
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-              <a
-                href={buildViberUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
-                className="inline-flex items-center gap-2 bg-[#7360F2] hover:bg-[#5e4bd6] text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
-              >
-                <ViberIcon />
-                Viber
-              </a>
-            </div>
+            <a
+              href="#destinations"
+              className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
+            >
+              Browse properties
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
           </AnimateOnScroll>
 
           {/* Right: feature list */}
@@ -353,7 +348,7 @@ export default async function HomePage() {
               },
               {
                 title: "Handpicked Quality",
-                desc: "Every property personally verified by the host.",
+                desc: "Every property personally verified by the host - an Airbnb Superhost.",
               },
               {
                 title: "Flexible Terms",

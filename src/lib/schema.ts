@@ -1,4 +1,4 @@
-import type { Property, Region } from "@/data/properties";
+import { regionInstagramUrls, type Property, type Region } from "@/data/properties";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 // Town-level address only - matches the site's "exact address after booking
@@ -86,5 +86,6 @@ export function organizationSchema(whatsappNumber: string) {
       telephone: `+${whatsappNumber}`,
       contactType: "customer service",
     },
+    sameAs: Object.values(regionInstagramUrls),
   };
 }

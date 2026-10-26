@@ -291,6 +291,11 @@ export const regionWhatsAppNumbers: Record<Region, string> = {
 // Used wherever a WhatsApp link isn't tied to one specific region (header, footer, homepage)
 export const defaultWhatsAppNumber = regionWhatsAppNumbers.paphos;
 
+// Instagram accounts, for regions that have one
+export const regionInstagramUrls: Partial<Record<Region, string>> = {
+  paphos: "https://www.instagram.com/paphos_mediterranean_rentals/",
+};
+
 export function getPropertiesByRegion(region: Region): Property[] {
   return properties.filter((p) => p.region === region);
 }

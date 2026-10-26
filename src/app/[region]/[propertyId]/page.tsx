@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import GoogleMapEmbed from "@/components/GoogleMapEmbed";
+import StickyBookingBar from "@/components/StickyBookingBar";
 import BookingPanel from "@/components/BookingPanel";
 import PhotoGallery from "@/components/PhotoGallery";
 import {
@@ -398,7 +399,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
 
           {/* ── Right column: booking ──────────────── */}
-          <div className="lg:col-span-1">
+          <div id="book" className="lg:col-span-1 scroll-mt-20">
             <div className="sticky top-20">
               <BookingPanel
                 propertyName={property.name}
@@ -417,6 +418,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           </div>
         </div>
       </section>
+
+      <StickyBookingBar minPrice={minPrice} targetId="book" />
     </div>
   );
 }

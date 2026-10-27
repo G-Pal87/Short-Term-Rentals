@@ -3,6 +3,7 @@ import Link from "next/link";
 import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import StickyBookingBar from "@/components/StickyBookingBar";
 import HostCard from "@/components/HostCard";
+import NearbyIcon from "@/components/NearbyIcon";
 import BookingPanel from "@/components/BookingPanel";
 import PhotoGallery from "@/components/PhotoGallery";
 import {
@@ -311,6 +312,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                       </svg>
                     ),
                   },
+                  ...(property.nearby ?? [])
+                    .filter((n) => n.kind === "beach")
+                    .slice(0, 1)
+                    .map((n) => ({ label: `${n.time} to beach`, icon: <NearbyIcon kind="beach" /> })),
                   ...(property.badges ?? []).map((label) => ({ label, icon: amenityIcons[label] ?? defaultAmenityIcon })),
                 ].map((badge) => (
                   <span
@@ -423,6 +428,23 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
               <p className="text-xs text-gray-600 mt-2 text-center">
                 Exact address provided after booking confirmation
               </p>
+
+              {property.nearby && property.nearby.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="font-semibold text-gray-900 mb-3">What&apos;s nearby</h3>
+                  <ul className="bg-white border border-cream-dark rounded-2xl divide-y divide-cream-dark">
+                    {property.nearby.map((n) => (
+                      <li key={n.kind + n.name} className="flex items-center justify-between gap-4 px-4 py-3 text-sm">
+                        <span className="flex items-center gap-3 text-gray-700">
+                          <span className="text-secondary"><NearbyIcon kind={n.kind} /></span>
+                          {n.name}
+                        </span>
+                        <span className="text-gray-600 whitespace-nowrap">{n.time}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 

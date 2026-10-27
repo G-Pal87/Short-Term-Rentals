@@ -310,6 +310,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                       </svg>
                     ),
                   },
+                  ...(property.badges ?? []).map((label) => ({ label, icon: amenityIcons[label] ?? defaultAmenityIcon })),
                 ].map((badge) => (
                   <span
                     key={badge.label}

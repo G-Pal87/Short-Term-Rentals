@@ -8,7 +8,7 @@ export const CONTACT_EMAIL_CC = "katonarita90@gmail.com";
 
 // GoatCounter site code (the "medrentals" in medrentals.goatcounter.com).
 // Empty = analytics off. Cookie-free, so no consent banner is needed.
-export const GOATCOUNTER_CODE = "";
+export const GOATCOUNTER_CODE = "giorgos";
 
 // Formspree form ID (the "xyzabcd" in formspree.io/f/xyzabcd).
 // Empty = the enquiry form is hidden and only WhatsApp/Viber/email show.

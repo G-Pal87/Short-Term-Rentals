@@ -10,7 +10,9 @@ import { buildWhatsAppUrl as buildWhatsAppLink, buildViberUrl } from "@/lib/what
 import ViberIcon from "./ViberIcon";
 import ViberButton from "./ViberButton";
 import EnquiryForm from "./EnquiryForm";
-import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
+import EmailButton from "./EmailButton";
+import { FORMSPREE_FORM_ID } from "@/lib/site";
+import type { EmailDraft } from "@/lib/email";
 
 interface BookingPanelProps {
   propertyName: string;
@@ -73,6 +75,7 @@ export default function BookingPanel({
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [guests, setGuests] = useState(Math.min(BASE_GUESTS, maxGuests));
+  const [formOpen, setFormOpen] = useState(false);
 
   // Dates and guests from the home-page search (?checkin=&checkout=&guests=),
   // applied only if the stay is still free and in the future.
@@ -143,17 +146,17 @@ export default function BookingPanel({
     return text;
   }
 
-  function buildEmailUrl(): string {
+  function buildEmailDraft(): EmailDraft {
     const subject = `Booking Request - ${propertyName}`;
-    let body: string;
     if (!range?.from || !range?.to) {
-      body = `Hello!\n\nI'm interested in booking ${propertyName} for ${guestLabel}. Could you please confirm availability and pricing?\n\nThank you.`;
-    } else {
-      const checkIn = formatDateDisplay(range.from);
-      const checkOut = formatDateDisplay(range.to);
-      body = `Hello!\n\nI'm interested in booking ${propertyName} from ${checkIn} to ${checkOut} (${nights} nights) for ${guestLabel}. Could you please confirm availability and ${showPrices ? "pricing" : "send me a quote"}?\n\nThank you.`;
+      return { subject, body: `Hello!\n\nI'm interested in booking ${propertyName} for ${guestLabel}. Could you please confirm availability and pricing?\n\nThank you.` };
     }
-    return `mailto:${CONTACT_EMAIL}?cc=${CONTACT_EMAIL_CC}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const checkIn = formatDateDisplay(range.from);
+    const checkOut = formatDateDisplay(range.to);
+    return {
+      subject,
+      body: `Hello!\n\nI'm interested in booking ${propertyName} from ${checkIn} to ${checkOut} (${nights} nights) for ${guestLabel}. Could you please confirm availability and ${showPrices ? "pricing" : "send me a quote"}?\n\nThank you.`,
+    };
   }
 
   return (
@@ -308,21 +311,24 @@ export default function BookingPanel({
             Request via Viber
           </ViberButton>
 
-          <a
-            href={buildEmailUrl()}
+          <EmailButton
+            draft={buildEmailDraft()}
+            onUseForm={FORMSPREE_FORM_ID ? () => setFormOpen(true) : undefined}
             className="flex items-center justify-center gap-2.5 bg-secondary hover:bg-secondary-dark text-white py-3.5 px-5 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             Request via Email
-          </a>
+          </EmailButton>
         </div>
 
         <EnquiryForm
           propertyName={propertyName}
           dates={range?.from && range?.to ? `${formatDateDisplay(range.from)} to ${formatDateDisplay(range.to)} (${nights} nights)` : ""}
           guests={guests}
+          open={formOpen}
+          onOpen={() => setFormOpen(true)}
         />
 
         {/* What happens after the guest sends the request */}

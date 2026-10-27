@@ -7,10 +7,9 @@ import { defaultWhatsAppNumber } from "@/data/properties";
 import { buildWhatsAppUrl, buildViberUrl } from "@/lib/whatsapp";
 import ViberIcon from "@/components/ViberIcon";
 import ViberButton from "@/components/ViberButton";
-import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
+import EmailButton from "@/components/EmailButton";
 
 const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
-const EMAIL_HREF = `mailto:${CONTACT_EMAIL}?cc=${CONTACT_EMAIL_CC}`;
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -100,8 +99,7 @@ export default function Header() {
                 <ViberIcon />
                 <span className="hidden lg:inline">Viber Us</span>
               </ViberButton>
-              <a
-                href={EMAIL_HREF}
+              <EmailButton
                 aria-label="Send an Email"
                 className="flex items-center gap-2 text-white px-3 lg:pl-3.5 lg:pr-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 hover:shadow-lg bg-secondary hover:bg-secondary-dark"
               >
@@ -109,7 +107,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <span className="hidden lg:inline">Send an Email</span>
-              </a>
+              </EmailButton>
             </div>
           </nav>
 
@@ -179,15 +177,14 @@ export default function Header() {
             <ViberIcon />
             Viber Us
           </ViberButton>
-          <a
-            href={EMAIL_HREF}
+          <EmailButton
             className="flex items-center justify-center gap-2 mt-2 text-white px-4 py-3 rounded-xl text-sm font-semibold transition-colors bg-secondary hover:bg-secondary-dark"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             Send an Email
-          </a>
+          </EmailButton>
         </div>
       </div>
     </header>

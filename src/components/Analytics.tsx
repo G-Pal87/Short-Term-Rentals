@@ -16,6 +16,8 @@ function channelOf(a: HTMLAnchorElement): string | null {
   if (href.startsWith("https://wa.me/")) return "whatsapp";
   if (href.startsWith("viber:")) return "viber";
   if (href.startsWith("mailto:")) return "email";
+  if (href.startsWith("https://mail.google.com/")) return "email-gmail";
+  if (href.startsWith("https://outlook.live.com/")) return "email-outlook";
   if (href.includes("instagram.com")) return "instagram";
   if (href.includes("airbnb.com")) return "airbnb-reviews";
   return null;

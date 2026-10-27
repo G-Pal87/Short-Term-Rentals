@@ -207,7 +207,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       />
       {/* Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
-        <nav className="flex items-center gap-2 text-sm text-gray-400">
+        <nav className="flex items-center gap-2 text-sm text-gray-600">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -240,10 +240,13 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
       {/* ── Main content ──────────────────────────────── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* DOM order title -> booking -> details puts the calendar right
+            under the title on phones; from lg the booking column spans both
+            rows on the right. */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-10 gap-y-8">
 
-          {/* ── Left column: details ────────────────── */}
-          <div className="lg:col-span-2 space-y-8">
+          {/* ── Left column: title ──────────────────── */}
+          <div className="lg:col-span-2">
 
             {/* Title block */}
             <div>
@@ -258,23 +261,23 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <span className="text-sm text-gray-400">{displayRegion}</span>
+                    <span className="text-sm text-gray-600">{displayRegion}</span>
                   </div>
                 </div>
                 <div className="flex-shrink-0 text-right">
                   {minPrice != null ? (
                     <>
-                      <p className="text-xs text-gray-400 uppercase tracking-widest">From</p>
+                      <p className="text-xs text-gray-600 uppercase tracking-widest">From</p>
                       <p className="font-serif text-3xl font-bold text-primary">€{minPrice}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-600">
                         per night{minPriceMonth ? ` in ${minPriceMonth}` : ""}
                       </p>
                     </>
                   ) : (
                     <>
-                      <p className="text-xs text-gray-400 uppercase tracking-widest">Rates</p>
+                      <p className="text-xs text-gray-600 uppercase tracking-widest">Rates</p>
                       <p className="font-serif text-2xl font-bold text-primary">Price on request</p>
-                      <p className="text-xs text-gray-400">Message the host for your best rate</p>
+                      <p className="text-xs text-gray-600">Message the host for your best rate</p>
                     </>
                   )}
                 </div>
@@ -318,7 +321,29 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 ))}
               </div>
             </div>
+          </div>
 
+          {/* ── Right column: booking ──────────────── */}
+          <div id="book" className="lg:col-start-3 lg:row-start-1 lg:row-span-2 scroll-mt-20">
+            <div className="sticky top-20">
+              <BookingPanel
+                propertyName={property.name}
+                showPrices={showPrices}
+                blockedRanges={calendar.blocked}
+                whatsappNumber={regionWhatsAppNumbers[property.region as Region]}
+                ratesByDate={propertyRates?.ratesByDate}
+                airbnbRatesByDate={propertyRates?.airbnbRatesByDate}
+                cleaningFee={propertyRates?.cleaningFee ?? 0}
+                maxGuests={property.maxGuests}
+                extraGuestFee={property.extraGuestFee ?? 0}
+                calendarSyncedAt={calendar.syncedAt}
+                calendarStatus={calendar.status}
+              />
+            </div>
+          </div>
+
+          {/* ── Left column: details ────────────────── */}
+          <div className="lg:col-span-2 space-y-8">
             <hr className="border-cream-dark" />
 
             {/* Description */}
@@ -361,7 +386,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 text-sm mb-1">Verified direct booking</p>
-                  <p className="text-xs text-gray-500 leading-relaxed">
+                  <p className="text-xs text-gray-600 leading-relaxed">
                     Book directly with the host for the best rate. No platform fees, no middlemen.
                     Flexible check-in times available on request.
                   </p>
@@ -392,30 +417,12 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   title={property.name}
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-2 text-center">
+              <p className="text-xs text-gray-600 mt-2 text-center">
                 Exact address provided after booking confirmation
               </p>
             </div>
           </div>
 
-          {/* ── Right column: booking ──────────────── */}
-          <div id="book" className="lg:col-span-1 scroll-mt-20">
-            <div className="sticky top-20">
-              <BookingPanel
-                propertyName={property.name}
-                showPrices={showPrices}
-                blockedRanges={calendar.blocked}
-                whatsappNumber={regionWhatsAppNumbers[property.region as Region]}
-                ratesByDate={propertyRates?.ratesByDate}
-                airbnbRatesByDate={propertyRates?.airbnbRatesByDate}
-                cleaningFee={propertyRates?.cleaningFee ?? 0}
-                maxGuests={property.maxGuests}
-                extraGuestFee={property.extraGuestFee ?? 0}
-                calendarSyncedAt={calendar.syncedAt}
-                calendarStatus={calendar.status}
-              />
-            </div>
-          </div>
         </div>
       </section>
 

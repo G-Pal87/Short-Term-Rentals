@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { differenceInCalendarDays, format, addDays } from "date-fns";
+import { differenceInCalendarDays, format, addDays, parseISO, isValid, startOfToday } from "date-fns";
 import AvailabilityCalendar from "./AvailabilityCalendar";
-import type { BlockedDateRange } from "@/lib/availability";
+import { blockedNightSet, stayIsFree, type BlockedDateRange } from "@/lib/availability";
 import type { CalendarStatus } from "@/lib/calendar";
 import { buildWhatsAppUrl as buildWhatsAppLink, buildViberUrl } from "@/lib/whatsapp";
 import ViberIcon from "./ViberIcon";
+import ViberButton from "./ViberButton";
+import EnquiryForm from "./EnquiryForm";
 import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
 
 interface BookingPanelProps {
@@ -71,6 +73,20 @@ export default function BookingPanel({
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [guests, setGuests] = useState(Math.min(BASE_GUESTS, maxGuests));
+
+  // Dates and guests from the home-page search (?checkin=&checkout=&guests=),
+  // applied only if the stay is still free and in the future.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const g = Number(q.get("guests"));
+    if (Number.isInteger(g) && g >= 1) setGuests(Math.min(g, maxGuests));
+    const from = q.get("checkin") ? parseISO(q.get("checkin")!) : null;
+    const to = q.get("checkout") ? parseISO(q.get("checkout")!) : null;
+    if (!from || !to || !isValid(from) || !isValid(to) || to <= from || from < startOfToday()) return;
+    if (stayIsFree(from, to, blockedNightSet(blockedRanges))) setRange({ from, to });
+    // Runs once on load; later edits come from the calendar itself.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const nights =
     range?.from && range?.to
@@ -152,7 +168,7 @@ export default function BookingPanel({
               </svg>
               Guests
             </h3>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               Up to {maxGuests} guest{maxGuests > 1 ? "s" : ""}
               {showPrices && extraGuestFee > 0 ? ` · +€${extraGuestFee}/night per guest after ${BASE_GUESTS}` : ""}
             </p>
@@ -204,11 +220,11 @@ export default function BookingPanel({
           {/* Check-in/out dates */}
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="bg-cream rounded-xl p-3">
-              <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Check-in</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Check-in</p>
               <p className="font-semibold text-gray-900 text-sm">{formatDateDisplay(range.from)}</p>
             </div>
             <div className="bg-cream rounded-xl p-3">
-              <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Check-out</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Check-out</p>
               <p className="font-semibold text-gray-900 text-sm">{formatDateDisplay(range.to)}</p>
             </div>
           </div>
@@ -234,7 +250,7 @@ export default function BookingPanel({
               </div>
             )}
 
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500">
               Final price subject to host confirmation
             </p>
           </div>
@@ -283,13 +299,14 @@ export default function BookingPanel({
             Request via WhatsApp
           </a>
 
-          <a
+          <ViberButton
+            number={whatsappNumber}
             href={buildViberUrl(whatsappNumber, buildMessageText())}
             className="flex items-center justify-center gap-2.5 bg-[#7360F2] hover:bg-[#5e4bd6] text-white py-3.5 px-5 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg"
           >
             <ViberIcon className="w-5 h-5" />
             Request via Viber
-          </a>
+          </ViberButton>
 
           <a
             href={buildEmailUrl()}
@@ -302,7 +319,30 @@ export default function BookingPanel({
           </a>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-cream-dark flex items-center justify-center gap-1.5 text-xs text-gray-400">
+        <EnquiryForm
+          propertyName={propertyName}
+          dates={range?.from && range?.to ? `${formatDateDisplay(range.from)} to ${formatDateDisplay(range.to)} (${nights} nights)` : ""}
+          guests={guests}
+        />
+
+        {/* What happens after the guest sends the request */}
+        <p className="mt-5 text-xs font-semibold uppercase tracking-wide text-gray-500">What happens next</p>
+        <ol className="mt-3 space-y-2.5">
+          {[
+            "Send your dates via WhatsApp, Viber or email.",
+            "We reply with your price and payment details.",
+            "Booking confirmed.",
+          ].map((step, i) => (
+            <li key={step} className="flex items-start gap-3 text-sm text-gray-600">
+              <span className="w-5 h-5 rounded-full bg-secondary/10 text-secondary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-px">
+                {i + 1}
+              </span>
+              {step}
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-4 pt-4 border-t border-cream-dark flex items-center justify-center gap-1.5 text-xs text-gray-500">
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
           </svg>

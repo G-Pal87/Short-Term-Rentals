@@ -224,3 +224,23 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-primary-dark);
 }
+
+/* ── Home hero slideshow ───────────────────────────────── */
+/* 30s cycle = 5 slides x 6s (HERO_SLIDE_SECONDS in page.tsx). Each slide
+   holds for 6s while zooming slightly, then fades out over the next. */
+.hero-slide {
+  animation: heroSlide 30s linear infinite backwards;
+}
+
+@keyframes heroSlide {
+  0% { opacity: 1; transform: scale(1); }
+  20% { opacity: 1; }
+  24% { opacity: 0; transform: scale(1.08); }
+  96% { opacity: 0; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { animation: none; }
+  .hero-slide:not(:first-child) { display: none; }
+}

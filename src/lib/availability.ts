@@ -39,3 +39,35 @@ export function stayIsFree(checkIn: Date, checkOut: Date, blockedNights: Set<str
   }
   return true;
 }
+
+/**
+ * The first stay of at least `minNights` free nights starting on or after
+ * `today`, stretched to at most `maxNights`. Returns check-in and checkout
+ * keys, or null if nothing is free within `horizonDays`.
+ */
+export function nextFreeStay(
+  blockedNights: Set<string>,
+  today: string,
+  minNights = 2,
+  maxNights = 7,
+  horizonDays = 180
+): { checkIn: string; checkOut: string } | null {
+  const first = parseISO(today);
+  for (let i = 0; i < horizonDays; i++) {
+    const checkIn = addDays(first, i);
+    if (!stayIsFree(checkIn, addDays(checkIn, minNights), blockedNights)) continue;
+    let nights = minNights;
+    while (nights < maxNights && !blockedNights.has(dateKey(addDays(checkIn, nights)))) nights++;
+    return { checkIn: dateKey(checkIn), checkOut: dateKey(addDays(checkIn, nights)) };
+  }
+  return null;
+}
+
+/** "14–18 Nov", or "28 Nov – 3 Dec" across months. */
+export function formatStayRange(checkIn: string, checkOut: string): string {
+  const a = parseISO(checkIn);
+  const b = parseISO(checkOut);
+  return a.getMonth() === b.getMonth()
+    ? `${format(a, "d")}–${format(b, "d MMM")}`
+    : `${format(a, "d MMM")} – ${format(b, "d MMM")}`;
+}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import CardPhotos from "@/components/CardPhotos";
 import type { Property } from "@/data/properties";
 import { regionDisplayNames } from "@/data/properties";
 
@@ -7,6 +7,8 @@ interface PropertyCardProps {
   property: Property;
   /** Advertised "From" price; null = "Price on request" (hidden or nothing open). */
   minPrice: number | null;
+  /** First free stay, e.g. "14–18 Nov"; null when unknown or fully booked. */
+  nextFree?: string | null;
 }
 
 function BedIcon() {
@@ -33,27 +35,20 @@ function GuestsIcon() {
   );
 }
 
-export default function PropertyCard({ property, minPrice }: PropertyCardProps) {
+export default function PropertyCard({ property, minPrice, nextFree = null }: PropertyCardProps) {
   const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, gradients, images } = property;
   const href = `/${region}/${id}`;
   const heroGradient = gradients[0];
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-  const heroImage = images?.[0]
-    ? `${basePath}/images/properties/${id}/${images[0]}`
-    : null;
+  // First few photos only: enough to get a feel without loading the gallery.
+  const photos = (images ?? []).slice(0, 5).map((f) => `${basePath}/images/properties/${id}/${f}`);
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1.5 border border-cream-dark/60">
       {/* Image / gradient area */}
-      <Link href={href} className="block relative h-60 overflow-hidden">
-        {heroImage ? (
-          <Image
-            src={heroImage}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-          />
+      <div className="block relative h-60 overflow-hidden">
+        {photos.length > 0 ? (
+          <CardPhotos href={href} alt={name} photos={photos} />
         ) : (
           <>
             {/* Gradient placeholder with zoom on hover */}
@@ -72,10 +67,10 @@ export default function PropertyCard({ property, minPrice }: PropertyCardProps) 
         )}
 
         {/* Text readability overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent pointer-events-none" />
 
         {/* Region badge */}
-        <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1.5">
+        <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1.5 pointer-events-none">
           <span className="bg-white/90 backdrop-blur-sm text-secondary text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
             {regionDisplayNames[region]}
           </span>
@@ -88,7 +83,7 @@ export default function PropertyCard({ property, minPrice }: PropertyCardProps) 
         </div>
 
         {/* Price badge */}
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-3 right-3 z-10 pointer-events-none flex flex-col items-end gap-1.5">
           <span className="bg-primary text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-sm">
             {minPrice != null ? (
               <>
@@ -99,16 +94,22 @@ export default function PropertyCard({ property, minPrice }: PropertyCardProps) 
               "Price on request"
             )}
           </span>
+          {nextFree && (
+            <span className="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-secondary text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500" aria-hidden="true" />
+              Next free: {nextFree}
+            </span>
+          )}
         </div>
 
         {/* Name overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+        <div className="absolute bottom-0 left-0 right-0 p-4 z-10 pointer-events-none">
           <h3 className="font-serif text-xl font-bold text-white leading-snug drop-shadow-sm">
             {name}
           </h3>
           <p className="text-white/75 text-sm mt-0.5">{subtitle}</p>
         </div>
-      </Link>
+      </div>
 
       {/* Card body */}
       <div className="p-4 pt-3.5">

@@ -3,11 +3,13 @@ import { Inter, Playfair_Display } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import Header from "@/components/Header";
+import Analytics from "@/components/Analytics";
 import { defaultWhatsAppNumber, regionInstagramUrls } from "@/data/properties";
 import { SITE_URL, SITE_NAME, CONTACT_EMAIL } from "@/lib/site";
 import { organizationSchema } from "@/lib/schema";
 import { buildWhatsAppUrl, buildViberUrl } from "@/lib/whatsapp";
 import ViberIcon from "@/components/ViberIcon";
+import ViberButton from "@/components/ViberButton";
 
 const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
 
@@ -62,6 +64,7 @@ export default function RootLayout({
             __html: JSON.stringify(organizationSchema(defaultWhatsAppNumber)),
           }}
         />
+        <Analytics />
         <Header />
         <main>{children}</main>
 
@@ -82,9 +85,9 @@ export default function RootLayout({
               {/* Brand column */}
               <div className="md:col-span-5">
                 <Link href="/" className="inline-flex items-center gap-3 mb-4 group">
-                  <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-secondary-light flex items-center justify-center flex-shrink-0">
                     <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                     </svg>
                   </div>
                   <span className="font-serif text-xl font-bold text-white group-hover:text-primary transition-colors">
@@ -138,13 +141,14 @@ export default function RootLayout({
                     </a>
                   </li>
                   <li>
-                    <a
+                    <ViberButton
+                      number={defaultWhatsAppNumber}
                       href={buildViberUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
                       className="text-sm text-gray-300 hover:text-primary transition-colors flex items-center gap-2"
                     >
                       <ViberIcon className="w-4 h-4 flex-shrink-0" />
                       Viber
-                    </a>
+                    </ViberButton>
                   </li>
                   <li>
                     <a

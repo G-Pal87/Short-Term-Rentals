@@ -291,6 +291,20 @@ export const regionWhatsAppNumbers: Record<Region, string> = {
 // Used wherever a WhatsApp link isn't tied to one specific region (header, footer, homepage)
 export const defaultWhatsAppNumber = regionWhatsAppNumbers.paphos;
 
+// Points of interest marked on each region's overview map (public places).
+export const regionLandmarks: Record<Region, { name: string; lat: number; lng: number }[]> = {
+  paphos: [
+    { name: "Paphos Harbour", lat: 34.754, lng: 32.406 },
+    { name: "Kato Paphos Archaeological Park", lat: 34.757, lng: 32.406 },
+    { name: "Paphos Airport", lat: 34.718, lng: 32.486 },
+  ],
+  tenerife: [
+    { name: "Las Teresitas Beach", lat: 28.508, lng: -16.186 },
+    { name: "Santa Cruz centre", lat: 28.468, lng: -16.255 },
+    { name: "Tenerife North Airport", lat: 28.483, lng: -16.341 },
+  ],
+};
+
 // Instagram accounts, for regions that have one
 export const regionInstagramUrls: Partial<Record<Region, string>> = {
   paphos: "https://www.instagram.com/paphos_mediterranean_rentals/",

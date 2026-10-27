@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { defaultWhatsAppNumber } from "@/data/properties";
 import { buildWhatsAppUrl, buildViberUrl } from "@/lib/whatsapp";
 import ViberIcon from "@/components/ViberIcon";
+import ViberButton from "@/components/ViberButton";
 import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
 
 const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
@@ -55,7 +56,7 @@ export default function Header() {
               <span className="font-serif font-bold text-secondary text-base sm:text-lg group-hover:text-primary transition-colors tracking-tight">
                 Mediterranean
               </span>
-              <span className="text-[10px] font-medium text-gray-400 tracking-widest uppercase">
+              <span className="text-[10px] font-medium text-gray-500 tracking-widest uppercase">
                 Rentals
               </span>
             </div>
@@ -90,14 +91,15 @@ export default function Header() {
                 </svg>
                 <span className="hidden lg:inline">WhatsApp Us</span>
               </a>
-              <a
+              <ViberButton
+                number={defaultWhatsAppNumber}
                 href={buildViberUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
                 aria-label="Viber Us"
                 className="flex items-center gap-2 text-white px-3 lg:pl-3.5 lg:pr-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105 hover:shadow-lg bg-[#7360F2] hover:bg-[#5e4bd6]"
               >
                 <ViberIcon />
                 <span className="hidden lg:inline">Viber Us</span>
-              </a>
+              </ViberButton>
               <a
                 href={EMAIL_HREF}
                 aria-label="Send an Email"
@@ -169,13 +171,14 @@ export default function Header() {
             </svg>
             WhatsApp Us
           </a>
-          <a
+          <ViberButton
+            number={defaultWhatsAppNumber}
             href={buildViberUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
             className="flex items-center justify-center gap-2 mt-2 text-white px-4 py-3 rounded-xl text-sm font-semibold transition-colors bg-[#7360F2] hover:bg-[#5e4bd6]"
           >
             <ViberIcon />
             Viber Us
-          </a>
+          </ViberButton>
           <a
             href={EMAIL_HREF}
             className="flex items-center justify-center gap-2 mt-2 text-white px-4 py-3 rounded-xl text-sm font-semibold transition-colors bg-secondary hover:bg-secondary-dark"

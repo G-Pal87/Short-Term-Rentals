@@ -2,16 +2,20 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import PropertyCard from "@/components/PropertyCard";
+import RegionMap from "@/components/RegionMap";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import {
   getPropertiesByRegion,
   regionDisplayNames,
   regionWhatsAppNumbers,
   regionInstagramUrls,
+  regionLandmarks,
   regionTimeZones,
   type Region,
 } from "@/data/properties";
-import { fetchPropertyRates, advertisedMinRate } from "@/lib/rates";
+import { fetchPropertyRates, advertisedMinRate, todayIn } from "@/lib/rates";
+import { readCalendar } from "@/lib/calendar";
+import { blockedNightSet, nextFreeStay, formatStayRange } from "@/lib/availability";
 import { SITE_URL } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
 import { buildWhatsAppUrl, buildViberUrl } from "@/lib/whatsapp";
@@ -116,6 +120,15 @@ export default async function RegionPage({ params }: RegionPageProps) {
       advertisedMinRate(await fetchPropertyRates(p.btPropertyId, timeZone), timeZone)?.price ?? null
     )
   );
+
+  // "Next free" chip from the Airbnb calendar; left off when it couldn't be read.
+  const today = todayIn(timeZone);
+  const nextFree = properties.map((p) => {
+    const calendar = readCalendar(p.id);
+    if (calendar.status === "missing") return null;
+    const stay = nextFreeStay(blockedNightSet(calendar.blocked), today);
+    return stay ? formatStayRange(stay.checkIn, stay.checkOut) : null;
+  });
 
   return (
     <div>
@@ -232,9 +245,18 @@ export default async function RegionPage({ params }: RegionPageProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property, i) => (
                 <AnimateOnScroll key={property.id} delay={i * 80}>
-                  <PropertyCard property={property} minPrice={minPrices[i]} />
+                  <PropertyCard property={property} minPrice={minPrices[i]} nextFree={nextFree[i]} />
                 </AnimateOnScroll>
               ))}
+            </div>
+
+            {/* Overview map */}
+            <div className="mt-16">
+              <h2 className="font-serif text-2xl font-bold text-gray-900 mb-5">Where the apartments are</h2>
+              <RegionMap
+                properties={properties.map((p) => ({ name: p.name, lat: p.mapLat, lng: p.mapLng, href: `${basePath}/${region}/${p.id}/` }))}
+                landmarks={regionLandmarks[typedRegion]}
+              />
             </div>
           </>
         )}

@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { differenceInCalendarDays, format, addDays } from "date-fns";
+import { differenceInCalendarDays, format, addDays, parseISO, isValid, startOfToday } from "date-fns";
 import AvailabilityCalendar from "./AvailabilityCalendar";
-import type { BlockedDateRange } from "@/lib/availability";
+import { blockedNightSet, stayIsFree, type BlockedDateRange } from "@/lib/availability";
 import type { CalendarStatus } from "@/lib/calendar";
 import { buildWhatsAppUrl as buildWhatsAppLink, buildViberUrl } from "@/lib/whatsapp";
 import ViberIcon from "./ViberIcon";
 import ViberButton from "./ViberButton";
+import EnquiryForm from "./EnquiryForm";
 import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
 
 interface BookingPanelProps {
@@ -72,6 +73,20 @@ export default function BookingPanel({
 }: BookingPanelProps) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [guests, setGuests] = useState(Math.min(BASE_GUESTS, maxGuests));
+
+  // Dates and guests from the home-page search (?checkin=&checkout=&guests=),
+  // applied only if the stay is still free and in the future.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const g = Number(q.get("guests"));
+    if (Number.isInteger(g) && g >= 1) setGuests(Math.min(g, maxGuests));
+    const from = q.get("checkin") ? parseISO(q.get("checkin")!) : null;
+    const to = q.get("checkout") ? parseISO(q.get("checkout")!) : null;
+    if (!from || !to || !isValid(from) || !isValid(to) || to <= from || from < startOfToday()) return;
+    if (stayIsFree(from, to, blockedNightSet(blockedRanges))) setRange({ from, to });
+    // Runs once on load; later edits come from the calendar itself.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const nights =
     range?.from && range?.to
@@ -303,6 +318,12 @@ export default function BookingPanel({
             Request via Email
           </a>
         </div>
+
+        <EnquiryForm
+          propertyName={propertyName}
+          dates={range?.from && range?.to ? `${formatDateDisplay(range.from)} to ${formatDateDisplay(range.to)} (${nights} nights)` : ""}
+          guests={guests}
+        />
 
         {/* What happens after the guest sends the request */}
         <p className="mt-5 text-xs font-semibold uppercase tracking-wide text-gray-500">What happens next</p>

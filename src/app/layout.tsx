@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import Header from "@/components/Header";
+import Analytics from "@/components/Analytics";
 import { defaultWhatsAppNumber, regionInstagramUrls } from "@/data/properties";
 import { SITE_URL, SITE_NAME, CONTACT_EMAIL } from "@/lib/site";
 import { organizationSchema } from "@/lib/schema";
@@ -63,6 +64,7 @@ export default function RootLayout({
             __html: JSON.stringify(organizationSchema(defaultWhatsAppNumber)),
           }}
         />
+        <Analytics />
         <Header />
         <main>{children}</main>
 

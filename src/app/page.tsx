@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getPropertiesByRegion, defaultWhatsAppNumber, regionTimeZones, type Property } from "@/data/properties";
+import { getPropertiesByRegion, defaultWhatsAppNumber, regionTimeZones, regionDisplayNames, type Property } from "@/data/properties";
+import { readCalendar } from "@/lib/calendar";
+import HomeSearch, { type SearchListing } from "@/components/HomeSearch";
 import { fetchPropertyRates, advertisedMinRate } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { buildWhatsAppUrl, buildViberUrl } from "@/lib/whatsapp";
@@ -11,6 +13,16 @@ import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
 const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+// Must match the 30s cycle of the heroSlide keyframes in globals.css (5 x 6s).
+const HERO_SLIDE_SECONDS = 6;
+const HERO_SLIDES = [
+  { src: "/images/landing-hero.jpg", alt: "Friends enjoying a Mediterranean beach" },
+  { src: "/images/cyprus-hero.jpg", alt: "" },
+  { src: "/images/properties/venus-beach-retreat/hero.jpeg", alt: "" },
+  { src: "/images/tenerife-hero.jpg", alt: "" },
+  { src: "/images/properties/colorful-2bedroom-house/hero.jpg", alt: "" },
+];
 
 // Cheapest advertised price across a region's properties. Properties with
 // prices hidden in Business-Tracking (or nothing open) are skipped. null when
@@ -35,23 +47,47 @@ export default async function HomePage() {
     regionMinPrice(tenerifeProps),
   ]);
 
+  const searchListings: SearchListing[] = [...paphosProps, ...tenerifeProps].map((p) => {
+    const calendar = readCalendar(p.id);
+    return {
+      id: p.id,
+      region: p.region,
+      name: p.name,
+      regionLabel: regionDisplayNames[p.region],
+      image: p.images?.[0] ? `${basePath}/images/properties/${p.id}/${p.images[0]}` : null,
+      maxGuests: p.maxGuests,
+      blocked: calendar.status === "missing" ? null : calendar.blocked,
+    };
+  });
+
   return (
     <div className="overflow-x-hidden">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative min-h-0 sm:min-h-[92vh] flex items-center justify-center overflow-hidden py-8 sm:py-0">
-        {/* Landing hero photo */}
-        <Image
-          src={`${basePath}/images/landing-hero.jpg`}
-          alt="Friends enjoying a Mediterranean beach"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
+      <section className="relative min-h-0 sm:min-h-[92vh] flex items-center justify-center overflow-hidden pt-8 pb-14 sm:pt-16 sm:pb-36">
+        {/* Hero slideshow: slow cross-fade and zoom (globals.css .hero-slide);
+            reduced-motion users get the first photo only. Earlier slides sit
+            on top so each one fades out to reveal the next. */}
+        {HERO_SLIDES.map((slide, i) => (
+          <div
+            key={slide.src}
+            className="hero-slide absolute inset-0"
+            style={{ zIndex: HERO_SLIDES.length - i, animationDelay: `${i * HERO_SLIDE_SECONDS}s` }}
+          >
+            <Image
+              src={`${basePath}${slide.src}`}
+              alt={i === 0 ? slide.alt : ""}
+              aria-hidden={i === 0 ? undefined : true}
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
+        ))}
         {/* Duotone overlay for legibility, tinted with the brand palette */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 z-[6]"
           style={{
             background:
               "linear-gradient(160deg, rgba(28,55,53,0.93) 0%, rgba(28,55,53,0.78) 45%, rgba(176,96,63,0.55) 100%)",
@@ -122,7 +158,7 @@ export default async function HomePage() {
         </div>
 
         {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 z-[7] pointer-events-none">
           <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
             <path
               d="M0 100L80 85C160 70 320 40 480 30C640 20 800 30 960 38C1120 46 1280 50 1360 52L1440 54V100H1360C1280 100 1120 100 960 100C800 100 640 100 480 100C320 100 160 100 80 100H0Z"
@@ -130,6 +166,11 @@ export default async function HomePage() {
             />
           </svg>
         </div>
+      </section>
+
+      {/* ── DATE SEARCH (overlaps the hero's bottom wave) ─ */}
+      <section className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 -mt-10 sm:-mt-24">
+        <HomeSearch listings={searchListings} />
       </section>
 
       {/* ── DESTINATIONS ────────────────────────────────── */}

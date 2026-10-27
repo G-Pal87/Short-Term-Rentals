@@ -28,6 +28,8 @@ export interface Property {
   mapLat: number;
   mapLng: number;
   amenities: string[];
+  /** Extra badges beside bedrooms/bathrooms/guests on the property page (icons from its amenity set). */
+  badges?: string[];
   description: string;
   /** Hand-written ~150-char summary for <meta name="description"> and social previews. */
   metaDescription: string;
@@ -46,6 +48,7 @@ export const properties: Property[] = [
     name: "Colourful Venus Beach Retreat",
     subtitle: "Pool & 2 Terraces",
     region: "paphos",
+    badges: ["Pool", "Beach Walk"],
     btPropertyId: "prop_mox7p43s8o",
     airbnbListingId: "1341854905555812998",
     bedrooms: 1,
@@ -89,6 +92,7 @@ export const properties: Property[] = [
     name: "Luxe Poolside Escape",
     subtitle: "Beach walk & 2 Terraces",
     region: "paphos",
+    badges: ["Pool", "Beach Walk"],
     btPropertyId: "prop_mox7mr8day",
     airbnbListingId: "1389855941514317769",
     bedrooms: 1,
@@ -138,6 +142,7 @@ export const properties: Property[] = [
     name: "Poolside Central Studio",
     subtitle: "Balcony & Beach Walk",
     region: "paphos",
+    badges: ["Pool", "Beach Walk"],
     btPropertyId: "prop_mox7ipfiam",
     airbnbListingId: "1417130109923067210",
     bedrooms: 0,

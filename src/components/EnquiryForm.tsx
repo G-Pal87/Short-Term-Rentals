@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FORMSPREE_FORM_ID } from "@/lib/site";
 
 interface EnquiryFormProps {
@@ -8,6 +8,9 @@ interface EnquiryFormProps {
   /** e.g. "Nov 3, 2026 to Nov 6, 2026 (3 nights)", or "" before dates are picked. */
   dates: string;
   guests: number;
+  /** Controlled by the booking panel so the email popup can open it too. */
+  open: boolean;
+  onOpen: () => void;
 }
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -15,9 +18,14 @@ type Status = "idle" | "sending" | "sent" | "error";
 // For guests without WhatsApp/Viber or a mail app: a short form posted to
 // Formspree, which emails it to the host. Hidden while FORMSPREE_FORM_ID is
 // empty.
-export default function EnquiryForm({ propertyName, dates, guests }: EnquiryFormProps) {
-  const [open, setOpen] = useState(false);
+export default function EnquiryForm({ propertyName, dates, guests, open, onOpen }: EnquiryFormProps) {
   const [status, setStatus] = useState<Status>("idle");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Bring the form into view when it's opened from the email popup.
+  useEffect(() => {
+    if (open) formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [open]);
 
   if (!FORMSPREE_FORM_ID) return null;
 
@@ -48,7 +56,7 @@ export default function EnquiryForm({ propertyName, dates, guests }: EnquiryForm
     return (
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={onOpen}
         className="mt-3 w-full text-sm font-semibold text-secondary hover:text-primary underline underline-offset-2"
       >
         No WhatsApp or Viber? Send an enquiry form
@@ -59,7 +67,7 @@ export default function EnquiryForm({ propertyName, dates, guests }: EnquiryForm
   const field = "w-full rounded-xl border border-cream-dark px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary/40";
 
   return (
-    <form onSubmit={submit} className="mt-4 space-y-3 border-t border-cream-dark pt-4">
+    <form ref={formRef} onSubmit={submit} className="mt-4 space-y-3 border-t border-cream-dark pt-4">
       <p className="text-sm font-semibold text-gray-900">Send an enquiry</p>
       <input type="hidden" name="property" value={propertyName} />
       <input type="hidden" name="dates" value={dates || "Not chosen yet"} />

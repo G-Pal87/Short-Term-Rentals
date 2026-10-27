@@ -81,7 +81,7 @@ export const properties: Property[] = [
     extraGuestFee: 15,
     mapLat: 34.777,
     mapLng: 32.406,
-    amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen", "Beach Nearby"],
+    amenities: ["Pool", "2 Terraces", "WiFi", "AC", "Kitchen"],
     description:
       "Welcome to the Colourful Venus Beach Retreat, a vibrant and beautifully designed one-bedroom apartment nestled in the heart of Paphos, Cyprus. This stunning retreat boasts a sparkling private pool and two spacious terraces where you can soak up the Mediterranean sunshine and enjoy breathtaking views. The interior is decorated with a palette of warm, cheerful colours that create an inviting and relaxing atmosphere. A convertible double bed couch in the living room means the apartment comfortably accommodates up to 4 guests. Fully equipped with modern amenities including a fully-fitted kitchen, air conditioning throughout, and high-speed WiFi, this property offers everything you need for an unforgettable holiday. The beach is just a short stroll away, making it the perfect base for exploring the beautiful coastline and the rich history of Paphos.",
     metaDescription:
@@ -136,7 +136,6 @@ export const properties: Property[] = [
     amenities: [
       "Pool",
       "2 Terraces",
-      "Beach Walk",
       "WiFi",
       "AC",
       "Kitchen",
@@ -190,7 +189,7 @@ export const properties: Property[] = [
     maxGuests: 2,
     mapLat: 34.764,
     mapLng: 32.412,
-    amenities: ["Pool", "Balcony", "Beach Walk", "WiFi", "AC", "Kitchenette"],
+    amenities: ["Pool", "Balcony", "WiFi", "AC", "Kitchenette"],
     description:
       "The Poolside Central Studio is a charming and cosy studio apartment perfectly situated in the centre of Paphos, just a short walk from the beach. Ideal for couples or solo travellers, this bright and airy studio features a beautiful private balcony overlooking the pool, where you can enjoy your morning coffee with a refreshing view. The studio is cleverly designed to maximise space and comfort, with a well-equipped kitchenette, air conditioning, and fast WiFi. Its central location means you're never far from Paphos's best restaurants, shops, and attractions. The pool is shared with a small number of guests, ensuring a peaceful and relaxing atmosphere throughout your stay.",
     metaDescription:
@@ -241,7 +240,6 @@ export const properties: Property[] = [
     mapLng: -16.241,
     amenities: [
       "View Terrace",
-      "Beach Walk",
       "WiFi",
       "AC",
       "Full Kitchen",
@@ -300,7 +298,6 @@ export const properties: Property[] = [
     mapLng: -16.237,
     amenities: [
       "Terrace",
-      "Near Beach",
       "WiFi",
       "AC",
       "Kitchenette",

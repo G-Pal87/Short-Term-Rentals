@@ -10,12 +10,12 @@ export const FAQ: FaqItem[] = [
   {
     question: "How do I book directly with you?",
     answer:
-      "Pick your dates on the apartment's page and send them to us on WhatsApp, Viber or email. We usually reply within an hour with your price and payment details, and your booking is confirmed once the payment is received.",
+      "Pick your dates on the apartment's page and send them to us on WhatsApp, Viber or email. We usually reply within an hour with your price and payment details, and your booking is confirmed once the 50% deposit is received.",
   },
   {
     question: "How do I pay, and is there a deposit?",
     answer:
-      "You can pay by bank transfer or card through a secure payment link. A 30% deposit confirms your booking and the rest is due 14 days before arrival.",
+      "You can pay by bank transfer, card through a secure payment link, or cash. A 50% deposit confirms your booking, and the rest is paid on arrival, before you get access to the apartment.",
   },
   {
     question: "What is your cancellation policy?",

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import StickyBookingBar from "@/components/StickyBookingBar";
+import HostCard from "@/components/HostCard";
 import BookingPanel from "@/components/BookingPanel";
 import PhotoGallery from "@/components/PhotoGallery";
 import {
@@ -340,6 +341,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                 calendarSyncedAt={calendar.syncedAt}
                 calendarStatus={calendar.status}
               />
+              <HostCard region={property.region as Region} />
             </div>
           </div>
 

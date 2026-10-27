@@ -4,6 +4,7 @@ import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import StickyBookingBar from "@/components/StickyBookingBar";
 import HostCard from "@/components/HostCard";
 import NearbyIcon from "@/components/NearbyIcon";
+import FaqList from "@/components/FaqList";
 import BookingPanel from "@/components/BookingPanel";
 import PhotoGallery from "@/components/PhotoGallery";
 import {
@@ -445,6 +446,11 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
                   </ul>
                 </div>
               )}
+
+              <div className="mt-8">
+                <h3 className="font-semibold text-gray-900 mb-3">Questions guests ask</h3>
+                <FaqList compact />
+              </div>
             </div>
           </div>
 

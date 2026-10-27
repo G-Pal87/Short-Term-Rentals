@@ -30,7 +30,7 @@ export const FAQ: FaqItem[] = [
   {
     question: "Can you arrange an airport transfer? Is there parking?",
     answer:
-      "Yes, we can arrange a transfer from the airport on request. Luxe Poolside Escape has on-site parking; at the other apartments there is free street parking nearby.",
+      "Yes, we can arrange a transfer from the airport on request. All our Paphos apartments come with private parking; in Tenerife there is public parking nearby.",
   },
   {
     question: "Do you have a cot or high chair? Are pets allowed?",

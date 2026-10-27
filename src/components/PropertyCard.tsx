@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CardPhotos from "@/components/CardPhotos";
+import NearbyIcon from "@/components/NearbyIcon";
 import type { Property } from "@/data/properties";
 import { regionDisplayNames } from "@/data/properties";
 
@@ -36,7 +37,10 @@ function GuestsIcon() {
 }
 
 export default function PropertyCard({ property, minPrice, nextFree = null }: PropertyCardProps) {
-  const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, gradients, images } = property;
+  const { id, name, subtitle, region, bedrooms, bathrooms, maxGuests, gradients, images, nearby = [] } = property;
+  const cardNearby = (["beach", "airport"] as const)
+    .map((kind) => nearby.find((n) => n.kind === kind))
+    .filter((n) => n !== undefined);
   const href = `/${region}/${id}`;
   const heroGradient = gradients[0];
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -139,6 +143,17 @@ export default function PropertyCard({ property, minPrice, nextFree = null }: Pr
             <span className="text-xs font-semibold text-gray-700">4.9</span>
           </div>
         </div>
+
+        {cardNearby.length > 0 && (
+          <div className="flex flex-wrap gap-x-4 gap-y-1 pt-3 text-xs text-gray-600">
+            {cardNearby.map((n) => (
+              <span key={n.kind} className="inline-flex items-center gap-1.5">
+                <span className="text-secondary"><NearbyIcon kind={n.kind} className="w-3.5 h-3.5" /></span>
+                {n.kind === "beach" ? `${n.time} to beach` : `${n.time} to airport`}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* CTA */}
         <Link

@@ -1,5 +1,15 @@
 export type Region = "paphos" | "tenerife";
 
+export type NearbyKind = "beach" | "supermarket" | "restaurants" | "town" | "airport";
+
+export interface NearbyPlace {
+  kind: NearbyKind;
+  /** e.g. "Beach", "Paphos Airport" */
+  name: string;
+  /** e.g. "4 min walk", "20 min drive" */
+  time: string;
+}
+
 export interface Property {
   id: string;
   name: string;
@@ -30,6 +40,12 @@ export interface Property {
   amenities: string[];
   /** Extra badges beside bedrooms/bathrooms/guests on the property page (icons from its amenity set). */
   badges?: string[];
+  /**
+   * Walking/driving times shown on cards, in the badge row (beach) and in
+   * "What's nearby" under the map. The first beach and airport entries are
+   * the ones shown on cards.
+   */
+  nearby?: NearbyPlace[];
   description: string;
   /** Hand-written ~150-char summary for <meta name="description"> and social previews. */
   metaDescription: string;
@@ -45,10 +61,18 @@ export interface Property {
 export const properties: Property[] = [
   {
     id: "venus-beach-retreat",
+    // PLACEHOLDER distances - replace with real ones
+    nearby: [
+      { kind: "beach", name: "Beach", time: "5 min walk" },
+      { kind: "supermarket", name: "Supermarket", time: "3 min walk" },
+      { kind: "restaurants", name: "Restaurants & cafés", time: "5 min walk" },
+      { kind: "town", name: "Paphos Harbour", time: "10 min drive" },
+      { kind: "airport", name: "Paphos Airport", time: "20 min drive" },
+    ],
     name: "Colourful Venus Beach Retreat",
     subtitle: "Pool & 2 Terraces",
     region: "paphos",
-    badges: ["Pool", "Beach Walk", "2 Terraces"],
+    badges: ["Pool", "2 Terraces"],
     btPropertyId: "prop_mox7p43s8o",
     airbnbListingId: "1341854905555812998",
     bedrooms: 1,
@@ -89,10 +113,18 @@ export const properties: Property[] = [
   },
   {
     id: "luxe-poolside-escape",
+    // PLACEHOLDER distances - replace with real ones
+    nearby: [
+      { kind: "beach", name: "Beach", time: "8 min walk" },
+      { kind: "supermarket", name: "Supermarket", time: "4 min walk" },
+      { kind: "restaurants", name: "Restaurants & cafés", time: "6 min walk" },
+      { kind: "town", name: "Paphos Harbour", time: "10 min drive" },
+      { kind: "airport", name: "Paphos Airport", time: "20 min drive" },
+    ],
     name: "Luxe Poolside Escape",
     subtitle: "Beach walk & 2 Terraces",
     region: "paphos",
-    badges: ["Pool", "Beach Walk", "2 Terraces"],
+    badges: ["Pool", "2 Terraces"],
     btPropertyId: "prop_mox7mr8day",
     airbnbListingId: "1389855941514317769",
     bedrooms: 1,
@@ -139,10 +171,18 @@ export const properties: Property[] = [
   },
   {
     id: "poolside-central-studio",
+    // PLACEHOLDER distances - replace with real ones
+    nearby: [
+      { kind: "beach", name: "Beach", time: "7 min walk" },
+      { kind: "supermarket", name: "Supermarket", time: "2 min walk" },
+      { kind: "restaurants", name: "Restaurants & cafés", time: "3 min walk" },
+      { kind: "town", name: "Paphos old town", time: "5 min walk" },
+      { kind: "airport", name: "Paphos Airport", time: "18 min drive" },
+    ],
     name: "Poolside Central Studio",
     subtitle: "Balcony & Beach Walk",
     region: "paphos",
-    badges: ["Pool", "Beach Walk", "Balcony"],
+    badges: ["Pool", "Balcony"],
     btPropertyId: "prop_mox7ipfiam",
     airbnbListingId: "1417130109923067210",
     bedrooms: 0,
@@ -180,6 +220,14 @@ export const properties: Property[] = [
   },
   {
     id: "colorful-2bedroom-house",
+    // PLACEHOLDER distances - replace with real ones
+    nearby: [
+      { kind: "beach", name: "Beach", time: "10 min walk" },
+      { kind: "supermarket", name: "Supermarket", time: "5 min walk" },
+      { kind: "restaurants", name: "Restaurants & cafés", time: "5 min walk" },
+      { kind: "town", name: "Santa Cruz centre", time: "10 min drive" },
+      { kind: "airport", name: "Tenerife North Airport", time: "15 min drive" },
+    ],
     name: "Colorful 2-Bedroom House",
     subtitle: "Walk to Beach & View Terrace",
     region: "tenerife",
@@ -232,6 +280,14 @@ export const properties: Property[] = [
   },
   {
     id: "beach-house-studio",
+    // PLACEHOLDER distances - replace with real ones
+    nearby: [
+      { kind: "beach", name: "Beach", time: "8 min walk" },
+      { kind: "supermarket", name: "Supermarket", time: "6 min walk" },
+      { kind: "restaurants", name: "Restaurants & cafés", time: "6 min walk" },
+      { kind: "town", name: "Santa Cruz centre", time: "12 min drive" },
+      { kind: "airport", name: "Tenerife North Airport", time: "15 min drive" },
+    ],
     name: "Beach House Style Studio",
     subtitle: "Quiet Nature & Near Beach",
     region: "tenerife",

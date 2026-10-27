@@ -244,7 +244,7 @@ export const properties: Property[] = [
       "AC",
       "Full Kitchen",
       "Garden",
-      "Public Parking",
+      "Public parking nearby",
     ],
     description:
       "Discover the magic of Tenerife from this stunning Colorful 2-Bedroom House, a vibrant and welcoming home with spectacular ocean and mountain views. Located within walking distance of a beautiful beach, this charming house accommodates up to six guests in style and comfort. The highlight of the property is its breathtaking view terrace - the perfect spot to watch the sunrise over the Atlantic Ocean with your morning coffee. Inside, the house is filled with colour and character, featuring a fully equipped kitchen, comfortable living spaces, and two well-appointed bedrooms. Tenerife's legendary sunshine, diverse landscapes, and rich culture are right on your doorstep, making this the ideal base for exploring this remarkable island.",
@@ -303,7 +303,7 @@ export const properties: Property[] = [
       "AC",
       "Kitchenette",
       "Nature Views",
-      "Public Parking",
+      "Public parking nearby",
     ],
     description:
       "Escape to the serene Beach House Style Studio, a peaceful and beautifully designed retreat nestled in the natural beauty of Tenerife. This intimate studio for two is the perfect sanctuary for those seeking tranquillity away from the crowds, while still being just minutes from a gorgeous beach. Surrounded by lush natural landscapes and the soothing sounds of nature, the studio features a charming terrace where you can unwind and take in the spectacular scenery. The interior is inspired by coastal living, with natural materials and a calming colour palette creating a sense of absolute relaxation. All essential amenities are provided, including air conditioning, WiFi, and a well-equipped kitchenette. Your own slice of paradise awaits.",

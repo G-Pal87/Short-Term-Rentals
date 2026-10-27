@@ -16,6 +16,7 @@ import { SITE_URL } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
 import { buildWhatsAppUrl, buildViberUrl } from "@/lib/whatsapp";
 import ViberIcon from "@/components/ViberIcon";
+import ViberButton from "@/components/ViberButton";
 
 interface RegionPageProps {
   params: { region: string };
@@ -222,7 +223,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
                 <h2 className="font-serif text-2xl font-bold text-gray-900">
                   All properties in {meta.listingsHeadingName ?? displayName}
                 </h2>
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-gray-600 text-sm mt-1">
                   {properties.length} listing{properties.length !== 1 ? "s" : ""} · Direct booking available
                 </p>
               </div>
@@ -268,7 +269,8 @@ export default async function RegionPage({ params }: RegionPageProps) {
                   </svg>
                   WhatsApp
                 </a>
-                <a
+                <ViberButton
+                  number={whatsappNumber}
                   href={buildViberUrl(
                     whatsappNumber,
                     `Hello! I'd like to know more about your properties in ${displayName}.`
@@ -277,7 +279,7 @@ export default async function RegionPage({ params }: RegionPageProps) {
                 >
                   <ViberIcon />
                   Viber
-                </a>
+                </ViberButton>
                 {instagramUrl ? (
                   <a
                     href={instagramUrl}

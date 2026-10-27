@@ -5,6 +5,7 @@ import { fetchPropertyRates, advertisedMinRate } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { buildWhatsAppUrl, buildViberUrl } from "@/lib/whatsapp";
 import ViberIcon from "@/components/ViberIcon";
+import ViberButton from "@/components/ViberButton";
 import { CONTACT_EMAIL, CONTACT_EMAIL_CC } from "@/lib/site";
 
 const GENERIC_WHATSAPP_MESSAGE = "Hello! I'd like to know more about your properties.";
@@ -428,7 +429,7 @@ export default async function HomePage() {
                     </div>
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">{review.name}</p>
-                      <p className="text-xs text-gray-400">{review.location} · {review.property}</p>
+                      <p className="text-xs text-gray-500">{review.location} · {review.property}</p>
                     </div>
                   </div>
                 </div>
@@ -463,13 +464,14 @@ export default async function HomePage() {
               </svg>
               WhatsApp Us
             </a>
-            <a
+            <ViberButton
+              number={defaultWhatsAppNumber}
               href={buildViberUrl(defaultWhatsAppNumber, GENERIC_WHATSAPP_MESSAGE)}
               className="flex items-center gap-2.5 bg-[#7360F2] hover:bg-[#5e4bd6] text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
             >
               <ViberIcon className="w-5 h-5" />
               Viber Us
-            </a>
+            </ViberButton>
             <a
               href={`mailto:${CONTACT_EMAIL}?cc=${CONTACT_EMAIL_CC}`}
               className="flex items-center gap-2.5 bg-secondary hover:bg-secondary-dark text-white px-7 py-4 rounded-full font-semibold transition-all duration-300 hover:scale-105 shadow-lg"

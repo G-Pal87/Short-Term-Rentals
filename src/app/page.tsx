@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getPropertiesByRegion, defaultWhatsAppNumber, regionTimeZones, regionDisplayNames, type Property } from "@/data/properties";
 import { readCalendar } from "@/lib/calendar";
 import { HOSTS_INTRO } from "@/data/hosts";
+import FaqList from "@/components/FaqList";
 import HomeSearch, { type SearchListing } from "@/components/HomeSearch";
 import { fetchPropertyRates, advertisedMinRate } from "@/lib/rates";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
@@ -547,6 +548,17 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ── FAQ ────────────────────────────────────────── */}
+      <section id="faq" className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 scroll-mt-16">
+        <AnimateOnScroll className="text-center mb-10">
+          <span className="inline-block text-xs font-semibold tracking-widest uppercase text-primary mb-3">
+            Good to know
+          </span>
+          <h2 className="font-serif text-4xl sm:text-5xl font-bold text-gray-900">Questions guests ask</h2>
+        </AnimateOnScroll>
+        <FaqList />
       </section>
 
       {/* ── FINAL CTA ────────────────────────────────────── */}

@@ -12,4 +12,4 @@ export const GOATCOUNTER_CODE = "giorgos";
 
 // Formspree form ID (the "xyzabcd" in formspree.io/f/xyzabcd).
 // Empty = the enquiry form is hidden and only WhatsApp/Viber/email show.
-export const FORMSPREE_FORM_ID = "";
+export const FORMSPREE_FORM_ID = "xwllljwb";

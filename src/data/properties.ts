@@ -94,6 +94,8 @@ export const properties: Property[] = [
     ],
     images: [
       "hero.jpeg",
+      "pool_01.jpg",
+      "pool_02.jpg",
       "Living_room_02.jpg",
       "Living_room_03.jpg",
       "Living_room_04.jpg",
@@ -153,6 +155,8 @@ export const properties: Property[] = [
     ],
     images: [
       "hero.jpg",
+      "pool_01.jpg",
+      "pool_02.jpg",
       "living_room_01.jpg",
       "living_room_02.jpg",
       "living_room_03.jpg",

@@ -377,14 +377,3 @@ export const regionInstagramUrls: Partial<Record<Region, string>> = {
 export function getPropertiesByRegion(region: Region): Property[] {
   return properties.filter((p) => p.region === region);
 }
-
-export function getPropertyById(id: string): Property | undefined {
-  return properties.find((p) => p.id === id);
-}
-
-export function getPropertyByRegionAndId(
-  region: string,
-  id: string
-): Property | undefined {
-  return properties.find((p) => p.region === region && p.id === id);
-}

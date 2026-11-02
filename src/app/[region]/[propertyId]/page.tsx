@@ -93,7 +93,7 @@ const amenityIcons: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
     </svg>
   ),
-  Parking: (
+  "Private Parking": (
     <svg className="w-4.5 h-4.5" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h3.5a2.5 2.5 0 010 5H8m0-5v10m0-10V5m0 12v2" />
       <rect x="3" y="3" width="18" height="18" rx="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -120,21 +120,6 @@ const amenityIcons: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
   ),
-  "Beach Walk": (
-    <svg className="w-4.5 h-4.5" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-    </svg>
-  ),
-  "Beach Nearby": (
-    <svg className="w-4.5 h-4.5" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 17c1.667-1.333 3.333-1.333 5 0s3.333 1.333 5 0 3.333-1.333 5 0M7.5 10l1-5 3.5 3L16 3l.5 5" />
-    </svg>
-  ),
-  "Near Beach": (
-    <svg className="w-4.5 h-4.5" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 17c1.667-1.333 3.333-1.333 5 0s3.333 1.333 5 0 3.333-1.333 5 0M7.5 10l1-5 3.5 3L16 3l.5 5" />
-    </svg>
-  ),
   Garden: (
     <svg className="w-4.5 h-4.5" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 21V11M12 11C12 8 9 5 6 5s-6 3-3 6c.5.86 1.29 1.5 2 2 2 1 3 2 3 4M12 11c0-3 3-6 6-6s6 3 3 6c-.5.86-1.29 1.5-2 2-2 1-3 2-3 4" />
@@ -147,9 +132,8 @@ const amenityIcons: Record<string, React.ReactNode> = {
   ),
 };
 
-// Both parking labels share the parking icon.
-amenityIcons["Private Parking"] = amenityIcons.Parking;
-amenityIcons["Public parking nearby"] = amenityIcons.Parking;
+// Same icon for both parking labels.
+amenityIcons["Public parking nearby"] = amenityIcons["Private Parking"];
 
 const defaultAmenityIcon = (
   <svg className="w-4.5 h-4.5" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

@@ -19,13 +19,31 @@ export interface SearchListing {
   blocked: BlockedDateRange[] | null;
 }
 
-// "When are you travelling?" on the home page: pick dates and guests, see
+const REGION_CHOICES = [
+  { value: "all", label: "Both" },
+  { value: "paphos", label: "Cyprus" },
+  { value: "tenerife", label: "Tenerife" },
+] as const;
+type RegionChoice = (typeof REGION_CHOICES)[number]["value"];
+
+// "When are you travelling?" on the home page: pick where, dates and guests, see
 // which apartments are free (from the same Airbnb calendars as the property
 // pages), and open one with the dates already selected.
 export default function HomeSearch({ listings }: { listings: SearchListing[] }) {
-  const maxGuests = Math.max(...listings.map((l) => l.maxGuests));
+  const [region, setRegion] = useState<RegionChoice>("all");
+  const inRegion = region === "all" ? listings : listings.filter((l) => l.region === region);
+  const regionName = REGION_CHOICES.find((c) => c.value === region)!.label;
+  const maxGuests = Math.max(...inRegion.map((l) => l.maxGuests));
   const [range, setRange] = useState<DateRange | undefined>();
   const [guests, setGuests] = useState(2);
+
+  function chooseRegion(next: RegionChoice) {
+    setRegion(next);
+    // A destination can't host more guests than its biggest apartment.
+    const pool = next === "all" ? listings : listings.filter((l) => l.region === next);
+    const cap = Math.max(...pool.map((l) => l.maxGuests));
+    setGuests((g) => Math.min(g, cap));
+  }
   const [pickerOpen, setPickerOpen] = useState(false);
   const [searched, setSearched] = useState(false);
   const [months, setMonths] = useState(1);
@@ -45,7 +63,7 @@ export default function HomeSearch({ listings }: { listings: SearchListing[] }) 
     : "Add dates";
 
   const results = ready
-    ? listings
+    ? inRegion
         .filter((l) => l.maxGuests >= guests)
         .map((l) => ({
           ...l,
@@ -54,7 +72,7 @@ export default function HomeSearch({ listings }: { listings: SearchListing[] }) 
     : [];
   const available = results.filter((r) => r.status !== "booked");
   const bookedCount = results.length - available.length;
-  const tooSmall = ready ? listings.filter((l) => l.maxGuests < guests).length : 0;
+  const tooSmall = ready ? inRegion.filter((l) => l.maxGuests < guests).length : 0;
 
   function search() {
     if (!ready) {
@@ -74,7 +92,27 @@ export default function HomeSearch({ listings }: { listings: SearchListing[] }) 
       <h2 className="font-serif text-xl sm:text-2xl font-bold text-gray-900">When are you travelling?</h2>
       <p className="text-sm text-gray-600 mt-1">See which apartments are free for your dates.</p>
 
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-3">
+      <div className="mt-4">
+        <span id="search-where" className="block text-xs text-gray-500 mb-1.5">Where</span>
+        <div role="radiogroup" aria-labelledby="search-where" className="grid grid-cols-3 sm:inline-grid gap-1 p-1 rounded-2xl bg-cream border border-cream-dark">
+          {REGION_CHOICES.map((c) => (
+            <button
+              key={c.value}
+              type="button"
+              role="radio"
+              aria-checked={region === c.value}
+              onClick={() => chooseRegion(c.value)}
+              className={`rounded-xl px-5 py-2 text-sm font-semibold transition-colors ${
+                region === c.value ? "bg-white text-primary shadow-sm" : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-3">
         <button
           type="button"
           onClick={() => setPickerOpen((v) => !v)}
@@ -166,7 +204,7 @@ export default function HomeSearch({ listings }: { listings: SearchListing[] }) 
           <p className="font-semibold text-gray-900">
             {available.length === 0
               ? "Nothing free for all of those nights."
-              : `${available.length} apartment${available.length > 1 ? "s" : ""} for ${dateLabel}`}
+              : `${available.length} apartment${available.length > 1 ? "s" : ""}${region === "all" ? "" : ` in ${regionName}`} for ${dateLabel}`}
           </p>
           {(bookedCount > 0 || tooSmall > 0) && (
             <p className="text-sm text-gray-600 mt-0.5">
@@ -176,7 +214,18 @@ export default function HomeSearch({ listings }: { listings: SearchListing[] }) 
             </p>
           )}
           {available.length === 0 ? (
-            <p className="text-sm text-gray-600 mt-2">Try moving your dates by a day or two, or message us and we&apos;ll see what we can do.</p>
+            <p className="text-sm text-gray-600 mt-2">
+              {region === "all" ? "Try" : (
+                <>
+                  Try{" "}
+                  <button type="button" onClick={() => chooseRegion("all")} className="font-semibold text-primary underline underline-offset-2">
+                    searching both destinations
+                  </button>
+                  , or try
+                </>
+              )}{" "}
+              moving your dates by a day or two, or message us and we&apos;ll see what we can do.
+            </p>
           ) : (
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {available.map((r) => (

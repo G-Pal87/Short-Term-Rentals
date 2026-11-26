@@ -88,36 +88,34 @@ export default function HomeSearch({ listings }: { listings: SearchListing[] }) 
     : "";
 
   return (
-    <div className="bg-white rounded-3xl shadow-2xl border border-cream-dark p-5 sm:p-6">
-      <h2 className="font-serif text-xl sm:text-2xl font-bold text-gray-900">When are you travelling?</h2>
-      <p className="text-sm text-gray-600 mt-1">See which apartments are free for your dates.</p>
-
-      <div className="mt-4">
-        <span id="search-where" className="block text-xs text-gray-500 mb-1.5">Where</span>
-        <div role="radiogroup" aria-labelledby="search-where" className="grid grid-cols-3 sm:inline-grid gap-1 p-1 rounded-2xl bg-cream border border-cream-dark">
-          {REGION_CHOICES.map((c) => (
-            <button
-              key={c.value}
-              type="button"
-              role="radio"
-              aria-checked={region === c.value}
-              onClick={() => chooseRegion(c.value)}
-              className={`rounded-xl px-5 py-2 text-sm font-semibold transition-colors ${
-                region === c.value ? "bg-white text-primary shadow-sm" : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              {c.label}
-            </button>
-          ))}
+    <div className="bg-white rounded-3xl shadow-2xl border border-cream-dark p-3 sm:p-4 text-left">
+      <h2 className="sr-only">Check availability</h2>
+      <div className="grid grid-cols-[1fr_auto] sm:grid-cols-2 lg:grid-cols-[auto_1fr_auto_auto] gap-2.5 sm:gap-3">
+        <div className="col-span-2 sm:col-span-1 border border-cream-dark rounded-2xl px-3 py-2">
+          <span id="search-where" className="block text-xs text-gray-500 mb-1 px-1">Where</span>
+          <div role="radiogroup" aria-labelledby="search-where" className="grid grid-cols-3 gap-1">
+            {REGION_CHOICES.map((c) => (
+              <button
+                key={c.value}
+                type="button"
+                role="radio"
+                aria-checked={region === c.value}
+                onClick={() => chooseRegion(c.value)}
+                className={`rounded-full px-3 py-1 text-sm font-semibold transition-colors ${
+                  region === c.value ? "bg-secondary text-white" : "text-gray-600 hover:text-gray-900 hover:bg-cream"
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-3">
         <button
           type="button"
           onClick={() => setPickerOpen((v) => !v)}
           aria-expanded={pickerOpen}
-          className="flex items-center gap-3 text-left border border-cream-dark hover:border-secondary/40 rounded-2xl px-4 py-3 transition-colors"
+          className="col-span-2 sm:col-span-1 flex items-center gap-3 text-left border border-cream-dark hover:border-secondary/40 rounded-2xl px-4 py-3 transition-colors"
         >
           <svg className="w-5 h-5 text-secondary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
@@ -161,7 +159,7 @@ export default function HomeSearch({ listings }: { listings: SearchListing[] }) 
         <button
           type="button"
           onClick={search}
-          className="bg-primary hover:bg-primary-dark text-white font-semibold rounded-2xl px-7 py-3 transition-colors shadow-md"
+          className="bg-primary hover:bg-primary-dark text-white font-semibold rounded-2xl px-6 sm:px-7 py-3 transition-colors shadow-md"
         >
           Search
         </button>
